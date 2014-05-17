@@ -47,3 +47,6 @@ class Music:
         
     def printmusic(self):
         print self.number+" "+self.name+" "+self.artist+" "+self.format;
+        
+    def display(self):
+        return "%s : %s by %s"%(self.number,self.name,self.artist)
