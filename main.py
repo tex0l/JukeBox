@@ -10,10 +10,21 @@ import keyboard_map
 import music_player
 import parser
 
+dic = keyboard_map.Map() # initialisation du dictionnaire
+player = music_player.Player(); # initialisation du lecteur
+music_dir="/Users/timotheerebours/Documents/JukeBox/Code/Music" # repertoire de musique
+music_index = parser.MusicDir(music_dir)
+
+#generate = input("generate music directory ? ((y or yes ) xor anything else)")
+#if (generate=="y" or generate=="yes"):
+#    extraction_path = raw_input("extraction_path")
+#    final_path = "./Music";
+#    player.generate_library(extraction_path,final_path)
+
 print (30 * '-')
 print ("   j u k e b o X")
 print (30 * '-')
-print ("C. Credit")
+print ("$. Credit")
 print ("A-D + 1-20. Select Song")
 print ("J. Switch to Jack Input")
 print ("Q. Quit")
@@ -25,8 +36,7 @@ entry="" # choix de musique, est vide avant le choix d'une lettre A-D, puis est 
 
 music_dir="/Users/timotheerebours/Documents/JukeBox/Code/Music" # repertoire de musique
 music_index = parser.MusicDir(music_dir) # indexation des musiques
-dic = keyboard_map.Map() # initialisation du dictionnaire
-player = music_player.Player(); # initialisation du lecteur
+
 while 1 :
     sys.stdout.write('Enter your choice : ')
     sys.stdout.flush()

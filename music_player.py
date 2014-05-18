@@ -16,6 +16,8 @@ class Player():
         try:
             self.client.add(music.path);
             self.client.play();
+        except KeyboardInterrupt:
+            raise
         except:
             self.connect()
             self.enqueue(music)
@@ -28,3 +30,50 @@ class Player():
     def exit(self):
         self.client.disconnect()
         os.system("killall mpd")
+    def generate_library(self,extraction_path,final_path,filledslots=[]):
+        current_path=os.path.abspath(os.path.curdir)
+        os.system("cd "+extraction_path)
+        lsinfo = self.client.lsinfo()
+        print(lsinfo)
+        letter = 1;
+        number = 1;
+        dic=dict([(1,'A'),(2,'B'),(3,'C'),(4,'D')])
+        os.system("cd "+current_path)
+        os.system("mkdir "+final_path)
+        for e in lsinfo:
+            try:
+                artist = e['artist']
+            except KeyError:
+                artist = "unknown"
+            try:
+                title = e['title']
+            except KeyError:
+                title = "unknown"
+            file_name = e['file']
+            extension = file_name.split(".")
+            extension = extension.pop(len(extension)-1)
+            if letter <= 4:
+                if number == 21:
+                    number =1
+                    letter+=1
+                
+                    
+                index = dic[letter]+str(number)
+                number+=1
+            else:
+                print("too many musics")
+                break;
+            cp_command= "cp "+\
+            extraction_path.replace(" ","\ ").replace("'","\\'")+"/"+\
+            file_name.replace(" ","\ ").replace("'","\\'")+" "+\
+            final_path.replace(" ","\ ").replace("'","\\'")+"/"+\
+            index+"-"+\
+            title.replace(" ","\ ").replace("'","\\'")+"-"+\
+            artist.replace(" ","\ ").replace("'","\\'")+"."+\
+            extension
+            os.system(cp_command)
+
+#player =Player()
+#path = raw_input("Entrez le chemin du repertoire a analyser : ")
+#os.system("mkdir ./Music")
+#player.listinfo(path,"./Music")

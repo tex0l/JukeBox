@@ -27,7 +27,22 @@ class MusicDir:
                 return self.musique[i];
             
         return "";
-        
+    def filled_slots(self):
+        letter = 1;
+        number = 1;
+        dic=dict([(1,'A'),(2,'B'),(3,'C'),(4,'D')])
+        filledslots=[]
+        if letter <= 4:
+            if number == 21:
+                number =1
+                letter+=1
+            if self.findnumber(dic[letter]+str(number))<>"":
+                filledslots.append(True)
+            else:
+                filledslots.append(False)
+            number+=1
+        return filledslots;
+    
         
 class Music:
     def __init__(self,path):
@@ -47,6 +62,6 @@ class Music:
         
     def printmusic(self):
         print self.number+" "+self.name+" "+self.artist+" "+self.format;
-        
+    
     def display(self):
         return "%s : %s by %s"%(self.number,self.name,self.artist)
