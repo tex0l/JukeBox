@@ -1,5 +1,4 @@
 import glob,os,sys
-import pygame
 
 def path_leaf(path): #recupere le bout d'un chemin systeme
     head, tail = os.path.split(path)
@@ -13,9 +12,12 @@ class MusicDir:
         self.musique = [];#listes des objets Music
         self.codes=[];#listes des index des musiques (type A1, B12, etc.)
         for file in fichiers :#indexation iterative
-            self.musique.append(Music(file));
-            l=len(self.musique);
-            self.codes.append(self.musique[l-1].number);
+            try:
+                self.musique.append(Music(file));
+                l=len(self.musique);
+                self.codes.append(self.musique[l-1].number);
+            except:
+                print(file+" is incorrectly named. Try updating the database")
     def printmusicdir(self): # impression de la liste des musiques
         for music in self.musique:
             music.printmusic();

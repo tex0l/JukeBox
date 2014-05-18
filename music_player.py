@@ -30,6 +30,11 @@ class Player():
     def exit(self):
         self.client.disconnect()
         os.system("killall mpd")
+    def cleanFileName(self,path):
+        return self.cleanPath(path).replace("/","\ ")
+    def cleanPath(self,path):
+        return path.replace(" ","\ ").replace("'","\\'").replace("&", "\\&")
+    
     def generate_library(self,extraction_path,final_path,filledslots=[]):
         current_path=os.path.abspath(os.path.curdir)
         os.system("cd "+extraction_path)
@@ -39,7 +44,7 @@ class Player():
         number = 1;
         dic=dict([(1,'A'),(2,'B'),(3,'C'),(4,'D')])
         os.system("cd "+current_path)
-        os.system("mkdir "+final_path)
+        #os.system("mkdir "+final_path)
         for e in lsinfo:
             try:
                 artist = e['artist']
@@ -63,14 +68,15 @@ class Player():
             else:
                 print("too many musics")
                 break;
-            cp_command= "cp "+\
-            extraction_path.replace(" ","\ ").replace("'","\\'")+"/"+\
-            file_name.replace(" ","\ ").replace("'","\\'")+" "+\
-            final_path.replace(" ","\ ").replace("'","\\'")+"/"+\
+            cp_command= "mv "+\
+            self.cleanPath(extraction_path)+"/"+\
+            self.cleanPath(file_name)+" "+\
+            self.cleanPath(final_path)+"/"+\
             index+"-"+\
-            title.replace(" ","\ ").replace("'","\\'")+"-"+\
-            artist.replace(" ","\ ").replace("'","\\'")+"."+\
+            self.cleanFileName(title)+"-"+\
+            self.cleanFileName(artist)+"."+\
             extension
+            #print(cp_command)
             os.system(cp_command)
 
 #player =Player()

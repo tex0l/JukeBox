@@ -12,14 +12,14 @@ import parser
 
 dic = keyboard_map.Map() # initialisation du dictionnaire
 player = music_player.Player(); # initialisation du lecteur
-music_dir="/Users/timotheerebours/Documents/JukeBox/Code/Music" # repertoire de musique
+music_dir="/Users/arantes/JukeMusic" # repertoire de musique
 music_index = parser.MusicDir(music_dir)
 
-#generate = input("generate music directory ? ((y or yes ) xor anything else)")
-#if (generate=="y" or generate=="yes"):
-#    extraction_path = raw_input("extraction_path")
-#    final_path = "./Music";
-#    player.generate_library(extraction_path,final_path)
+generate = raw_input("Update music directory ? ((y or yes ) or anything else)")
+if (generate=="y" or generate=="yes"):
+    #extraction_path = raw_input("Extract from ? : ")
+    #final_path = music_dir;
+    player.generate_library(music_dir,music_dir,music_index.filled_slots())
 
 print (30 * '-')
 print ("   j u k e b o X")
@@ -34,8 +34,8 @@ print (30 * '-')
 credit = 0 # nombre de credits
 entry="" # choix de musique, est vide avant le choix d'une lettre A-D, puis est complete par un nombre 1-20 sauf si erreur -> ""
 
-music_dir="/Users/timotheerebours/Documents/JukeBox/Code/Music" # repertoire de musique
-music_index = parser.MusicDir(music_dir) # indexation des musiques
+#music_dir="/Users/arantes/JukeMusic" # repertoire de musique
+#music_index = parser.MusicDir(music_dir) # indexation des musiques
 
 while 1 :
     sys.stdout.write('Enter your choice : ')
