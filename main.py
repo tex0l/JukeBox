@@ -9,11 +9,13 @@ import getch
 import keyboard_map
 import music_player
 import parser
+from display_LCDd_2x40 import *
 
 dic = keyboard_map.Map() # initialisation du dictionnaire
 player = music_player.Player(); # initialisation du lecteur
 music_dir="/Users/arantes/JukeMusic" # repertoire de musique
 music_index = parser.MusicDir(music_dir)
+display=displayLCDd2x40()
 
 generate = raw_input("Update music directory ? ((y or yes ) or anything else)")
 if (generate=="y" or generate=="yes"):
@@ -48,6 +50,7 @@ while 1 :
         print("Credit = "+`credit`)
     elif choice == 'quit':
         player.exit()
+        #display.display.RT.join()
         print ("Goodbye !")
         exit();
     elif choice == 'list':
