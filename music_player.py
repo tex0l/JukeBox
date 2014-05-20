@@ -33,7 +33,7 @@ class Player():
     def cleanFileName(self,path):
         return self.cleanPath(path).replace("/","\ ")
     def cleanPath(self,path):
-        return path.replace(" ","\ ").replace("'","\\'").replace("&", "\\&")
+        return path.replace(" ","\ ").replace("'","\\'").replace("&", "\\&").replace("(","\(").replace(")","\)")
     
     def generate_library(self,extraction_path,final_path,filledslots=[]):
         current_path=os.path.abspath(os.path.curdir)

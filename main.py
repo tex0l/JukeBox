@@ -47,6 +47,8 @@ while 1 :
     if choice == 'credit':
         print ("Adding 1 credit")
         credit+=1
+        display.setCredit(credit)
+        display.waiting("choose")
         print("Credit = "+`credit`)
     elif choice == 'quit':
         player.exit()
@@ -75,7 +77,11 @@ while 1 :
                     player.enqueue(song); #ajout a la playlist
                     print("songs queued :" + str(player.queue_count()));
                     credit-=1
+                    display.setCredit(credit)
                     print("Credits left : " +`credit`)
+                    if credit==0:
+                        display.waiting("coin")
+                    display.setQueue(player.queue_count())
                 entry=""
             elif (""+choice).isalpha(): #on ecrase le choix de la lettre precedente
                 entry=choice.upper()
