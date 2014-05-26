@@ -1,8 +1,10 @@
 from mpd import MPDClient
 import os
+
 class Player():
-    def __init__(self):
-        os.system("mpd /etc/mpd.conf")#lancement de mpd
+    def __init__(self,launch=True):
+        if launch:
+            os.system("mpd /etc/mpd.conf")#lancement de mpd
         self.connect();#connexion
     def connect(self):
         self.client = MPDClient();#creation du client MPD
@@ -24,6 +26,21 @@ class Player():
     def isPlaying(self):
         status = self.client.status();
         return status['state']=='play';
+    def title(self):
+        try :
+            return self.client.currentsong()['title']
+        except:
+            return ""
+    def artist(self):
+        try:
+            return self.client.currentsong()['artist']
+        except:
+            return ""
+    def number(self):
+        try:
+            return self.client.currentsong()['file'].split("-")[0]
+        except:
+            return ""
     def queue_count(self):
         playlist = self.client.playlist();
         return len(playlist);

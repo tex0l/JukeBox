@@ -36,8 +36,7 @@ print (30 * '-')
 credit = 0 # nombre de credits
 entry="" # choix de musique, est vide avant le choix d'une lettre A-D, puis est complete par un nombre 1-20 sauf si erreur -> ""
 
-#music_dir="/Users/arantes/JukeMusic" # repertoire de musique
-#music_index = parser.MusicDir(music_dir) # indexation des musiques
+music_index = parser.MusicDir(music_dir) # indexation des musiques
 
 while 1 :
     sys.stdout.write('Enter your choice : ')
@@ -48,9 +47,10 @@ while 1 :
         print ("Adding 1 credit")
         credit+=1
         display.setCredit(credit)
-        display.waiting("choose")
         print("Credit = "+`credit`)
+        print(player.number()+' - '+player.title()+' by '+player.artist())
     elif choice == 'quit':
+        display.UT.join()
         player.exit()
         #display.display.RT.join()
         print ("Goodbye !")
@@ -62,10 +62,12 @@ while 1 :
         if entry=="": # Si on n'a pas deja choisi une lettre
             if (str(choice)).isalpha(): # Si c'est une lettre
                 entry=choice.upper() # L'entree devient la lettre en majuscule
+                display.entry(entry)
             else:
                 print("Invalid input") # Echec
         else:
             if (str(choice)).isdigit(): #si le choix est un nombre
+                oldEntry=entry
                 entry+=choice #on ajoute a l'entree le nombre correspondant
                 song = music_index.findnumber(entry) # recherche dans l'index des musiques
                 if song=="":
@@ -77,14 +79,14 @@ while 1 :
                     player.enqueue(song); #ajout a la playlist
                     print("songs queued :" + str(player.queue_count()));
                     credit-=1
+                    display.entry(oldEntry,choice,song)
                     display.setCredit(credit)
                     print("Credits left : " +`credit`)
-                    if credit==0:
-                        display.waiting("coin")
                     display.setQueue(player.queue_count())
                 entry=""
             elif (""+choice).isalpha(): #on ecrase le choix de la lettre precedente
                 entry=choice.upper()
+                display.entry(entry)
             else: #echec
                 print("Invalid input")
                 entry=""
