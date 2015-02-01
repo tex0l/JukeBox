@@ -8,6 +8,7 @@ import getch
 import keyboard_map
 import parser
 import config
+from raw_input_timout import raw_input_with_timeout
 
 from display_LCDd_2x40 import *
 
@@ -17,12 +18,12 @@ dic = keyboard_map.Map()
 player = music_player.Player()
 music_index = parser.MusicDir(config.MUSIC_DIR)
 display = displayLCDd2x40()
-
-generate = raw_input("Update music directory ? ((y or yes ) or anything else)")
-if generate == "y" or generate == "yes":
-    #extraction_path = raw_input("Extract from ? : ")
-    #final_path = config.MUSIC_DIR;
-    player.generate_library(config.INDEX_DIR, config.MUSIC_DIR, music_index.filled_slots())
+if config.INDEX:
+    generate = raw_input_with_timeout("Update music directory ? ((y or yes ) or anything else)", timeout=15.0)
+    if generate == "y" or generate == "yes":
+        #extraction_path = raw_input("Extract from ? : ")
+        #final_path = config.MUSIC_DIR;
+        player.generate_library(config.INDEX_DIR, config.MUSIC_DIR, music_index.filled_slots())
 
 print (30 * '-')
 print ("   j u k e b o X")
