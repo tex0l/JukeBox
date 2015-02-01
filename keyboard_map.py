@@ -1,3 +1,4 @@
+from __future__ import unicode_literals
 class Map():
     def __init__(self):
         self.map = {}

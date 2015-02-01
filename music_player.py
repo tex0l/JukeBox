@@ -67,9 +67,7 @@ class Player():
     def generate_library(self, extraction_path, final_path, filledslots=[]):
         current_path = os.path.abspath(os.path.curdir)
         os.chdir(extraction_path)
-        print os.getcwd()
         lsinfo = os.listdir(".")
-        print lsinfo
         letter = 1
         number = 1
         dic = dict([(1, 'A'), (2, 'B'), (3, 'C'), (4, 'D')])
@@ -92,18 +90,15 @@ class Player():
                         title = "unknown"
                     extension = file.split(".")
                     extension = extension.pop(len(extension)-1)
-                    print filledslots
-
                     while filledslots[letter-1][number-1]:
                         number += 1
                         if number == 21 and letter < 4:
                             number = 1
                             letter += 1
                         if letter == 5:
-                            print ("library is full, empty it")
+                            print ("library is full: empty it, skipping")
                             break
                     index = dic[letter]+str(number)
-                    print index
                     from_path = self.cleanPath(extraction_path) + "/" + \
                                 self.cleanPath(file) + " "
                     to_path = self.cleanPath(final_path) + "/" + index + "-" + \
@@ -114,7 +109,9 @@ class Player():
                     #print(cp_command)
                     os.system(cp_command)
                 except mutagen.id3._util.ID3NoHeaderError:
-                    print "no id3 tags found"
+                    print "no id3 tags found, ignored"
+            else:
+                print "system file, ignored"
 
 
 #player =Player()

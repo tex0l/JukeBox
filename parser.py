@@ -1,3 +1,4 @@
+from __future__ import unicode_literals
 import glob, os, sys
 
 def path_leaf(path): #recupere le bout d'un chemin systeme
@@ -47,7 +48,6 @@ class MusicDir:
             number = 0
             while number < 20:
                 number += 1
-                print number
                 if self.findnumber(dic[letter]+str(number)) != "":
                     filledslots[letter-1].append(True)
                 else:

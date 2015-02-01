@@ -1,3 +1,4 @@
+from __future__ import unicode_literals
 #!/usr/bin/python
 # Version 2
 
@@ -23,10 +24,9 @@ player = music_player.Player()
 display = displayLCDd()
 music_index = parser.MusicDir(config.MUSIC_DIR)
 if config.INDEX:
-    generate = nonBlockingRawInput("Update music directory ? ((y or yes ) or anything else), 15sec then skipped",
+    generate = nonBlockingRawInput("Update music directory ? ((y or yes ) or anything else), 15sec then skipped \n",
                                    timeout=15)
     if generate == "y" or generate == "yes":
-        print "doing it"
         #extraction_path = raw_input("Extract from ? : ")
         #final_path = config.MUSIC_DIR;
         player.generate_library(config.INDEX_DIR, config.MUSIC_DIR, music_index.filled_slots())

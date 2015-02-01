@@ -1,3 +1,4 @@
+from __future__ import unicode_literals
 import signal
 
 class AlarmException(Exception):
@@ -14,6 +15,6 @@ def nonBlockingRawInput(prompt='', timeout=20):
         signal.alarm(0)
         return text
     except AlarmException:
-        print '\nPrompt timeout. Continuing...'
+        print '\nSkipping...'
     signal.signal(signal.SIGALRM, signal.SIG_IGN)
     return ''
