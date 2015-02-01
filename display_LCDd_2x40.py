@@ -40,15 +40,15 @@ class displayLCDd2x40:
         self.queueString = self.display.addString(30, 1).setText("Queue : 0")
         self.icon = self.display.addIcon(1, 2).setIcon("STOP")
         self.line2 = self.display.addString(3, 2).setText("Insert Coin")
-        self.mode="coin" # coin or free
-        self.credit=0
+        self.mode = "coin" # coin or free
+        self.credit = 0
         self.UT = UpdateThread(self)
         self.UT.start()
         self.timer = None
 
     def setCredit(self, c):  # Change the number of credits displayed
-        self.credit=c
-        if self.credit<0:
+        self.credit = c
+        if self.credit < 0:
             self.creditString.setText("Free Play")
         else:
             self.creditString.setText("Credits : %d" % c)

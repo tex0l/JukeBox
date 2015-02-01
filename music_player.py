@@ -1,31 +1,40 @@
 from mpd import MPDClient
+import config
 import os
 
+
 class Player():
-    def __init__(self,launch=True):
+    def __init__(self, launch=True):
         if launch:
-            os.system("mpd /etc/mpd.conf")#lancement de mpd
-        self.connect();#connexion
+            command = unicode("mpd %s" % config.MPD_CONF_FILE)
+            #lancement de mpd
+            os.system(command)
+        #connexion
+        self.client = None
+        self.connect()
+
     def connect(self):
-        self.client = MPDClient();#creation du client MPD
-        self.client.timeout = None;
-        self.client.idletimout = None;
-        self.client.connect("localhost",6600)
-        self.client.update();
-        self.client.consume(1);
-        self.client.crossfade(1);
+        #creation du client MPD
+        self.client = MPDClient()
+        self.client.timeout = None
+        self.client.idletimeout = None
+        self.client.connect("localhost", 6600)
+        self.client.update()
+        self.client.consume(1)
+        self.client.crossfade(1)
+
     def enqueue(self, music):
         try:
-            self.client.add(music.path);
-            self.client.play();
+            self.client.add(music.path)
+            self.client.play()
         except KeyboardInterrupt:
             raise
         except:
             self.connect()
             self.enqueue(music)
     def isPlaying(self):
-        status = self.client.status();
-        return status['state']=='play';
+        status = self.client.status()
+        return status['state']=='play'
     def title(self):
         try :
             return self.client.currentsong()['title']
@@ -42,8 +51,8 @@ class Player():
         except:
             return ""
     def queue_count(self):
-        playlist = self.client.playlist();
-        return len(playlist);
+        playlist = self.client.playlist()
+        return len(playlist)
     def exit(self):
         self.client.disconnect()
         os.system("killall mpd")
@@ -57,9 +66,9 @@ class Player():
         os.system("cd "+extraction_path)
         lsinfo = self.client.lsinfo()
         print(lsinfo)
-        letter = 1;
-        number = 1;
-        dic=dict([(1,'A'),(2,'B'),(3,'C'),(4,'D')])
+        letter = 1
+        number = 1
+        dic = dict([(1, 'A'), (2, 'B'), (3, 'C'), (4, 'D')])
         os.system("cd "+current_path)
         #os.system("mkdir "+final_path)
         for e in lsinfo:

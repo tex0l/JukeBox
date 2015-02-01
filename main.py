@@ -3,25 +3,26 @@
 
 
 import sys
-import os
 
 import getch
 import keyboard_map
-import music_player
 import parser
+import config
+
 from display_LCDd_2x40 import *
 
-dic = keyboard_map.Map() # initialisation du dictionnaire
-player = music_player.Player(); # initialisation du lecteur
-music_dir="/Users/arantes/JukeMusic" # repertoire de musique
-music_index = parser.MusicDir(music_dir)
-display=displayLCDd2x40()
+# initialisation du dictionnaire
+dic = keyboard_map.Map()
+# initialisation du lecteur
+player = music_player.Player()
+music_index = parser.MusicDir(config.MUSIC_DIR)
+display = displayLCDd2x40()
 
 generate = raw_input("Update music directory ? ((y or yes ) or anything else)")
-if (generate=="y" or generate=="yes"):
+if generate == "y" or generate == "yes":
     #extraction_path = raw_input("Extract from ? : ")
-    #final_path = music_dir;
-    player.generate_library(music_dir,music_dir,music_index.filled_slots())
+    #final_path = config.MUSIC_DIR;
+    player.generate_library(config.MUSIC_DIR, config.MUSIC_DIR, music_index.filled_slots())
 
 print (30 * '-')
 print ("   j u k e b o X")
@@ -32,24 +33,19 @@ print ("J. Switch to Jack Input")
 print ("Q. Quit")
 print ("L. List songs")
 print (30 * '-')
-
-credit = 0 # nombre de credits
-entry="" # choix de musique, est vide avant le choix d'une lettre A-D, puis est complete par un nombre 1-20 sauf si erreur -> ""
-
-music_index = parser.MusicDir(music_dir) # indexation des musiques
+# choix de musique, est vide avant le choix d'une lettre A-D, puis est complete par un nombre 1-20 sauf si erreur -> ""
+entry = ""
+# indexation des musiques
+music_index = parser.MusicDir(config.MUSIC_DIR)
 
 while 1 :
     sys.stdout.write('Enter your choice : ')
     sys.stdout.flush()
-    choice = getch.getch() # Recuperation de la frappe clavier
-    choice = dic.find(choice) # Conversion avec le dictionnaire
-    if choice == 'credit':
-        print ("Adding 1 credit")
-        credit+=1
-        display.setCredit(credit)
-        print("Credit = "+`credit`)
-        print(player.number()+' - '+player.title()+' by '+player.artist())
-    elif choice == 'quit':
+    # Recuperation de la frappe clavier
+    choice = getch.getch()
+    # Conversion avec le dictionnaire
+    choice = dic.find(choice)
+    if choice == 'quit':
         display.UT.join()
         player.exit()
         #display.display.RT.join()
@@ -59,35 +55,41 @@ while 1 :
         print ("List of songs :")
         music_index.printmusicdir()
     else:
-        if entry=="": # Si on n'a pas deja choisi une lettre
-            if (str(choice)).isalpha(): # Si c'est une lettre
-                entry=choice.upper() # L'entree devient la lettre en majuscule
+        # Si on n'a pas deja choisi une lettre
+        if entry == "":
+            # Si c'est une lettre
+            if (str(choice)).isalpha():
+                # L'entree devient la lettre en majuscule
+                entry = choice.upper()
                 display.entry(entry)
+            # Echec
             else:
-                print("Invalid input") # Echec
+                print("Invalid input")
         else:
-            if (str(choice)).isdigit(): #si le choix est un nombre
+            #si le choix est un nombre
+            if (str(choice)).isdigit():
                 oldEntry=entry
-                entry+=choice #on ajoute a l'entree le nombre correspondant
-                song = music_index.findnumber(entry) # recherche dans l'index des musiques
+                #on ajoute a l'entree le nombre correspondant
+                entry += choice
+                # recherche dans l'index des musiques
+                song = music_index.findnumber(entry)
+                #non trouvee
                 if song=="":
-                    print("This song does not exist") #non trouve
-                elif credit==0:
-                    print("0 credit. Insert coin")#pas de credit
+                    print("This song does not exist")
+                #trouvee
                 else:
                     print("Song chosen : " + song.artist+"'s "+song.name)
-                    player.enqueue(song); #ajout a la playlist
-                    print("songs queued :" + str(player.queue_count()));
-                    credit-=1
-                    display.entry(oldEntry,choice,song)
-                    display.setCredit(credit)
-                    print("Credits left : " +`credit`)
+                    #ajout a la playlist
+                    player.enqueue(song)
+                    print("songs queued :" + str(player.queue_count()))
+                    display.entry(oldEntry, choice, song)
                     display.setQueue(player.queue_count())
                 entry=""
-            elif (""+choice).isalpha(): #on ecrase le choix de la lettre precedente
+            #on ecrase le choix de la lettre precedente
+            elif (""+choice).isalpha():
                 entry=choice.upper()
                 display.entry(entry)
-            else: #echec
+            else:  #echec
                 print("Invalid input")
                 entry=""
 
