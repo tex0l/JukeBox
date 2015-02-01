@@ -82,8 +82,7 @@ class Player():
                     id3 = EasyID3(file)
                     print id3
                     try:
-                        artist = id3[u'artist'][0]
-                        print artist
+                        artist = slugify(id3[u'artist'][0], separator=" ")
                     except KeyError:
                         artist = u"unknown"
                     try:
