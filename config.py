@@ -11,4 +11,4 @@ INDEX_DIR = "/Users/timotheerebours/Documents/Jukebox/Codegit/Music"
 #Chemin du fichier de conf
 MPD_CONF_FILE = "/etc/mpd.conf"
 #LCD
-LCD = False
+LCD = "dummy"

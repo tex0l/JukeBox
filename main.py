@@ -8,7 +8,7 @@ import getch
 import keyboard_map
 import parser
 import config
-from raw_input_timout import raw_input_with_timeout
+from raw_input_timout import nonBlockingRawInput
 import music_player
 
 if config.LCD == "2x40":
@@ -24,8 +24,8 @@ music_index = parser.MusicDir(config.MUSIC_DIR)
 display = displayLCDd()
 print config.INDEX
 if config.INDEX:
-    generate = raw_input_with_timeout("Update music directory ? ((y or yes ) or anything else), 15sec then skipped",
-                                      timeout=15.0)
+    generate = nonBlockingRawInput("Update music directory ? ((y or yes ) or anything else), 15sec then skipped",
+                                   timeout=15)
     if generate == "y" or generate == "yes":
         #extraction_path = raw_input("Extract from ? : ")
         #final_path = config.MUSIC_DIR;

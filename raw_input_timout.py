@@ -1,14 +1,19 @@
-import thread
-import threading
+import signal
 
-def raw_input_with_timeout(prompt, timeout=30.0):
-    print prompt,    
-    timer = threading.Timer(timeout, thread.interrupt_main)
-    result = None
+class AlarmException(Exception):
+    pass
+
+def alarmHandler(signum, frame):
+    raise AlarmException
+
+def nonBlockingRawInput(prompt='', timeout=20):
+    signal.signal(signal.SIGALRM, alarmHandler)
+    signal.alarm(timeout)
     try:
-        timer.start()
-        result = raw_input(prompt)
-    except KeyboardInterrupt:
-        pass
-    timer.cancel()
-    return result
+        text = raw_input(prompt)
+        signal.alarm(0)
+        return text
+    except AlarmException:
+        print '\nPrompt timeout. Continuing...'
+    signal.signal(signal.SIGALRM, signal.SIG_IGN)
+    return ''
