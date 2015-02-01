@@ -1,7 +1,6 @@
 class Map():
     def __init__(self):
         self.map = {}
-        self.map["$"] = "credit"
         self.map["l"] = "list"
         self.map["q"] = "quit"
         self.map["h"] = "help"
