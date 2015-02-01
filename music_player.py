@@ -2,9 +2,13 @@ from __future__ import unicode_literals
 from mpd import MPDClient
 import config
 import os
+<<<<<<< HEAD
+import time
+=======
 from mutagen.easyid3 import EasyID3
 import mutagen
 from slugify import slugify
+>>>>>>> FETCH_HEAD
 
 
 class Player():
@@ -16,6 +20,7 @@ class Player():
         #connexion
         self.client = None
         self.connect()
+        self.lastAdded = time.time()
 
     def connect(self):
         #creation du client MPD
@@ -31,6 +36,7 @@ class Player():
         try:
             self.client.add(music.path)
             self.client.play()
+            self.lastAdded = time.time()
         except KeyboardInterrupt:
             raise
         except:

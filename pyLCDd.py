@@ -97,9 +97,9 @@ class pyLCDd:
             self.LCD.socket.send("widget_del 0 %d\n" % self.id)
 
     #speed: int. 0 means still. 1 is the fastest
-    def addScroller(self, x, y, speed):
+    def addScroller(self, x, y, width, speed):
         #creating a new LCDScroller, the ID is equal to the current number of widgets
-        s = self.LCDScroller(self.findFreeId(), x, y, 38, "h", speed, self)
+        s = self.LCDScroller(self.findFreeId(), x, y, width, "h", speed, self)
         self.widgets.append(s)
         return s
     
