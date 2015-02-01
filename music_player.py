@@ -2,13 +2,13 @@ from __future__ import unicode_literals
 from mpd import MPDClient
 import config
 import os
-<<<<<<< HEAD
+
 import time
-=======
+
 from mutagen.easyid3 import EasyID3
 import mutagen
 from slugify import slugify
->>>>>>> FETCH_HEAD
+
 
 
 class Player():
@@ -115,7 +115,7 @@ class Player():
                               self.cleanFileName(artist) + u"." + extension
 
                     cp_command = "mv " + from_path + " " + to_path
-                    print cp_command
+                    print "\nmoved" + from_path + "\nto" + to_path
                     #print(cp_command)
                     os.system(cp_command)
                 except mutagen.id3._util.ID3NoHeaderError:
