@@ -61,7 +61,7 @@ class Player():
     def cleanPath(self,path):
         return path.replace(" ","\ ").replace("'","\\'").replace("&", "\\&").replace("(","\(").replace(")","\)")
     
-    def generate_library(self,extraction_path,final_path,filledslots=[]):
+    def generate_library(self, extraction_path, final_path, filledslots=[]):
         current_path=os.path.abspath(os.path.curdir)
         os.system("cd "+extraction_path)
         lsinfo = self.client.lsinfo()

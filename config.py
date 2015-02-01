@@ -6,5 +6,7 @@ NB_MUSIC = 5
 TIMEOUT = 30
 #Indexation au demarrage ?
 INDEX = True
+#Repertoire de musiques a indexer
+INDEX_DIR = "/Users/arantes/JukeMusicBuffer"
 #Chemin du fichier de conf
 MPD_CONF_FILE = "/etc/mpd.conf"
