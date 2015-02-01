@@ -4,6 +4,7 @@ import config
 import os
 from mutagen.easyid3 import EasyID3
 import mutagen
+from slugify import slugify
 
 
 class Player():
@@ -74,21 +75,23 @@ class Player():
         os.system("cd "+current_path)
         #os.system("mkdir "+final_path)
         for file in lsinfo:
+            #file = repr(file)
             print file
-            if not file.startswith('.'):
+            if not file.startswith(u'.'):
                 try:
                     id3 = EasyID3(file)
                     print id3
                     try:
-                        artist = id3['artist'][0]
+                        artist = id3[u'artist'][0]
                         print artist
                     except KeyError:
-                        artist = "unknown"
+                        artist = u"unknown"
                     try:
-                        title = id3['title'][0]
+                        title = slugify(id3[u'title'][0], separator=" ")
+                        print title
                     except KeyError:
-                        title = "unknown"
-                    extension = file.split(".")
+                        title = u"unknown"
+                    extension = file.split(u".")
                     extension = extension.pop(len(extension)-1)
                     while filledslots[letter-1][number-1]:
                         number += 1
@@ -99,13 +102,15 @@ class Player():
                             print ("library is full: empty it, skipping")
                             break
                     index = dic[letter]+str(number)
-                    from_path = self.cleanPath(extraction_path) + "/" + \
-                                self.cleanPath(file) + " "
-                    to_path = self.cleanPath(final_path) + "/" + index + "-" + \
-                              self.cleanFileName(title) + "-" + \
-                              self.cleanFileName(artist) + "." + extension
+                    filledslots[letter-1][number-1] = True
+                    from_path = self.cleanPath(extraction_path) + u"/" + \
+                                self.cleanPath(file) + u" "
+                    to_path = self.cleanPath(final_path) + u"/" + index + u"-" + \
+                              self.cleanFileName(title) + u"-" + \
+                              self.cleanFileName(artist) + u"." + extension
 
                     cp_command = "mv " + from_path + " " + to_path
+                    print cp_command
                     #print(cp_command)
                     os.system(cp_command)
                 except mutagen.id3._util.ID3NoHeaderError:

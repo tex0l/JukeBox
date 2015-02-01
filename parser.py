@@ -1,4 +1,4 @@
-from __future__ import unicode_literals
+#from __future__ import unicode_literals
 import glob, os, sys
 
 def path_leaf(path): #recupere le bout d'un chemin systeme
