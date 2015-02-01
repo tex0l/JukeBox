@@ -1,6 +1,9 @@
+from __future__ import unicode_literals
 from mpd import MPDClient
 import config
 import os
+from mutagen.easyid3 import EasyID3
+import mutagen
 
 
 class Player():
@@ -63,46 +66,56 @@ class Player():
     
     def generate_library(self, extraction_path, final_path, filledslots=[]):
         current_path = os.path.abspath(os.path.curdir)
-        os.system("cd "+extraction_path)
+        os.chdir(extraction_path)
+        print os.getcwd()
         lsinfo = os.listdir(".")
+        print lsinfo
         letter = 1
         number = 1
         dic = dict([(1, 'A'), (2, 'B'), (3, 'C'), (4, 'D')])
         os.system("cd "+current_path)
         #os.system("mkdir "+final_path)
-        for e in lsinfo:
-            try:
-                artist = e['artist']
-            except KeyError:
-                artist = "unknown"
-            try:
-                title = e['title']
-            except KeyError:
-                title = "unknown"
-            file_name = e['file']
-            extension = file_name.split(".")
-            extension = extension.pop(len(extension)-1)
-            if letter <= 4:
-                if number == 21:
-                    number =1
-                    letter+=1
-                
-                    
-                index = dic[letter]+str(number)
-                number+=1
-            else:
-                print("too many musics")
-                break;
-            cp_command= "mv "+\
-            self.cleanPath(extraction_path)+"/"+\
-            self.cleanPath(file_name)+" "+\
-            self.cleanPath(final_path)+"/"+\
-            index+"-"+\
-            self.cleanFileName(title)+"-"+\
-            self.cleanFileName(artist)+"."+\
-            extension
-            #print(cp_command)
-            os.system(cp_command)
+        for file in lsinfo:
+            print file
+            if not file.startswith('.'):
+                try:
+                    id3 = EasyID3(file)
+                    print id3
+                    try:
+                        artist = id3['artist'][0]
+                        print artist
+                    except KeyError:
+                        artist = "unknown"
+                    try:
+                        title = id3['title'][0]
+                    except KeyError:
+                        title = "unknown"
+                    extension = file.split(".")
+                    extension = extension.pop(len(extension)-1)
+                    print filledslots
+
+                    while filledslots[letter-1][number-1]:
+                        number += 1
+                        if number == 21 and letter < 4:
+                            number = 1
+                            letter += 1
+                        if letter == 5:
+                            print ("library is full, empty it")
+                            break
+                    index = dic[letter]+str(number)
+                    print index
+                    from_path = self.cleanPath(extraction_path) + "/" + \
+                                self.cleanPath(file) + " "
+                    to_path = self.cleanPath(final_path) + "/" + index + "-" + \
+                              self.cleanFileName(title) + "-" + \
+                              self.cleanFileName(artist) + "." + extension
+
+                    cp_command = "mv " + from_path + " " + to_path
+                    #print(cp_command)
+                    os.system(cp_command)
+                except mutagen.id3._util.ID3NoHeaderError:
+                    print "no id3 tags found"
+
 
 #player =Player()
 #path = raw_input("Entrez le chemin du repertoire a analyser : ")
