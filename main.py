@@ -10,6 +10,7 @@ import parser
 import config
 from raw_input_timout import nonBlockingRawInput
 import music_player
+import time
 
 if config.LCD == "2x40":
     from display_LCDd_2x40 import displayLCDd2x40 as displayLCDd
@@ -61,41 +62,45 @@ while 1:
         print ("List of songs :")
         music_index.printmusicdir()
     else:
-        # Si on n'a pas deja choisi une lettre
-        if entry == "":
-            # Si c'est une lettre
-            if (str(choice)).isalpha():
-                # L'entree devient la lettre en majuscule
-                entry = choice.upper()
-                display.entry(entry)
-            # Echec
-            else:
-                print("Invalid input")
-        else:
-            #si le choix est un nombre
-            if (str(choice)).isdigit():
-                oldEntry=entry
-                #on ajoute a l'entree le nombre correspondant
-                entry += choice
-                # recherche dans l'index des musiques
-                song = music_index.findnumber(entry)
-                #non trouvee
-                if song == "":
-                    print("This song does not exist")
-                #trouvee
+        #On test le timer
+        if ((player.queue_count() < 5) or (time.time()-player.lastAdded > 30)) :
+            # Si on n'a pas deja choisi une lettre
+            if entry == "":
+                # Si c'est une lettre
+                if (str(choice)).isalpha():
+                    # L'entree devient la lettre en majuscule
+                    entry = choice.upper()
+                    display.entry(entry)
+                # Echec
                 else:
-                    print("Song chosen : " + song.artist+"'s "+song.name)
-                    #ajout a la playlist
-                    player.enqueue(song)
-                    print("songs queued :" + str(player.queue_count()))
-                    display.entry(oldEntry, choice, song)
-                    display.setQueue(player.queue_count())
-                entry = ""
-            #on ecrase le choix de la lettre precedente
-            elif (""+choice).isalpha():
-                entry = choice.upper()
-                display.entry(entry)
-            else:  #echec
-                print("Invalid input")
-                entry = ""
-
+                    print("Invalid input")
+            else:
+                #si le choix est un nombre
+                if (str(choice)).isdigit():
+                    oldEntry=entry
+                    #on ajoute a l'entree le nombre correspondant
+                    entry += choice
+                    # recherche dans l'index des musiques
+                    song = music_index.findnumber(entry)
+                    #non trouvee
+                    if song == "":
+                        print("This song does not exist")
+                    #trouvee
+                    else:
+                        print("Song chosen : " + song.artist+"'s "+song.name)
+                        #ajout a la playlist
+                        player.enqueue(song)
+                        print("songs queued :" + str(player.queue_count()))
+                        display.entry(oldEntry, choice, song)
+                        display.setQueue(player.queue_count())
+                    entry = ""
+                #on ecrase le choix de la lettre precedente
+                elif (""+choice).isalpha():
+                    entry = choice.upper()
+                    display.entry(entry)
+                else:  #echec
+                    print("Invalid input")
+                    entry = ""
+        else :
+            print("Wait !")
+            #display.wait()

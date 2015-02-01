@@ -1,6 +1,7 @@
 from mpd import MPDClient
 import config
 import os
+import time
 
 
 class Player():
@@ -12,6 +13,7 @@ class Player():
         #connexion
         self.client = None
         self.connect()
+        self.lastAdded = time.time()
 
     def connect(self):
         #creation du client MPD
@@ -27,6 +29,7 @@ class Player():
         try:
             self.client.add(music.path)
             self.client.play()
+            self.lastAdded = time.time()
         except KeyboardInterrupt:
             raise
         except:
