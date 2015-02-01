@@ -1,3 +1,4 @@
+from __future__ import unicode_literals
 #!/usr/bin/python
 # Version 2
 
@@ -21,17 +22,18 @@ else:
 dic = keyboard_map.Map()
 # initialisation du lecteur
 player = music_player.Player()
-music_index = parser.MusicDir(config.MUSIC_DIR)
 display = displayLCDd()
-print config.INDEX
+music_index = parser.MusicDir(config.MUSIC_DIR)
 if config.INDEX:
-    generate = nonBlockingRawInput("Update music directory ? ((y or yes ) or anything else), 15sec then skipped",
+    generate = nonBlockingRawInput("Update music directory ? ((y or yes ) or anything else), 15sec then skipped \n",
                                    timeout=15)
     if generate == "y" or generate == "yes":
         #extraction_path = raw_input("Extract from ? : ")
         #final_path = config.MUSIC_DIR;
         player.generate_library(config.INDEX_DIR, config.MUSIC_DIR, music_index.filled_slots())
-        player.client.update()
+        #player.client.update()
+
+
 
 print (30 * '-')
 print ("   j u k e b o X")

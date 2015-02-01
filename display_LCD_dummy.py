@@ -1,5 +1,4 @@
-
-
+from __future__ import unicode_literals
 class displayLCDddummy:
 # a class to handle all the display functions of the jukebox and actually display them on a 40x2 display through pyLCDd
     def __init__(self):

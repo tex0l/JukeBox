@@ -1,3 +1,4 @@
+from __future__ import unicode_literals
 #Repertoire de musique
 MUSIC_DIR = "/Users/arantes/JukeMusic"
 #Nombre de musiques sans restriction

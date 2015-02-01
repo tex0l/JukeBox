@@ -1,7 +1,14 @@
+from __future__ import unicode_literals
 from mpd import MPDClient
 import config
 import os
+<<<<<<< HEAD
 import time
+=======
+from mutagen.easyid3 import EasyID3
+import mutagen
+from slugify import slugify
+>>>>>>> FETCH_HEAD
 
 
 class Player():
@@ -65,48 +72,58 @@ class Player():
         return path.replace(" ","\ ").replace("'","\\'").replace("&", "\\&").replace("(","\(").replace(")","\)")
     
     def generate_library(self, extraction_path, final_path, filledslots=[]):
-        current_path=os.path.abspath(os.path.curdir)
-        os.system("cd "+extraction_path)
-        lsinfo = self.client.lsinfo()
-        print(lsinfo)
+        current_path = os.path.abspath(os.path.curdir)
+        os.chdir(extraction_path)
+        lsinfo = os.listdir(".")
         letter = 1
         number = 1
         dic = dict([(1, 'A'), (2, 'B'), (3, 'C'), (4, 'D')])
         os.system("cd "+current_path)
         #os.system("mkdir "+final_path)
-        for e in lsinfo:
-            try:
-                artist = e['artist']
-            except KeyError:
-                artist = "unknown"
-            try:
-                title = e['title']
-            except KeyError:
-                title = "unknown"
-            file_name = e['file']
-            extension = file_name.split(".")
-            extension = extension.pop(len(extension)-1)
-            if letter <= 4:
-                if number == 21:
-                    number =1
-                    letter+=1
-                
-                    
-                index = dic[letter]+str(number)
-                number+=1
+        for file in lsinfo:
+            #file = repr(file)
+            print file
+            if not file.startswith(u'.'):
+                try:
+                    id3 = EasyID3(file)
+                    print id3
+                    try:
+                        artist = id3[u'artist'][0]
+                        print artist
+                    except KeyError:
+                        artist = u"unknown"
+                    try:
+                        title = slugify(id3[u'title'][0], separator=" ")
+                        print title
+                    except KeyError:
+                        title = u"unknown"
+                    extension = file.split(u".")
+                    extension = extension.pop(len(extension)-1)
+                    while filledslots[letter-1][number-1]:
+                        number += 1
+                        if number == 21 and letter < 4:
+                            number = 1
+                            letter += 1
+                        if letter == 5:
+                            print ("library is full: empty it, skipping")
+                            break
+                    index = dic[letter]+str(number)
+                    filledslots[letter-1][number-1] = True
+                    from_path = self.cleanPath(extraction_path) + u"/" + \
+                                self.cleanPath(file) + u" "
+                    to_path = self.cleanPath(final_path) + u"/" + index + u"-" + \
+                              self.cleanFileName(title) + u"-" + \
+                              self.cleanFileName(artist) + u"." + extension
+
+                    cp_command = "mv " + from_path + " " + to_path
+                    print cp_command
+                    #print(cp_command)
+                    os.system(cp_command)
+                except mutagen.id3._util.ID3NoHeaderError:
+                    print "no id3 tags found, ignored"
             else:
-                print("too many musics")
-                break;
-            cp_command= "mv "+\
-            self.cleanPath(extraction_path)+"/"+\
-            self.cleanPath(file_name)+" "+\
-            self.cleanPath(final_path)+"/"+\
-            index+"-"+\
-            self.cleanFileName(title)+"-"+\
-            self.cleanFileName(artist)+"."+\
-            extension
-            #print(cp_command)
-            os.system(cp_command)
+                print "system file, ignored"
+
 
 #player =Player()
 #path = raw_input("Entrez le chemin du repertoire a analyser : ")

@@ -1,3 +1,4 @@
+#from __future__ import unicode_literals
 import glob, os, sys
 
 def path_leaf(path): #recupere le bout d'un chemin systeme
@@ -33,25 +34,25 @@ class MusicDir:
         l = len(self.codes)
         
         for i in range(0,l):
-            if (self.codes[i]==test):
+            if (self.codes[i] == test):
                 return self.musique[i]
             
         return ""
 
     def filled_slots(self):
+
+        dic = dict([(1, 'A'), (2, 'B'), (3, 'C'), (4, 'D')])
+        filledslots = [[],[],[],[]]
         letter = 1
-        number = 1
-        dic = dict([(1,'A'),(2,'B'),(3,'C'),(4,'D')])
-        filledslots = []
-        if letter <= 4:
-            if number == 21:
-                number = 1
-                letter += 1
-            if self.findnumber(dic[letter]+str(number)) <> "":
-                filledslots.append(True)
-            else:
-                filledslots.append(False)
-            number += 1
+        while letter <= 4:
+            number = 0
+            while number < 20:
+                number += 1
+                if self.findnumber(dic[letter]+str(number)) != "":
+                    filledslots[letter-1].append(True)
+                else:
+                    filledslots[letter-1].append(False)
+            letter += 1
         return filledslots
     
         
