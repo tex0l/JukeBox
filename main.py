@@ -19,7 +19,8 @@ player = music_player.Player()
 music_index = parser.MusicDir(config.MUSIC_DIR)
 display = displayLCDd2x40()
 if config.INDEX:
-    generate = raw_input_with_timeout("Update music directory ? ((y or yes ) or anything else)", timeout=15.0)
+    generate = raw_input_with_timeout("Update music directory ? ((y or yes ) or anything else), 15sec then skipped",
+                                      timeout=15.0)
     if generate == "y" or generate == "yes":
         #extraction_path = raw_input("Extract from ? : ")
         #final_path = config.MUSIC_DIR;
