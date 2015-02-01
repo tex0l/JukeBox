@@ -5,7 +5,7 @@ import music_player
 
 
 class UpdateThread(threading.Thread):
-    def __init__(self,display):
+    def __init__(self, display):
         threading.Thread.__init__(self)
         self.alive = threading.Event()
         self.alive.set()

@@ -9,15 +9,20 @@ import keyboard_map
 import parser
 import config
 from raw_input_timout import raw_input_with_timeout
+import music_player
 
-from display_LCDd_2x40 import *
+if config.LCD == "2x40":
+    from display_LCDd_2x40 import displayLCDd2x40 as displayLCDd
+else:
+    from display_LCD_dummy import displayLCDddummy as displayLCDd
 
 # initialisation du dictionnaire
 dic = keyboard_map.Map()
 # initialisation du lecteur
 player = music_player.Player()
 music_index = parser.MusicDir(config.MUSIC_DIR)
-display = displayLCDd2x40()
+display = displayLCDd()
+print config.INDEX
 if config.INDEX:
     generate = raw_input_with_timeout("Update music directory ? ((y or yes ) or anything else), 15sec then skipped",
                                       timeout=15.0)
@@ -25,6 +30,7 @@ if config.INDEX:
         #extraction_path = raw_input("Extract from ? : ")
         #final_path = config.MUSIC_DIR;
         player.generate_library(config.INDEX_DIR, config.MUSIC_DIR, music_index.filled_slots())
+        player.client.update()
 
 print (30 * '-')
 print ("   j u k e b o X")
@@ -38,7 +44,7 @@ entry = ""
 # indexation des musiques
 music_index = parser.MusicDir(config.MUSIC_DIR)
 
-while 1 :
+while 1:
     sys.stdout.write('Enter your choice : ')
     sys.stdout.flush()
     # Recuperation de la frappe clavier
@@ -74,7 +80,7 @@ while 1 :
                 # recherche dans l'index des musiques
                 song = music_index.findnumber(entry)
                 #non trouvee
-                if song=="":
+                if song == "":
                     print("This song does not exist")
                 #trouvee
                 else:
@@ -84,12 +90,12 @@ while 1 :
                     print("songs queued :" + str(player.queue_count()))
                     display.entry(oldEntry, choice, song)
                     display.setQueue(player.queue_count())
-                entry=""
+                entry = ""
             #on ecrase le choix de la lettre precedente
             elif (""+choice).isalpha():
-                entry=choice.upper()
+                entry = choice.upper()
                 display.entry(entry)
             else:  #echec
                 print("Invalid input")
-                entry=""
+                entry = ""
 

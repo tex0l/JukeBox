@@ -19,9 +19,9 @@ class Player():
         self.client.timeout = None
         self.client.idletimeout = None
         self.client.connect("localhost", 6600)
-        self.client.update()
-        self.client.consume(1)
-        self.client.crossfade(1)
+        #self.client.update()
+        #self.client.consume(1)
+        #self.client.crossfade(1)
 
     def enqueue(self, music):
         try:
