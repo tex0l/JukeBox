@@ -62,10 +62,9 @@ class Player():
         return path.replace(" ","\ ").replace("'","\\'").replace("&", "\\&").replace("(","\(").replace(")","\)")
     
     def generate_library(self, extraction_path, final_path, filledslots=[]):
-        current_path=os.path.abspath(os.path.curdir)
+        current_path = os.path.abspath(os.path.curdir)
         os.system("cd "+extraction_path)
-        lsinfo = self.client.lsinfo()
-        print(lsinfo)
+        lsinfo = os.listdir(".")
         letter = 1
         number = 1
         dic = dict([(1, 'A'), (2, 'B'), (3, 'C'), (4, 'D')])
