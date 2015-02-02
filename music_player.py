@@ -1,14 +1,11 @@
 from __future__ import unicode_literals
-from mpd import MPDClient
+from mpd import MPDClient,ConnectionError
 import config
 import os
-<<<<<<< HEAD
 import time
-=======
 from mutagen.easyid3 import EasyID3
 import mutagen
 from slugify import slugify
->>>>>>> FETCH_HEAD
 
 
 class Player():
@@ -28,9 +25,9 @@ class Player():
         self.client.timeout = None
         self.client.idletimeout = None
         self.client.connect("localhost", 6600)
-        #self.client.update()
-        #self.client.consume(1)
-        #self.client.crossfade(1)
+        self.client.update()
+        self.client.consume(1)
+        self.client.crossfade(1)
 
     def enqueue(self, music):
         try:
@@ -39,32 +36,57 @@ class Player():
             self.lastAdded = time.time()
         except KeyboardInterrupt:
             raise
+        except ConnectionError:
+            self.connect()
+            self.enqueue(music)
         except:
             self.connect()
             self.enqueue(music)
     def isPlaying(self):
-        status = self.client.status()
-        return status['state']=='play'
+        try:
+            status = self.client.status()
+            return status['state']=='play'
+        except ConnectionError:
+            self.connect()
+            return (self.isPlaying())
     def title(self):
         try :
             return self.client.currentsong()['title']
+        except ConnectionError:
+            self.connect()
+            return (self.title())
         except:
             return ""
     def artist(self):
         try:
             return self.client.currentsong()['artist']
+        except ConnectionError:
+            self.connect()
+            return (self.artist())
         except:
             return ""
     def number(self):
         try:
             return self.client.currentsong()['file'].split("-")[0]
+        except ConnectionError:
+            self.connect()
+            return (self.isPlaying())
         except:
             return ""
     def queue_count(self):
-        playlist = self.client.playlist()
-        return len(playlist)
+        try:
+            playlist = self.client.playlist()
+            return len(playlist)
+        except ConnectionError:
+            self.connect()
+            return (self.queue_count())
     def exit(self):
-        self.client.disconnect()
+        try:
+            self.client.disconnect()
+        except ConnectionError:
+            self.connect()
+            self.exit()
+            return
         os.system("killall mpd")
     def cleanFileName(self,path):
         return self.cleanPath(path).replace("/","\ ")

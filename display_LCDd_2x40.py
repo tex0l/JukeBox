@@ -19,6 +19,7 @@ class UpdateThread(threading.Thread):
         while self.alive.isSet():
             time.sleep(0.1)
             self.display.setQueue(self.player.queue_count())
+            self.display.waitingEntry()
             if self.player.isPlaying():
                 if self.player.number() != self.playing:
                     self.display.playingSong(self.player.number(), self.player.title(), self.player.artist())
@@ -42,8 +43,12 @@ class displayLCDd2x40:
         self.UT = UpdateThread(self)
         self.UT.start()
         self.timer = None
+        self.entryInProgress = False
+        self.lastAdded = time.time()
+        self.queue = 0
 
     def setQueue(self, q):  # Change the length of the queue displayed
+        self.queue = q
         self.queueString.setText("Queue : %d" % q)
 
     def waiting(self):
@@ -55,14 +60,24 @@ class displayLCDd2x40:
         self.line2.setText("%s - %s - %s"%(number, title, artist))
 
     def removeEntry(self):
-        self.entryString.setText("Choose song")
+        self.entryInProgress = False
+        self.waitingEntry()
+
+    def waitingEntry(self):
+        if self.entryInProgress is False:
+            if (self.queue < 5) or (time.time()-self.lastAdded > 30):
+                self.entryString.setText("Choose song")
+            else:
+                self.entryString.setText("Wait %s seconds" % (int(31-time.time()+self.lastAdded)))
 
     def entry(self, letter, number="_", song=None):
+        self.entryInProgress = True
         text = "Entry : %s%s" % (letter.upper(), number)
         if self.timer is not None:
             self.timer.cancel()
         if song is not None:
             text += " - %s - %s" % (song.name, song.artist)
-            self.timer = threading.Timer(5,self.removeEntry)
+            self.lastAdded = time.time()
+            self.timer = threading.Timer(5, self.removeEntry)
             self.timer.start()
         self.entryString.setText(text)
