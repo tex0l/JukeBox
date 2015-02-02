@@ -10,6 +10,7 @@ from slugify import slugify
 class Player():
     def __init__(self, launch=True):
         if launch:
+            os.system("killall mpd")
             command = unicode("mpd %s" % config.MPD_CONF_FILE)
             #lancement de mpd
             os.system(command)
