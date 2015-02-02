@@ -1,5 +1,7 @@
 #from __future__ import unicode_literals
-import glob, os, sys
+import glob, os, sys, config
+from mutagen.easyid3 import EasyID3
+
 
 def path_leaf(path): #recupere le bout d'un chemin systeme
     head, tail = os.path.split(path)
@@ -8,7 +10,7 @@ def path_leaf(path): #recupere le bout d'un chemin systeme
 class MusicDir:
     def __init__(self, path):
         #chemin du repertoire
-        self.path = os.path.abspath(path)
+        self.path = os.path.join(os.path.dirname(__file__),path)
         os.chdir(self.path)
         fichiers = glob.glob("*")
         #listes des objets Music
@@ -63,23 +65,25 @@ class Music:
         self.path = path
         #nom du fichier
         self.file_name = path_leaf(self.path)
-        liste = self.file_name.split("-")
+        id3 = EasyID3(path)
         #index
-        self.number = liste[0]
-        #nom
-        self.name = liste[1]
+        self.number = self.file_name.split("-")[0]
         #artiste
-        self.artist = liste[2].split(".")
-        l = len(self.artist)
+        try:
+            self.artist = id3[u'artist'][0]
+        except KeyError:
+            self.artist = u"unknown"
+        #nom
+        try:
+            self.name = id3[u'title'][0]
+        except KeyError:
+            self.name = u"unknown"
         #format
-        self.format = self.artist.pop(l-1)
-        if l>2:
-            self.artist = ".".join(self.artist)
-        else:
-            self.artist = self.artist[0];
+        self.format = self.file_name.split(".")[-1]
+
         
     def printmusic(self):
-        print self.number+" "+self.name+" "+self.artist+" "+self.format
+        print self.number+" - "+self.name+" - "+self.artist+" - "+self.format
     
     def display(self):
         return "%s : %s by %s" % (self.number, self.name, self.artist)

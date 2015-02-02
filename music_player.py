@@ -98,17 +98,17 @@ class Player():
         return path.replace(" ","\ ").replace("'","\\'").replace("&", "\\&").replace("(","\(").replace(")","\)")
     
     def generate_library(self, extraction_path, final_path, filledslots=[]):
-        current_path = os.path.abspath(os.path.curdir)
-        os.chdir(os.path.abspath(extraction_path))
+        current_path = os.getcwd()
+        import_path = os.path.join(os.path.dirname(__file__), extraction_path)
+        export_path = os.path.join(os.path.dirname(__file__), final_path)
+        os.chdir(import_path)
         lsinfo = os.listdir(".")
         letter = 1
         number = 1
         dic = dict([(1, 'A'), (2, 'B'), (3, 'C'), (4, 'D')])
-        os.system("cd "+current_path)
         #os.system("mkdir "+final_path)
         for file in lsinfo:
             #file = repr(file)
-            print file
             if not file.startswith(u'.'):
                 try:
                     id3 = EasyID3(file)
@@ -134,9 +134,9 @@ class Player():
                             break
                     index = dic[letter]+str(number)
                     filledslots[letter-1][number-1] = True
-                    from_path = self.cleanPath(extraction_path) + u"/" + \
+                    from_path = self.cleanPath(import_path) + u"/" + \
                                 self.cleanPath(file) + u" "
-                    to_path = self.cleanPath(final_path) + u"/" + index + u"-" + \
+                    to_path = self.cleanPath(export_path) + u"/" + index + u"-" + \
                               self.cleanFileName(title) + u"-" + \
                               self.cleanFileName(artist) + u"." + extension
 
@@ -148,6 +148,7 @@ class Player():
                     print "no id3 tags found, ignored"
             else:
                 print "system file, ignored"
+        os.chdir(current_path)
 
 
 #player =Player()
