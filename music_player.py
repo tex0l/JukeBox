@@ -7,7 +7,6 @@ from mutagen.easyid3 import EasyID3
 import mutagen
 from slugify import slugify
 
-
 class Player():
     def __init__(self, launch=True):
         if launch:
@@ -39,9 +38,7 @@ class Player():
         except ConnectionError:
             self.connect()
             self.enqueue(music)
-        except:
-            self.connect()
-            self.enqueue(music)
+
     def isPlaying(self):
         try:
             status = self.client.status()
@@ -49,6 +46,7 @@ class Player():
         except ConnectionError:
             self.connect()
             return (self.isPlaying())
+
     def title(self):
         try :
             return self.client.currentsong()['title']
@@ -57,6 +55,7 @@ class Player():
             return (self.title())
         except:
             return ""
+
     def artist(self):
         try:
             return self.client.currentsong()['artist']
@@ -65,6 +64,7 @@ class Player():
             return (self.artist())
         except:
             return ""
+
     def number(self):
         try:
             return self.client.currentsong()['file'].split("-")[0]
@@ -73,6 +73,7 @@ class Player():
             return (self.isPlaying())
         except:
             return ""
+
     def queue_count(self):
         try:
             playlist = self.client.playlist()
@@ -80,6 +81,7 @@ class Player():
         except ConnectionError:
             self.connect()
             return (self.queue_count())
+
     def exit(self):
         try:
             self.client.disconnect()
@@ -88,8 +90,10 @@ class Player():
             self.exit()
             return
         os.system("killall mpd")
+
     def cleanFileName(self,path):
         return self.cleanPath(path).replace("/","\ ")
+
     def cleanPath(self,path):
         return path.replace(" ","\ ").replace("'","\\'").replace("&", "\\&").replace("(","\(").replace(")","\)")
     
@@ -110,8 +114,7 @@ class Player():
                     id3 = EasyID3(file)
                     print id3
                     try:
-                        artist = id3[u'artist'][0]
-                        print artist
+                        artist = slugify(id3[u'artist'][0], separator=" ")
                     except KeyError:
                         artist = u"unknown"
                     try:
@@ -138,7 +141,7 @@ class Player():
                               self.cleanFileName(artist) + u"." + extension
 
                     cp_command = "mv " + from_path + " " + to_path
-                    print cp_command
+                    print "\nmoved" + from_path + "\nto" + to_path
                     #print(cp_command)
                     os.system(cp_command)
                 except mutagen.id3._util.ID3NoHeaderError:
