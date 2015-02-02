@@ -8,8 +8,8 @@ def path_leaf(path): #recupere le bout d'un chemin systeme
 class MusicDir:
     def __init__(self, path):
         #chemin du repertoire
-        self.path = path
-        os.chdir(path)
+        self.path = os.path.abspath(path)
+        os.chdir(self.path)
         fichiers = glob.glob("*")
         #listes des objets Music
         self.musique = []

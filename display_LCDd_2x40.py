@@ -3,6 +3,7 @@ import pyLCDd
 import threading
 import time
 import music_player
+import config
 
 
 class UpdateThread(threading.Thread):
@@ -36,7 +37,7 @@ class displayLCDd2x40:
 # a class to handle all the display functions of the jukebox and actually display them on a 40x2 display through pyLCDd
     def __init__(self):
         self.display = pyLCDd.pyLCDd("localhost", 13666, "jukeboX")
-        self.entryString = self.display.addScroller(1, 1, 29, 4).setText("Choose song")
+        self.entryString = self.display.addScroller(1, 1, 28, 4).setText("Choose song")
         self.queueString = self.display.addString(30, 1).setText("Queue : 0")
         self.icon = self.display.addIcon(1, 2).setIcon("STOP")
         self.line2 = self.display.addScroller(3, 2, 38, 4)
@@ -65,10 +66,10 @@ class displayLCDd2x40:
 
     def waitingEntry(self):
         if self.entryInProgress is False:
-            if (self.queue < 5) or (time.time()-self.lastAdded > 30):
+            if (self.queue < config.NB_MUSIC) or (time.time()-self.lastAdded > config.TIMEOUT):
                 self.entryString.setText("Choose song")
             else:
-                self.entryString.setText("Wait %s seconds" % (int(31-time.time()+self.lastAdded)))
+                self.entryString.setText("Wait %s seconds" % (int(config.TIMEOUT+1-time.time()+self.lastAdded)))
 
     def entry(self, letter, number="_", song=None):
         self.entryInProgress = True

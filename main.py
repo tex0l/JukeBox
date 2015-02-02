@@ -65,7 +65,7 @@ while 1:
         music_index.printmusicdir()
     else:
         #On test le timer
-        if ((player.queue_count() < 5) or (time.time()-player.lastAdded > 30)) :
+        if ((player.queue_count() < config.NB_MUSIC) or (time.time()-player.lastAdded > config.TIMEOUT)) :
             # Si on n'a pas deja choisi une lettre
             if entry == "":
                 # Si c'est une lettre

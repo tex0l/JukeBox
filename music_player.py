@@ -99,7 +99,7 @@ class Player():
     
     def generate_library(self, extraction_path, final_path, filledslots=[]):
         current_path = os.path.abspath(os.path.curdir)
-        os.chdir(extraction_path)
+        os.chdir(os.path.abspath(extraction_path))
         lsinfo = os.listdir(".")
         letter = 1
         number = 1
