@@ -205,6 +205,7 @@ class Jukebox:
         else:
             remaining_time = loaded_config.variables['add_timeout'] - time_elapsed
             logging.info("Waiting for timeout, still %s secs to wait" % remaining_time)
+	    return ''
 
     @staticmethod
     def print_help():
