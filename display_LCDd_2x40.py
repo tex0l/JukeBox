@@ -8,6 +8,9 @@ import music_player
 
 
 class UpdateThread(threading.Thread):
+    """
+
+    """
     def __init__(self, display, CONF):
         threading.Thread.__init__(self)
         self.alive = threading.Event()

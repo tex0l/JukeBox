@@ -8,6 +8,7 @@ import logging
 from tags import tag_finder
 import slugify
 
+
 class Player():
     def __init__(self, CONF, launch=True):
         if launch:
@@ -15,7 +16,7 @@ class Player():
             os.system("killall mpd")
             command = unicode("mpd %s" % CONF.paths['mpd_conf_file'])
             #lancement de mpd
-            logging.info("Starting MPD...")
+            logging.info("Starting MPD")
             os.system(command)
         #connexion
         self.client = None
@@ -30,7 +31,7 @@ class Player():
         self.client.timeout = None
         self.client.idletimeout = None
         self.client.connect(self.CONF.network['mpd_host'], self.CONF.network['mpd_port'])
-        logging.info("Updating MPD client...")
+        logging.info("Updating MPD client")
         self.client.update()
         self.client.consume(1)
         self.client.crossfade(1)
