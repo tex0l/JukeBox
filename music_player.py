@@ -1,5 +1,5 @@
 from __future__ import unicode_literals
-from mpd import MPDClient,ConnectionError
+from mpd import MPDClient, ConnectionError
 import config
 import os
 import time
@@ -8,23 +8,25 @@ import mutagen
 from slugify import slugify
 
 class Player():
-    def __init__(self, launch=True):
+    def __init__(self, CONF, launch=True):
         if launch:
             os.system("killall mpd")
-            command = unicode("mpd %s" % config.MPD_CONF_FILE)
+            command = unicode("mpd %s" % CONF.paths['mpd_conf_file'])
             #lancement de mpd
             os.system(command)
         #connexion
         self.client = None
+        self.CONF = CONF
         self.connect()
         self.lastAdded = time.time()
+
 
     def connect(self):
         #creation du client MPD
         self.client = MPDClient()
         self.client.timeout = None
         self.client.idletimeout = None
-        self.client.connect("localhost", 6600)
+        self.client.connect(self.CONF.network['host'], self.CONF.network['port'])
         self.client.update()
         self.client.consume(1)
         self.client.crossfade(1)

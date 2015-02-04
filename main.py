@@ -8,29 +8,29 @@ import sys
 import getch
 import keyboard_map
 import parser
-import config
+from config import Config
 from raw_input_timout import nonBlockingRawInput
 import music_player
 import time
+import config
+CONF = Config()
 
-if config.LCD == "2x40":
-    from display_LCDd_2x40 import displayLCDd2x40 as displayLCDd
-else:
-    from display_LCD_dummy import displayLCDddummy as displayLCDd
+from display import DisplayChooser
+
 
 # initialisation du dictionnaire
 dic = keyboard_map.Map()
 # initialisation du lecteur
-player = music_player.Player()
-display = displayLCDd()
-music_index = parser.MusicDir(config.MUSIC_DIR)
-if config.INDEX:
+player = music_player.Player(CONF, launch=True)
+display = DisplayChooser(CONF=CONF).display
+music_index = parser.MusicDir(CONF.paths['music_dir'])
+if CONF.variables['index']:
     generate = nonBlockingRawInput("Update music directory ? ((y or yes ) or anything else), 15sec then skipped \n",
-                                   timeout=15)
+                                   timeout=5)
     if generate == "y" or generate == "yes":
         #extraction_path = raw_input("Extract from ? : ")
         #final_path = config.MUSIC_DIR;
-        player.generate_library(config.INDEX_DIR, config.MUSIC_DIR, music_index.filled_slots())
+        player.generate_library(CONF.paths['index_dir'], CONF.paths['music_dir'], music_index.filled_slots())
         #player.client.update()
 
 
@@ -45,7 +45,7 @@ print (30 * '-')
 # choix de musique, est vide avant le choix d'une lettre A-D, puis est complete par un nombre 1-20 sauf si erreur -> ""
 entry = ""
 # indexation des musiques
-music_index = parser.MusicDir(config.MUSIC_DIR)
+music_index = parser.MusicDir(CONF.paths['music_dir'])
 
 while 1:
     sys.stdout.write('Enter your choice : ')
@@ -65,7 +65,7 @@ while 1:
         music_index.printmusicdir()
     else:
         #On test le timer
-        if ((player.queue_count() < config.NB_MUSIC) or (time.time()-player.lastAdded > config.TIMEOUT)) :
+        if ((player.queue_count() < CONF.variables['nb_music']) or (time.time()-player.lastAdded > CONF.variables['timeout'])) :
             # Si on n'a pas deja choisi une lettre
             if entry == "":
                 # Si c'est une lettre

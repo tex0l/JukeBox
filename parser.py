@@ -1,5 +1,6 @@
-#from __future__ import unicode_literals
-import glob, os, sys, config
+from __future__ import unicode_literals
+import glob
+import os
 from mutagen.easyid3 import EasyID3
 
 
@@ -10,7 +11,7 @@ def path_leaf(path): #recupere le bout d'un chemin systeme
 class MusicDir:
     def __init__(self, path):
         #chemin du repertoire
-        self.path = os.path.join(os.path.dirname(__file__),path)
+        self.path = os.path.join(os.path.dirname(__file__), path)
         os.chdir(self.path)
         fichiers = glob.glob("*")
         #listes des objets Music
