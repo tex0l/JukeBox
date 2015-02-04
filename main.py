@@ -12,28 +12,32 @@ from config import Config
 from raw_input_timout import nonBlockingRawInput
 import music_player
 import time
-import config
+
 CONF = Config()
 
 from display import DisplayChooser
 
 
 # initialisation du dictionnaire
+print "Initializing dictionnary..."
 dic = keyboard_map.Map()
 # initialisation du lecteur
+print "Initializing player..."
 player = music_player.Player(CONF, launch=True)
+print "Initializing display"
 display = DisplayChooser(CONF=CONF).display
+print "Initializing library"
 music_index = parser.MusicDir(CONF.paths['music_dir'])
 if CONF.variables['index']:
-    generate = nonBlockingRawInput("Update music directory ? ((y or yes ) or anything else), 15sec then skipped \n",
-                                   timeout=5)
+    generate = nonBlockingRawInput("To update music directory, type 'y' or 'yes', %s secs then skipped \n" %
+                                   CONF.variables['index_timeout'], timeout=CONF.variables['index_timeout'])
     if generate == "y" or generate == "yes":
         #extraction_path = raw_input("Extract from ? : ")
         #final_path = config.MUSIC_DIR;
+        print "Parsing import directory"
         player.generate_library(CONF.paths['index_dir'], CONF.paths['music_dir'], music_index.filled_slots())
-        #player.client.update()
-
-
+        print "Updating music library"
+        music_index = parser.MusicDir(CONF.paths['music_dir'])
 
 print (30 * '-')
 print ("   j u k e b o X")
@@ -45,7 +49,7 @@ print (30 * '-')
 # choix de musique, est vide avant le choix d'une lettre A-D, puis est complete par un nombre 1-20 sauf si erreur -> ""
 entry = ""
 # indexation des musiques
-music_index = parser.MusicDir(CONF.paths['music_dir'])
+
 
 while 1:
     sys.stdout.write('Enter your choice : ')

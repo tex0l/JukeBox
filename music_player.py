@@ -10,13 +10,16 @@ from slugify import slugify
 class Player():
     def __init__(self, CONF, launch=True):
         if launch:
+            print "Killing MPD in case it's already started..."
             os.system("killall mpd")
+            print "Starting MPD..."
             command = unicode("mpd %s" % CONF.paths['mpd_conf_file'])
             #lancement de mpd
             os.system(command)
         #connexion
         self.client = None
         self.CONF = CONF
+        print "Connecting to MPD..."
         self.connect()
         self.lastAdded = time.time()
 
@@ -26,7 +29,8 @@ class Player():
         self.client = MPDClient()
         self.client.timeout = None
         self.client.idletimeout = None
-        self.client.connect(self.CONF.network['host'], self.CONF.network['port'])
+        self.client.connect(self.CONF.network['mpd_host'], self.CONF.network['mpd_port'])
+        print "Updating MPD client..."
         self.client.update()
         self.client.consume(1)
         self.client.crossfade(1)
@@ -104,36 +108,37 @@ class Player():
         current_path = os.getcwd()
         import_path = os.path.join(os.path.dirname(__file__), extraction_path)
         export_path = os.path.join(os.path.dirname(__file__), final_path)
+        print "Changing directory to %s" % import_path
         os.chdir(import_path)
         lsinfo = os.listdir(".")
         letter = 1
         number = 1
         dic = dict([(1, 'A'), (2, 'B'), (3, 'C'), (4, 'D')])
-        #os.system("mkdir "+final_path)
         for file in lsinfo:
-            #file = repr(file)
+            print "\nCurrently working on %s ..." % file
             if not file.startswith(u'.'):
                 try:
                     id3 = EasyID3(file)
-                    print id3
                     try:
                         artist = slugify(id3[u'artist'][0], separator=" ")
                     except KeyError:
                         artist = u"unknown"
                     try:
                         title = slugify(id3[u'title'][0], separator=" ")
-                        print title
                     except KeyError:
                         title = u"unknown"
+                    print "Artist : %s" % artist
+                    print "Title : %s" % title
                     extension = file.split(u".")
                     extension = extension.pop(len(extension)-1)
+                    print "Extension : %s" % extension
                     while filledslots[letter-1][number-1]:
                         number += 1
                         if number == 21 and letter < 4:
                             number = 1
                             letter += 1
                         if letter == 5:
-                            print ("library is full: empty it, skipping")
+                            print ("Library is full: empty it ! skipping...")
                             break
                     index = dic[letter]+str(number)
                     filledslots[letter-1][number-1] = True
@@ -144,17 +149,19 @@ class Player():
                               self.cleanFileName(artist) + u"." + extension
 
                     cp_command = "mv " + from_path + " " + to_path
-                    print "\nmoved" + from_path + "\nto" + to_path
+
                     #print(cp_command)
-                    os.system(cp_command)
+                    try:
+                        print "moving" + from_path + "to" + to_path
+                        os.system(cp_command)
+                        print "Succeed !"
+                    except:
+                        print "Failed :("
+
                 except mutagen.id3._util.ID3NoHeaderError:
-                    print "no id3 tags found, ignored"
+                    print "No id3 tags found, ignored... sorry :("
             else:
-                print "system file, ignored"
+                print "System file, ignored."
+        print "All musics in import directory have been processed."
+        print "Changing directory to %s." % current_path
         os.chdir(current_path)
-
-
-#player =Player()
-#path = raw_input("Entrez le chemin du repertoire a analyser : ")
-#os.system("mkdir ./Music")
-#player.listinfo(path,"./Music")

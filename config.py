@@ -6,44 +6,62 @@ class Config():
     def __init__(self):
         self.config_file = "/etc/jukebox.ini"
         self.Config = ConfigParser.ConfigParser()
-        print "\nreading config file..."
+        print "reading config file..."
         self.Config.read(self.config_file)
         if self.Config.sections() == []:
+            print "config file is empty"
             self.generate()
         self.network = self.ConfigSectionMap('Network')
         self.paths = self.ConfigSectionMap('Paths')
         self.variables = self.ConfigSectionMap('Variables')
-        print self.network
-        print self.paths
-        print self.variables
+        self.lcd = self.ConfigSectionMap('LCD')
+        self.print_config()
 
+    def print_config(self):
+        print "Network options :"
         print self.network
+        print "Paths options :"
+        print self.paths
+        print "Miscellaneous variables :"
+        print self.variables
     def generate(self):
+        print "writing config file..."
         cfgfile = open(self.config_file, 'w')
         self.Config.add_section('Network')
-        self.Config.set('Network', 'host', '127.0.0.1')
-        self.Config.set('Network', 'port', 6600)
+        self.Config.set('Network', 'mpd_host', '127.0.0.1')
+        self.Config.set('Network', 'mpd_port', '6600')
         self.Config.add_section('Paths')
         self.Config.set('Paths', 'music_dir', 'Music')
         self.Config.set('Paths', 'index_dir', 'Import')
         self.Config.set('Paths', 'mpd_conf_file', '/etc/mpd.conf')
         self.Config.add_section('Variables')
-        self.Config.set('Variables', 'index', True)
-        self.Config.set('Variables', 'lcd', '2x40')
-        self.Config.set('Variables', 'timeout', 30)
-        self.Config.set('Variables', 'nb_music', 5)
+        #indexation au demarrage ?
+        self.Config.set('Variables', 'index', 'True')
+        self.Config.set('Variables', 'index_timeout', '5')
+        #amount of musics in queue before timeout is activated
+        self.Config.set('Variables', 'add_timeout', '30')
+        self.Config.set('Variables', 'nb_music', '5')
+        self.Config.add_section('LCD')
+        self.Config.set('LCD', 'type', 'dummy')
+        self.Config.set('LCD', 'LCDd_host', 'localhost')
+        self.Config.set('LCD', 'LCDd_port', '13666')
         self.Config.write(cfgfile)
         cfgfile.close()
-        print self.Config
     def ConfigSectionMap(self, section):
         dict1 = {}
         options = self.Config.options(section)
         for option in options:
             try:
-                dict1[option] = self.Config.get(section, option)
+                dict1[option] = self.Config.getint(section, option)
                 if dict1[option] == -1:
                     print "skip: %s" % option
             except:
-                print("exception on %s!" % option)
-                dict1[option] = None
+                try:
+                    dict1[option] = self.Config.getboolean(section, option)
+                except:
+                    try:
+                        dict1[option] = self.Config.get(section, option)
+                    except:
+                        print("exception on %s!" % option)
+
         return dict1
