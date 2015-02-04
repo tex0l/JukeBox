@@ -1,4 +1,6 @@
 from __future__ import unicode_literals
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 import pyLCDd
 import threading
 import time
@@ -37,7 +39,7 @@ class displayLCDd2x40:
 # a class to handle all the display functions of the jukebox and actually display them on a 40x2 display through pyLCDd
     def __init__(self, CONF):
         self.CONF = CONF
-        self.display = pyLCDd.pyLCDd(self.CONF.lcd['LCDd_host'], self.CONF.lcd['LCDd_port'], "jukeboX")
+        self.display = pyLCDd.pyLCDd(self.CONF.lcd['lcdd_host'], self.CONF.lcd['lcdd_port'], "jukeboX")
         self.entryString = self.display.addScroller(1, 1, 28, 4).setText("Choose song")
         self.queueString = self.display.addString(30, 1).setText("Queue : 0")
         self.icon = self.display.addIcon(1, 2).setIcon("STOP")

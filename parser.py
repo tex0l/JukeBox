@@ -1,8 +1,9 @@
 from __future__ import unicode_literals
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 import glob
 import os
 from tags import tag_finder
-from mutagen.easyid3 import EasyID3
 
 
 def path_leaf(path): #recupere le bout d'un chemin systeme
@@ -23,15 +24,10 @@ class MusicDir:
         #indexation iterative
         for file in fichiers:
             try:
-                print"0"
                 self.musique.append(Music(file))
-                print"1"
                 l = len(self.musique)
-                print"2"
                 self.codes.append(self.musique[l-1].number)
-                print"3"
-            except Exception as e:
-                print e
+            except:
                 print(file+" is incorrectly named. Try updating the database")
 
     # impression de la liste des musiques
@@ -77,9 +73,7 @@ class Music:
 
 
     def find_tags(self):
-        print "self.path : %s" % self.path
         tags = tag_finder(self.path)
-        print "tags : %s" % tags
         #Audio file mode
         #index
         self.number = self.file_name.split("-")[0]

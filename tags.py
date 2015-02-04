@@ -1,4 +1,6 @@
 from __future__ import unicode_literals
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 from mutagen.easyid3 import EasyID3
 from mutagen.easymp4 import EasyMP4
 import logging

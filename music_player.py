@@ -1,4 +1,6 @@
 from __future__ import unicode_literals
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 from mpd import MPDClient, ConnectionError
 import os
 import time
