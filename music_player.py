@@ -150,6 +150,7 @@ class Player():
         logging.info("All musics in import directory have been processed.")
         logging.debug("Changing directory to %s." % current_path)
         os.chdir(current_path)
+
     @staticmethod
     def get_absolute_path(path):
         return os.path.join(os.path.dirname(__file__), path)
