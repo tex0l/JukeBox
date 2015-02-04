@@ -1,6 +1,7 @@
 from __future__ import unicode_literals
 import glob
 import os
+from tags import tag_finder
 from mutagen.easyid3 import EasyID3
 
 
@@ -13,6 +14,7 @@ class MusicDir:
         #chemin du repertoire
         self.path = os.path.join(os.path.dirname(__file__), path)
         os.chdir(self.path)
+        print os.chdir(self.path)
         fichiers = glob.glob("*")
         #listes des objets Music
         self.musique = []
@@ -21,10 +23,15 @@ class MusicDir:
         #indexation iterative
         for file in fichiers:
             try:
+                print"0"
                 self.musique.append(Music(file))
-                l=len(self.musique)
+                print"1"
+                l = len(self.musique)
+                print"2"
                 self.codes.append(self.musique[l-1].number)
-            except:
+                print"3"
+            except Exception as e:
+                print e
                 print(file+" is incorrectly named. Try updating the database")
 
     # impression de la liste des musiques
@@ -66,12 +73,13 @@ class Music:
         self.path = path
         #nom du fichier
         self.file_name = path_leaf(self.path)
-
         self.find_tags()
 
 
     def find_tags(self):
-        tags = EasyID3(self.path)
+        print "self.path : %s" % self.path
+        tags = tag_finder(self.path)
+        print "tags : %s" % tags
         #Audio file mode
         #index
         self.number = self.file_name.split("-")[0]

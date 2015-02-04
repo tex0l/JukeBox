@@ -4,6 +4,7 @@ import os
 import time
 import logging
 from tags import tag_finder
+import slugify
 
 class Player():
     def __init__(self, CONF, launch=True):
@@ -55,7 +56,7 @@ class Player():
             return self.is_playing()
 
     def title(self):
-        try :
+        try:
             return self.client.currentsong()['title']
         except ConnectionError:
             logging.warning("Unable to contact daemon, reconnecting and retry")
@@ -137,8 +138,8 @@ class Player():
             from_path = self.format_path(import_path) + u"/" + \
                         self.format_path(file_path) + u" "
             to_path = self.format_path(export_path) + u"/" + result['index'] + u"-" + \
-                      self.format_file_name(tags['title']) + u"-" + \
-                      self.format_file_name(tags['artist']) + u"." + tags['extension']
+                      self.format_file_name(slugify(tags['title'])) + u"-" + \
+                      self.format_file_name(slugify(tags['artist'])) + u"." + tags['extension']
 
             cp_command = "mv " + from_path + " " + to_path
             try:

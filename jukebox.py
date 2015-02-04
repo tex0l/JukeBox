@@ -88,8 +88,8 @@ class Jukebox:
         self.is_letter_updater(""+choice)
 
     def music_picker(self, CONF, choice, entry):
-        if self.player.queue_count() < CONF.variables['nb_music'] or \
-                                time.time()-self.player.last_added > CONF.variables['timeout']:
+        if self.player.queue_count() < CONF.variables['nb_music'] \
+            or time.time()-self.player.last_added > CONF.variables['timeout']:
                 # Si on n'a pas deja choisi une lettre
                 if entry == "":
                     try:
