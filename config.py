@@ -1,10 +1,11 @@
 from __future__ import unicode_literals
+import os
 import ConfigParser
 
 class Config():
 
     def __init__(self):
-        self.config_file = "/etc/jukebox.ini"
+        self.config_file = os.path.join(os.path.dirname(__file__), "jukebox.conf")
         self.Config = ConfigParser.ConfigParser()
         print "reading config file..."
         self.Config.read(self.config_file)
@@ -28,7 +29,7 @@ class Config():
         print "writing config file..."
         cfgfile = open(self.config_file, 'w')
         self.Config.add_section('Network')
-        self.Config.set('Network', 'mpd_host', '127.0.0.1')
+        self.Config.set('Network', 'mpd_host', 'localhost')
         self.Config.set('Network', 'mpd_port', '6600')
         self.Config.add_section('Paths')
         self.Config.set('Paths', 'music_dir', 'Music')

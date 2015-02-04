@@ -21,7 +21,7 @@ class UpdateThread(threading.Thread):
             time.sleep(0.1)
             self.display.setQueue(self.player.queue_count())
             self.display.waitingEntry()
-            if self.player.isPlaying():
+            if self.player.is_playing():
                 if self.player.number() != self.playing:
                     self.display.playingSong(self.player.number(), self.player.title(), self.player.artist())
             else:

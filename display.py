@@ -7,6 +7,6 @@ class DisplayChooser():
 
     def __init__(self, CONF):
         if CONF.lcd['type'] == '2x40':
-            self.display = displayLCDd2x40(CONF=CONF)
+            self.display = displayLCDd2x40(CONF)
         else:
             self.display = displayLCDddummy()

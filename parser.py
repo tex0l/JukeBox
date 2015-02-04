@@ -66,23 +66,28 @@ class Music:
         self.path = path
         #nom du fichier
         self.file_name = path_leaf(self.path)
-        id3 = EasyID3(path)
+
+        self.find_tags()
+
+
+    def find_tags(self):
+        tags = EasyID3(self.path)
+        #Audio file mode
         #index
         self.number = self.file_name.split("-")[0]
         #artiste
         try:
-            self.artist = id3[u'artist'][0]
+            self.artist = tags['artist'][0]
         except KeyError:
-            self.artist = u"unknown"
+            self.artist = "unknown"
         #nom
         try:
-            self.name = id3[u'title'][0]
+            self.name = tags['title'][0]
         except KeyError:
-            self.name = u"unknown"
+            self.name = "unknown"
         #format
         self.format = self.file_name.split(".")[-1]
 
-        
     def printmusic(self):
         print self.number+" - "+self.name+" - "+self.artist+" - "+self.format
     

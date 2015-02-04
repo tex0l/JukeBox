@@ -1,6 +1,6 @@
 from __future__ import unicode_literals
-#!/usr/bin/python
-# Version 2
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 
 import sys
@@ -12,31 +12,34 @@ from config import Config
 from raw_input_timout import nonBlockingRawInput
 import music_player
 import time
+import logging
+
 
 CONF = Config()
-
+logging.basicConfig(filename="/var/log/jukebox.log", format='%(asctime)s %(levelname)s %(message)s', level=logging.DEBUG)
 from display import DisplayChooser
 
 
 # initialisation du dictionnaire
-print "Initializing dictionnary..."
+logging.info("Initializing dictionnary")
 dic = keyboard_map.Map()
 # initialisation du lecteur
-print "Initializing player..."
+logging.info("Initializing player")
 player = music_player.Player(CONF, launch=True)
-print "Initializing display"
+logging.info("Initializing display")
 display = DisplayChooser(CONF=CONF).display
-print "Initializing library"
+logging.info("Initializing library")
 music_index = parser.MusicDir(CONF.paths['music_dir'])
+print CONF.variables['index']
 if CONF.variables['index']:
     generate = nonBlockingRawInput("To update music directory, type 'y' or 'yes', %s secs then skipped \n" %
                                    CONF.variables['index_timeout'], timeout=CONF.variables['index_timeout'])
     if generate == "y" or generate == "yes":
         #extraction_path = raw_input("Extract from ? : ")
         #final_path = config.MUSIC_DIR;
-        print "Parsing import directory"
+        logging.info("Parsing import directory")
         player.generate_library(CONF.paths['index_dir'], CONF.paths['music_dir'], music_index.filled_slots())
-        print "Updating music library"
+        logging.info("Updating music library")
         music_index = parser.MusicDir(CONF.paths['music_dir'])
 
 print (30 * '-')
@@ -59,17 +62,18 @@ while 1:
     # Conversion avec le dictionnaire
     choice = dic.find(choice)
     if choice == 'quit':
-        display.UT.join()
+        display.UT.join() #Attend que le thread d'update du display soit termine
         player.exit()
         #display.display.RT.join()
         print ("Goodbye !")
-        exit();
+        logging.info("Exiting program")
+        exit()
     elif choice == 'list':
         print ("List of songs :")
         music_index.printmusicdir()
     else:
         #On test le timer
-        if ((player.queue_count() < CONF.variables['nb_music']) or (time.time()-player.lastAdded > CONF.variables['timeout'])) :
+        if ((player.queue_count() < CONF.variables['nb_music']) or (time.time()-player.last_added > CONF.variables['timeout'])) :
             # Si on n'a pas deja choisi une lettre
             if entry == "":
                 # Si c'est une lettre
