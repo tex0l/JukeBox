@@ -13,7 +13,7 @@ class UpdateThread(threading.Thread):
         self.alive = threading.Event()
         self.alive.set()
         self.display = display
-        self.player = music_player.Player(False)
+        self.player = music_player.Player(CONF, launch=False)
         self.playing = ""
         self.CONF = CONF
 
