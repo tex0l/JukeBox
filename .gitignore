@@ -2,6 +2,8 @@
 __pycache__/
 *.py[cod]
 config.py
+Import/
+Music/
 # C extensions
 *.so
 
