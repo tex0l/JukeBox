@@ -118,14 +118,14 @@ class Jukebox:
             entry += choice
             song = self.music_index.findnumber(entry)
             if song != "":
-                print("Song chosen : " + song.artist +"'s "+song.name)
+                print("Song chosen : " + song.artist + "'s " + song.name)
                 logging.debug("Song %s picked from entry %s" % (song.name, entry))
                 #ajout a la playlist
                 self.player.enqueue(song)
                 print("songs queued :" + str(self.player.queue_count()))
                 self.display.entry(entry, song)
                 self.display.setQueue(self.player.queue_count())
-                return
+                return ''
             print("This song does not exist")
             logging.debug("No song found for entry %s" % entry)
             return ""
