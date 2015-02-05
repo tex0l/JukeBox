@@ -88,6 +88,9 @@ class Jukebox:
             print ("List of songs :")
             self.music_index.printmusicdir()
             self.main(CONF, entry)
+        elif choice == '':
+            print("Invalid Entry")
+            self.main(CONF, entry=entry)
         else:
             logging.debug("Entering main() loop again, and again and again...")
             self.main(CONF, self.music_picker(CONF, choice, entry))
@@ -99,7 +102,7 @@ class Jukebox:
         """
         if (str(string)).isalpha():
             entry = string.upper()
-            self.display.entry(entry)
+            self.display.entry(entry+"_")
             return entry
         return ""
 
@@ -120,7 +123,7 @@ class Jukebox:
                 #ajout a la playlist
                 self.player.enqueue(song)
                 print("songs queued :" + str(self.player.queue_count()))
-                self.display.entry(old_entry, choice, song)
+                self.display.entry(entry, song)
                 self.display.setQueue(self.player.queue_count())
                 return
             print("This song does not exist")
