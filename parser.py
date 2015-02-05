@@ -21,6 +21,10 @@ class MusicDir:
     find_number(index) method
     """
     def __init__(self, path):
+        #TODO
+        """
+
+        """
         #chemin du repertoire
         self.path = os.path.join(os.path.dirname(__file__), path)
         os.chdir(self.path)
@@ -40,20 +44,32 @@ class MusicDir:
 
     # impression de la liste des musiques
     def printmusicdir(self):
+        #TODO
+        """
+
+        """
         for music in self.musique:
             music.printmusic()
 
     # renvoie l'objet Music correspondant a l'index test
     def find_number(self, test):
+        #TODO
+        """
+
+        """
         l = len(self.codes)
         
         for i in range(0,l):
-            if (self.codes[i] == test):
+            if self.codes[i] == test:
                 return self.musique[i]
             
         return ""
 
     def filled_slots(self):
+        #TODO
+        """
+
+        """
 
         dic = dict([(1, 'A'), (2, 'B'), (3, 'C'), (4, 'D')])
         result = [[], [], [], []]
@@ -71,7 +87,15 @@ class MusicDir:
     
         
 class Music:
+    #TODO
+    """
+
+    """
     def __init__(self, path):
+        #TODO
+        """
+
+        """
         #file named : CODE-Name-Artist.format
         #chemin
         self.path = path
@@ -81,11 +105,15 @@ class Music:
 
 
     def find_tags(self):
+        #TODO
+        """
+
+        """
         logging.debug("Executing tag_finder() method")
         tags = tag_finder(self.path)
         #Audio file mode
         #index
-        number = self.file_name.split("-")[0]
+        index = self.file_name.split("-")[0]
         #artiste
         try:
             artist = tags['artist']
@@ -100,10 +128,18 @@ class Music:
         #format
         logging.debug("Title:" + name)
         format = self.file_name.split(".")[-1]
-        return number, artist, name, format
+        return index, artist, name, format
 
     def printmusic(self):
+        #TODO
+        """
+
+        """
         print self.number+" - "+self.name+" - "+self.artist+" - "+self.format
     
     def display(self):
+        #TODO
+        """
+
+        """
         return "%s : %s by %s" % (self.number, self.name, self.artist)

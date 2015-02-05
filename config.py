@@ -19,10 +19,10 @@ class Config:
         Finally it prints the config read or generated
         """
         self.config_file = os.path.join(os.path.dirname(__file__), "jukebox.conf")
-        self.Config = ConfigParser.SafeConfigParser()
+        self.config = ConfigParser.SafeConfigParser()
         print "reading config file..."
-        self.Config.read(self.config_file)
-        if self.Config.sections() == []:
+        self.config.read(self.config_file)
+        if not self.config.sections():
             print "config file is empty"
             self.generate()
         try:
@@ -35,11 +35,11 @@ class Config:
         logging.debug(self.stringify_config())
         
     def get_sections(self):
-        return (self.ConfigSectionMap('Network'),
-                self.ConfigSectionMap('Paths'),
-                self.ConfigSectionMap('Variables'),
-                self.ConfigSectionMap('LCD'),
-                self.ConfigSectionMap('log'))
+        return (self.config_section_map('Network'),
+                self.config_section_map('Paths'),
+                self.config_section_map('Variables'),
+                self.config_section_map('LCD'),
+                self.config_section_map('log'))
     
     def stringify_config(self):
         """
@@ -60,61 +60,61 @@ class Config:
         Generates a default config file:
         Works on a standard computer, must have the requirements installed though such as MPD, mutagen, ...
         It opens the non-existing file in writing mode, it adds a section with
-        Config.add_section() method, and a value with Config.set() method both to the Config object in RAM
+        config.add_section() method, and a value with config.set() method both to the config object in RAM
         Then it writes the config in RAM into the file well-formatted, and closes the file.
         """
         print "writing config file..."
         cfgfile = open(self.config_file, 'w')
-        self.Config.add_section('Network')
-        self.Config.set('Network', 'mpd_host', 'localhost')
-        self.Config.set('Network', 'mpd_port', '6600')
-        self.Config.add_section('Paths')
-        self.Config.set('Paths', 'music_dir', 'Music')
-        self.Config.set('Paths', 'index_dir', 'Import')
-        self.Config.set('Paths', 'mpd_conf_file', '/etc/mpd.conf')
-        self.Config.add_section('Variables')
+        self.config.add_section('Network')
+        self.config.set('Network', 'mpd_host', 'localhost')
+        self.config.set('Network', 'mpd_port', '6600')
+        self.config.add_section('Paths')
+        self.config.set('Paths', 'music_dir', 'Music')
+        self.config.set('Paths', 'index_dir', 'Import')
+        self.config.set('Paths', 'mpd_conf_file', '/etc/mpd.conf')
+        self.config.add_section('Variables')
         #indexation au demarrage ?
-        self.Config.set('Variables', 'index', 'True')
-        self.Config.set('Variables', 'index_timeout', '5')
+        self.config.set('Variables', 'index', 'True')
+        self.config.set('Variables', 'index_timeout', '5')
         #amount of musics in queue before timeout is activated
-        self.Config.set('Variables', 'add_timeout', '30')
-        self.Config.set('Variables', 'nb_music', '5')
-        self.Config.add_section('LCD')
-        self.Config.set('LCD', 'type', '2x40')
-        self.Config.set('LCD', 'lcdd_host', 'localhost')
-        self.Config.set('LCD', 'lcdd_port', '13666')
-        self.Config.add_section('log')
-        self.Config.set('log', 'format', "%%(asctime)s %%(levelname)s %%(message)s")
-        self.Config.set('log', 'path', "/var/log/jukebox.log")
-        self.Config.set('log', 'level', '20')
-        self.Config.write(cfgfile)
+        self.config.set('Variables', 'add_timeout', '30')
+        self.config.set('Variables', 'nb_music', '5')
+        self.config.add_section('LCD')
+        self.config.set('LCD', 'type', '2x40')
+        self.config.set('LCD', 'lcdd_host', 'localhost')
+        self.config.set('LCD', 'lcdd_port', '13666')
+        self.config.add_section('log')
+        self.config.set('log', 'format', "%%(asctime)s %%(levelname)s %%(message)s")
+        self.config.set('log', 'path', "/var/log/jukebox.log")
+        self.config.set('log', 'level', '20')
+        self.config.write(cfgfile)
         cfgfile.close()
         
-    def ConfigSectionMap(self, section):
+    def config_section_map(self, section):
         """
         It is a modified version of a method found on the Internet
         Basically it reads a section a gets the values in the appropriate type (integer, boolean or string)
         It is not pretty, but it works
         """
         dict1 = {}
-        options = self.Config.options(section)
+        options = self.config.options(section)
         for option in options:
             try:
-                dict1[option] = self.Config.getint(section, option)
+                dict1[option] = self.config.getint(section, option)
                 logging.debug("Found an option : %s" % dict1[option])
                 continue
             except:
                 #The option (or attribute) is not an integer
                 pass
             try:
-                dict1[option] = self.Config.getboolean(section, option)
+                dict1[option] = self.config.getboolean(section, option)
                 logging.debug("Found an option : %s" % dict1[option])
                 continue
             except:
                 #The option (or attribute) is not a boolean
                 pass
             try:
-                dict1[option] = self.Config.get(section, option)
+                dict1[option] = self.config.get(section, option)
                 logging.debug("Found an option : %s" % dict1[option])
                 continue
             except:

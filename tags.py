@@ -7,6 +7,10 @@ import logging
 
 
 def tag_finder(file_path):
+    #TODO
+    """
+
+    """
     logging.debug("tag_finder started on %s" % file_path)
 
     if not file_path.startswith(u'.'):
@@ -37,6 +41,10 @@ def tag_finder(file_path):
     return {}
 
 def id3_finder(file_path):
+    #TODO
+    """
+
+    """
     try:
         tags = EasyID3(file_path)
         logging.info("ID3 tags found")

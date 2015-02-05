@@ -2,7 +2,7 @@ from __future__ import unicode_literals
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-
+#TODO Put it in config !
 class Map():
     def __init__(self):
         self.map = {"l": "list",

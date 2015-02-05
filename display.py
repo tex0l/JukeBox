@@ -6,13 +6,18 @@ from __future__ import unicode_literals
 
 
 class DisplayChooser():
+    #TODO
     """
 
     """
-    def __init__(self, CONF):
-        if CONF.lcd['type'] == '2x40':
-            from display_LCDd_2x40 import displayLCDd2x40
-            self.display = displayLCDd2x40(CONF)
+    def __init__(self, loaded_config):
+        #TODO
+        """
+
+        """
+        if loaded_config.lcd['type'] == '2x40':
+            from display_LCDd_2x40 import Display_LCDd_2x40
+            self.display = Display_LCDd_2x40(loaded_config)
         else:
-            from display_LCD_dummy import displayLCDddummy
-            self.display = displayLCDddummy()
+            from display_LCD_dummy import Display_LCDd_dummy
+            self.display = Display_LCDd_dummy()

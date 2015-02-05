@@ -7,28 +7,26 @@ from logger import Logger
 from jukebox import Jukebox
 import logging
 
-CONF = Config()
+loaded_config = Config()
 #Initialilizing the logger with the correct settings
-logger = Logger(format=CONF.log['format'],
-                path=CONF.log['path'],
-                level=CONF.log['level']).root_logger
+logger = Logger(log_format=loaded_config.log['format'],
+                path=loaded_config.log['path'],
+                level=loaded_config.log['level']).root_logger
 
 
-def main(CONF):
+def main(loaded_config):
     """
-    This method main.main() initializes a jukebox.Jukebox class with CONF
+    This method main.main() initializes a jukebox.Jukebox class with loaded_config
     """
-    try :
-        jukebox = Jukebox(CONF)
+    try:
+        jukebox = Jukebox(loaded_config)
     except Exception as e:
-        if jukebox.shutdown != True:
-            main(CONF)
-            logger.critical("Jukebox has crashed with error %s restarting... " % e)
-        else:
-            logger.info("Shot down")
+        logger.critical("Jukebox has crashed with error %s restarting... " % e)
+        main(loaded_config)
+    #if jukebox.shutdown != True:
+
 
 if __name__ == '__main__':
-    #This function executes the following code if and
-    #only if main.py is first started, not another file.
+    #This code executes the following if and only if main.py is first started, not another file.
     logging.warning("Starting...")
-    main(CONF)
+    main(loaded_config)

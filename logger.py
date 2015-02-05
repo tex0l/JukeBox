@@ -13,14 +13,14 @@ class Logger:
     The level is 10 for debug, ..., 50 for critical)
 
     """
-    def __init__(self, format, path, level):
+    def __init__(self, log_format, path, level):
         """
-        format is the wanted logging format
+        log_format is the wanted logging format
         path is the path of the log file
         level is the minimum required level for the logged messages,
         if less it's nor stored nor displayed
         """
-        self.log_formatter = logging.Formatter(format)
+        self.log_formatter = logging.Formatter(log_format)
         self.root_logger = logging.getLogger()
         self.root_logger.setLevel(level)
         self.file_handler = logging.FileHandler(path)

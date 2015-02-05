@@ -1,8 +1,12 @@
 from __future__ import unicode_literals
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-class displayLCDddummy:
-# a class to handle all the display functions of the jukebox and actually display them on a 40x2 display through pyLCDd
+class Display_LCDd_dummy:
+    #TODO
+    """
+
+    """
+# a dummy class to use on a computer without a lcd screen emulator
     def __init__(self):
         self.UT = UT()
         return
@@ -24,5 +28,7 @@ class displayLCDddummy:
 
 
 class UT:
+    def __init__(self):
+        return
     def join(self):
         return
