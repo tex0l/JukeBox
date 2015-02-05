@@ -89,7 +89,7 @@ class Jukebox:
 
     def music_picker(self, CONF, choice, entry):
         if self.player.queue_count() < CONF.variables['nb_music'] \
-            or time.time()-self.player.last_added > CONF.variables['timeout']:
+            or time.time()-self.player.last_added > CONF.variables['add_timeout']:
                 # Si on n'a pas deja choisi une lettre
                 if entry == "":
                     try:
@@ -101,6 +101,8 @@ class Jukebox:
                             raise e
                 else:
                     return self.is_digit_updater(choice, entry)
+        else:
+            print("Wait !")
     @staticmethod
     def print_help():
         print (30 * '-')

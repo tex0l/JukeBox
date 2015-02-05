@@ -16,7 +16,7 @@ class Config():
         self.paths = self.ConfigSectionMap('Paths')
         self.variables = self.ConfigSectionMap('Variables')
         self.lcd = self.ConfigSectionMap('LCD')
-        self.print_config()
+        #self.print_config()
 
     def print_config(self):
         print "Network options :"

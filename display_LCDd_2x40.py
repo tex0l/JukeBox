@@ -1,7 +1,7 @@
 from __future__ import unicode_literals
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import pyLCDd
+from lcdproc.server import Server
 import threading
 import time
 import music_player
@@ -42,11 +42,25 @@ class displayLCDd2x40:
 # a class to handle all the display functions of the jukebox and actually display them on a 40x2 display through pyLCDd
     def __init__(self, CONF):
         self.CONF = CONF
-        self.display = pyLCDd.pyLCDd(self.CONF.lcd['lcdd_host'], self.CONF.lcd['lcdd_port'], "jukeboX")
-        self.entryString = self.display.addScroller(1, 1, 28, 4).setText("Choose song")
-        self.queueString = self.display.addString(30, 1).setText("Queue : 0")
-        self.icon = self.display.addIcon(1, 2).setIcon("STOP")
-        self.line2 = self.display.addScroller(3, 2, 38, 4)
+
+        lcd = Server(hostname=self.CONF.lcd['lcdd_host'], port=self.CONF.lcd['lcdd_port'])
+        lcd.start_session()
+        screen = lcd.add_screen("jukeboX".encode('ascii', 'ignore'))
+        screen.set_heartbeat("off".encode('ascii', 'ignore'))
+        screen.set_priority("foreground".encode('ascii', 'ignore'))
+
+        self.entryString = screen.add_scroller_widget("entry".encode('ascii', 'ignore'),
+                                                      text="Choose song".encode('ascii', 'ignore'), left=1, top=1,
+                                                      right=28, bottom=1, speed=4)
+        self.queueString = screen.add_string_widget("queue".encode('ascii', 'ignore'),
+                                                    text="Queue : 0".encode('ascii', 'ignore'), x=30, y=1)
+        self.icon = screen.add_icon_widget("playIcon".encode('ascii', 'ignore'), x=1, y=2,
+                                           name="STOP".encode('ascii', 'ignore'))
+        self.playingString = screen.add_scroller_widget("playing".encode('ascii', 'ignore'),
+                                                        text="Nothing in the playlist. Add a song ?"
+                                                        .encode('ascii', 'ignore'),
+                                                        left=3, top=2, right=40, bottom=2, speed=4)
+        #self.display.addScroller(3, 2, 38, 4)
         self.UT = UpdateThread(self, CONF)
         self.UT.start()
         self.timer = None
@@ -57,15 +71,16 @@ class displayLCDd2x40:
 
     def setQueue(self, q):  # Change the length of the queue displayed
         self.queue = q
-        self.queueString.setText("Queue : %d" % q)
+        self.queueString.set_text("Queue : %d".encode('ascii', 'ignore') % q)
 
     def waiting(self):
-        self.icon.setIcon("STOP")
-        self.line2.setText("Nothing in the playlist. Add a song ?")
+        self.icon.set_name("STOP".encode('ascii', 'ignore'))
+        self.playingString.set_text("Nothing in the playlist. Add a song ?".encode('ascii', 'ignore'))
 
     def playingSong(self, number, title, artist):
-        self.icon.setIcon("PLAY")
-        self.line2.setText("%s - %s - %s"%(number, title, artist))
+        self.icon.set_name("PLAY".encode('ascii', 'ignore'))
+        text = "%s - %s - %s"%(number, title, artist)
+        self.playingString.set_text(text.encode('ascii', 'ignore'))
 
     def removeEntry(self):
         self.entryInProgress = False
@@ -73,10 +88,12 @@ class displayLCDd2x40:
 
     def waitingEntry(self):
         if self.entryInProgress is False:
-            if (self.queue < self.CONF.variables['nb_music']) or (time.time()-self.lastAdded > self.CONF.variables['timeout']):
-                self.entryString.setText("Choose song")
+            if (self.queue < self.CONF.variables['nb_music']) \
+                    or (time.time()-self.lastAdded > self.CONF.variables['add_timeout']):
+                self.entryString.set_text("Choose song".encode('ascii', 'ignore'))
             else:
-                self.entryString.setText("Wait %s seconds" % (int(self.CONF.variables['timeout']+1-time.time()+self.lastAdded)))
+                text = "Wait %s seconds" % (int(self.CONF.variables['add_timeout']+1-time.time()+self.lastAdded))
+                self.entryString.set_text(text.encode('ascii', 'ignore'))
 
     def entry(self, letter, number="_", song=None):
         self.entryInProgress = True
@@ -88,4 +105,4 @@ class displayLCDd2x40:
             self.lastAdded = time.time()
             self.timer = threading.Timer(5, self.removeEntry)
             self.timer.start()
-        self.entryString.setText(text)
+        self.entryString.set_text(text.encode('ascii', 'ignore'))
