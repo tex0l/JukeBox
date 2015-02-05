@@ -3,10 +3,18 @@ from __future__ import unicode_literals
 # -*- coding: utf-8 -*-
 
 from config import Config
-import logging
+from logger import Logger
 from jukebox import Jukebox
+import logging
 CONF = Config()
-logging.basicConfig(filename="/var/log/jukebox.log", format='%(asctime)s %(levelname)s %(message)s', level=logging.DEBUG)
+logger = Logger(format=CONF.log['format'],
+                path=CONF.log['path'],
+                level=CONF.log['level']).root_logger
 
 
-jukebox = Jukebox(CONF)
+def main(CONF):
+    Jukebox(CONF)
+
+if __name__ == '__main__':
+    logging.warning("Starting...")
+    main(CONF)

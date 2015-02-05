@@ -19,22 +19,29 @@ class Player():
             logging.info("Starting MPD")
             os.system(command)
         #connexion
-        self.client = None
+        self.client = MPDClient()
+        self.client.timeout = None
+        self.client.idletimeout = None
         self.CONF = CONF
         logging.info("Connecting to MPD")
         self.connect()
         self.last_added = time.time()
+        self.client.consume(1)
+        self.client.crossfade(1)
 
     def connect(self):
         #creation du client MPD
-        self.client = MPDClient()
-        self.client.timeout = None
-        self.client.idletimeout = None
         self.client.connect(self.CONF.network['mpd_host'], self.CONF.network['mpd_port'])
         logging.info("Updating MPD client")
         self.client.update()
-        self.client.consume(1)
-        self.client.crossfade(1)
+
+    def update(self):
+        logging.info("Updating the library")
+        try:
+            self.client.update(1)
+        except ConnectionError:
+            self.connect()
+            self.update()
 
     def enqueue(self, music):
         try:
