@@ -90,9 +90,8 @@ class Music:
         except KeyError:
             name = "unknown"
         #format
-        logging.debug("Artist:" + artist)
+        logging.debug("Title:" + name)
         format = self.file_name.split(".")[-1]
-        print type(number), type(artist), type(name), type(format)
         return number, artist, name, format
 
     def printmusic(self):

@@ -71,9 +71,9 @@ class Jukebox:
         sys.stdout.flush()
         # Recuperation de la frappe clavier
         choice = getch.getch()
-        logging.info("Got choice %s through getch" % choice)
+        logging.debug("Got choice %s through getch" % choice)
         # Conversion avec le dictionnaire
-        logging.info("Mapping choice throughout the dictionary")
+        logging.debug("Mapping choice throughout the dictionary")
         choice = self.dictionnary.find(choice)
         if choice == 'quit':
             logging.debug("Waiting for the end of the display thread update")
@@ -92,7 +92,7 @@ class Jukebox:
             print("Invalid Entry")
             self.main(CONF, entry=entry)
         else:
-            logging.debug("Entering main() loop again, and again and again...")
+            logging.debug("Entering main() loop (once) again")
             self.main(CONF, self.music_picker(CONF, choice, entry))
 
     def is_letter_updater(self, string):
@@ -114,7 +114,6 @@ class Jukebox:
         It returns "" as an entry anyway
         """
         if (str(choice)).isdigit():
-            old_entry = entry
             entry += choice
             song = self.music_index.findnumber(entry)
             if song != "":
@@ -142,19 +141,23 @@ class Jukebox:
         If it fails, it raises an "Invalid input" error,
         Else it processes the choice throughout is_digit_updater()  method and returns the result.
         """
+        time_elapsed = time.time()-self.player.last_added
         if self.player.queue_count() < CONF.variables['nb_music'] \
-            or time.time()-self.player.last_added > CONF.variables['add_timeout']:
+            or time_elapsed > CONF.variables['add_timeout']:
                 # Si on n'a pas deja choisi une lettre
                 if entry == "":
                     result = self.is_letter_updater(choice)
                     if result == "":
                         logging.info("Invalid input")
                     logging.debug("music_picker returns %s" % result)
+
                     return result
                 else:
+                    logging.debug(entry)
                     return self.is_digit_updater(choice, entry)
         else:
-            logging.debug("Waiting for timeout, still %s secs to wait" % time.time()-self.player.last_added)
+            remaining_time = CONF.variables['add_timeout'] - time_elapsed
+            logging.debug("Waiting for timeout, still %s secs to wait" % remaining_time)
     @staticmethod
     def print_help():
         """

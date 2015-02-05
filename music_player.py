@@ -102,7 +102,7 @@ class Player():
         try:
             playlist = self.client.playlist()
             return len(playlist)
-        except ConnectionError:
+        except:
             logging.warning("Unable to contact daemon, reconnecting and retry")
             self.connect()
             return self.queue_count()
@@ -111,7 +111,7 @@ class Player():
         try:
             logging.info("Disconnecting client")
             self.client.disconnect()
-        except ConnectionError:
+        except:
             logging.warning("Unable to contact daemon, reconnecting and retry")
             self.connect()
             self.exit()

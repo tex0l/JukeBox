@@ -32,25 +32,28 @@ class Config:
             os.remove(self.config_file)
             self.generate()
             self.network, self.paths, self.variables, self.lcd, self.log = self.get_sections()
-        self.print_config()
+        logging.debug(self.stringify_config())
+        
     def get_sections(self):
         return (self.ConfigSectionMap('Network'),
                 self.ConfigSectionMap('Paths'),
                 self.ConfigSectionMap('Variables'),
                 self.ConfigSectionMap('LCD'),
                 self.ConfigSectionMap('log'))
-    def print_config(self):
+    
+    def stringify_config(self):
         """
         a print method
         """
-        print "Network options :"
-        print self.network
-        print "Paths options :"
-        print self.paths
-        print "Miscellaneous variables :"
-        print self.variables
-        print "Log options :"
-        print self.log
+        result = "Network options :"
+        result += str(self.network)
+        result += "Paths options :"
+        result += str(self.paths)
+        result += "Miscellaneous variables :"
+        result += str(self.variables)
+        result += "Log options :"
+        result += str(self.log)
+        return result
 
     def generate(self):
         """
@@ -77,7 +80,7 @@ class Config:
         self.Config.set('Variables', 'add_timeout', '30')
         self.Config.set('Variables', 'nb_music', '5')
         self.Config.add_section('LCD')
-        self.Config.set('LCD', 'type', 'dummy')
+        self.Config.set('LCD', 'type', '2x40')
         self.Config.set('LCD', 'lcdd_host', 'localhost')
         self.Config.set('LCD', 'lcdd_port', '13666')
         self.Config.add_section('log')
@@ -86,6 +89,7 @@ class Config:
         self.Config.set('log', 'level', '20')
         self.Config.write(cfgfile)
         cfgfile.close()
+        
     def ConfigSectionMap(self, section):
         """
         It is a modified version of a method found on the Internet
