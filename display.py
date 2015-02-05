@@ -6,7 +6,9 @@ from __future__ import unicode_literals
 
 
 class DisplayChooser():
+    """
 
+    """
     def __init__(self, CONF):
         if CONF.lcd['type'] == '2x40':
             from display_LCDd_2x40 import displayLCDd2x40
