@@ -12,6 +12,8 @@ import time
 import logging
 from display import DisplayChooser
 
+class InvalidInputException(Exception):
+        pass
 
 class Jukebox:
     def __init__(self, CONF):
@@ -57,16 +59,19 @@ class Jukebox:
             print ("List of songs :")
             self.music_index.printmusicdir()
             self.main(CONF, entry)
+        elif choice == '':
+            print("Invalid Entry")
+            self.main(CONF, entry=entry)
         else:
             self.main(CONF, entry=self.music_picker(CONF, choice, entry))
 
-    def is_letter_updater(self, string):
-        if (str(string)).isalpha():
-            entry = string.upper()
-            self.display.entry(entry)
+    def is_letter_updater(self, choice):
+        if (str(choice)).isalpha():
+            entry = choice.upper()
+            self.display.entry(entry+"_")
             return entry
         else:
-            raise Exception("Invalid input")
+            raise InvalidInputException("Invalid input")
 
     def is_digit_updater(self, choice, entry):
         if (str(choice)).isdigit():
@@ -82,25 +87,23 @@ class Jukebox:
                 #ajout a la playlist
                 self.player.enqueue(song)
                 print("songs queued :" + str(self.player.queue_count()))
-                self.display.entry(old_entry, choice, song)
+                self.display.entry(entry, song)
                 self.display.setQueue(self.player.queue_count())
             return ""
-        self.is_letter_updater(""+choice)
+        return self.is_letter_updater(""+choice)
 
     def music_picker(self, CONF, choice, entry):
         if self.player.queue_count() < CONF.variables['nb_music'] \
-            or time.time()-self.player.last_added > CONF.variables['add_timeout']:
-                # Si on n'a pas deja choisi une lettre
-                if entry == "":
-                    try:
-                        return self.is_letter_updater(choice)
-                    except Exception as e:
-                        if e.message == "Invalid input":
-                            print e.message
-                        else:
-                            raise e
-                else:
-                    return self.is_digit_updater(choice, entry)
+                or time.time()-self.player.last_added > CONF.variables['add_timeout']:
+            # Si on n'a pas deja choisi une lettre
+            if entry == "":
+                try:
+                    return self.is_letter_updater(choice)
+                except InvalidInputException as e:
+                    print e.message
+                    return ""
+            else:
+                return self.is_digit_updater(choice, entry)
         else:
             print("Wait !")
     @staticmethod

@@ -95,9 +95,9 @@ class displayLCDd2x40:
                 text = "Wait %s seconds" % (int(self.CONF.variables['add_timeout']+1-time.time()+self.lastAdded))
                 self.entryString.set_text(text.encode('ascii', 'ignore'))
 
-    def entry(self, letter, number="_", song=None):
+    def entry(self, entry, song=None):
         self.entryInProgress = True
-        text = "Entry : %s%s" % (letter.upper(), number)
+        text = "Entry : %s" % entry
         if self.timer is not None:
             self.timer.cancel()
         if song is not None:
