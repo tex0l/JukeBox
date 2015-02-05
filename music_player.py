@@ -7,6 +7,7 @@ import time
 import logging
 from tags import tag_finder
 import slugify
+import socket
 
 
 class Player():
@@ -30,18 +31,22 @@ class Player():
         self.client.crossfade(1)
 
     def connect(self):
-        #creation du client MPD
-        self.client.connect(self.CONF.network['mpd_host'], self.CONF.network['mpd_port'])
-        logging.info("Updating MPD client")
-        self.client.update()
+        try:
+            self.client.connect(self.CONF.network['mpd_host'], self.CONF.network['mpd_port'])
+            logging.info("Updating MPD client")
+            self.client.update()
+            self.update()
+        except ConnectionError, socket.error:
+            logging.warning("Unable to contact daemon, reconnecting and retry")
+            self.connect()
 
     def update(self):
         logging.info("Updating the library")
         try:
             self.client.update(1)
-        except ConnectionError:
+        except ConnectionError, socket.error:
+            logging.warning("Unable to contact daemon, reconnecting and retry")
             self.connect()
-            self.update()
 
     def enqueue(self, music):
         try:
@@ -51,7 +56,7 @@ class Player():
             self.last_added = time.time()
         except KeyboardInterrupt:
             raise
-        except ConnectionError:
+        except ConnectionError, socket.error:
             logging.warning("Unable to contact daemon, reconnecting and retry")
             self.connect()
             self.enqueue(music)
@@ -60,7 +65,7 @@ class Player():
         try:
             status = self.client.status()
             return status['state'] == 'play'
-        except ConnectionError:
+        except ConnectionError, socket.error:
             logging.warning("Unable to contact daemon, reconnecting and retry")
             self.connect()
             return self.is_playing()
@@ -68,7 +73,7 @@ class Player():
     def title(self):
         try:
             return self.client.currentsong()['title']
-        except ConnectionError:
+        except ConnectionError, socket.error:
             logging.warning("Unable to contact daemon, reconnecting and retry")
             self.connect()
             return self.title()
@@ -79,7 +84,7 @@ class Player():
     def artist(self):
         try:
             return self.client.currentsong()['artist']
-        except ConnectionError:
+        except ConnectionError, socket.error:
             logging.warning("Unable to contact daemon, reconnecting and retry")
             self.connect()
             return self.artist()
@@ -90,7 +95,7 @@ class Player():
     def number(self):
         try:
             return self.client.currentsong()['file'].split("-")[0]
-        except ConnectionError:
+        except ConnectionError, socket.error:
             logging.warning("Unable to contact daemon, reconnecting and retry")
             self.connect()
             return self.number()
@@ -102,7 +107,7 @@ class Player():
         try:
             playlist = self.client.playlist()
             return len(playlist)
-        except:
+        except ConnectionError, socket.error:
             logging.warning("Unable to contact daemon, reconnecting and retry")
             self.connect()
             return self.queue_count()
@@ -111,7 +116,7 @@ class Player():
         try:
             logging.info("Disconnecting client")
             self.client.disconnect()
-        except:
+        except ConnectionError, socket.error:
             logging.warning("Unable to contact daemon, reconnecting and retry")
             self.connect()
             self.exit()

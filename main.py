@@ -18,7 +18,14 @@ def main(CONF):
     """
     This method main.main() initializes a jukebox.Jukebox class with CONF
     """
-    Jukebox(CONF)
+    try :
+        jukebox = Jukebox(CONF)
+    except Exception as e:
+        if jukebox.shutdown != True:
+            main(CONF)
+            logger.critical("Jukebox has crashed with error %s restarting... " % e)
+        else:
+            logger.info("Shot down")
 
 if __name__ == '__main__':
     #This function executes the following code if and

@@ -26,6 +26,7 @@ class Jukebox:
         And it asks if an import is necessary, and completes the library automatically,
         Finally it switches into using mode aka the "normal mode"
         """
+        self.shutdown = False
         # initialisation du dictionnaire
         logging.info("Initializing dictionnary")
         self.dictionnary = keyboard_map.Map()
@@ -80,6 +81,7 @@ class Jukebox:
             self.display.UT.join() #Attend que le thread d'update du display soit termine
             logging.debug("Exiting the player")
             self.player.exit()
+            self.shutdown = True
             #display.display.RT.join()
             print ("Goodbye !")
             logging.info("Exiting program")
@@ -115,7 +117,7 @@ class Jukebox:
         """
         if (str(choice)).isdigit():
             entry += choice
-            song = self.music_index.findnumber(entry)
+            song = self.music_index.find_number(entry)
             if song != "":
                 print("Song chosen : " + song.artist + "'s " + song.name)
                 logging.debug("Song %s picked from entry %s" % (song.name, entry))

@@ -7,11 +7,19 @@ from tags import tag_finder
 import logging
 
 
-def path_leaf(path): #recupere le bout d'un chemin systeme
+def path_leaf(path):
+    """
+    It gets the path final leaf
+    """
     head, tail = os.path.split(path)
     return tail or os.path.basename(head)
 
+
 class MusicDir:
+    """
+    The MusicDir class indexes the Music directory and provides a
+    find_number(index) method
+    """
     def __init__(self, path):
         #chemin du repertoire
         self.path = os.path.join(os.path.dirname(__file__), path)
@@ -36,7 +44,7 @@ class MusicDir:
             music.printmusic()
 
     # renvoie l'objet Music correspondant a l'index test
-    def findnumber(self, test):
+    def find_number(self, test):
         l = len(self.codes)
         
         for i in range(0,l):
@@ -54,7 +62,7 @@ class MusicDir:
             number = 0
             while number < 20:
                 number += 1
-                if self.findnumber(dic[letter]+str(number)) != "":
+                if self.find_number(dic[letter]+str(number)) != "":
                     result[letter-1].append(True)
                 else:
                     result[letter-1].append(False)
