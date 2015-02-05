@@ -143,7 +143,7 @@ class Jukebox:
         Else it processes the choice throughout is_digit_updater()  method and returns the result.
         """
         if self.player.queue_count() < CONF.variables['nb_music'] \
-            or time.time()-self.player.last_added > CONF.variables['timeout']:
+            or time.time()-self.player.last_added > CONF.variables['add_timeout']:
                 # Si on n'a pas deja choisi une lettre
                 if entry == "":
                     result = self.is_letter_updater(choice)
