@@ -1,6 +1,7 @@
 from __future__ import unicode_literals
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+
 from mpd import MPDClient, ConnectionError
 import os
 import time
@@ -8,34 +9,47 @@ import logging
 from tags import tag_finder
 from slugify import slugify
 import socket
+from threading import Lock
 
-#class MyError(socket.error, ConnectionError):
 
+class LockableMPDClient(MPDClient):
+    def __init__(self, use_unicode=False):
+        super(LockableMPDClient, self).__init__()
+        self.use_unicode = use_unicode
+        self._lock = Lock()
+    def acquire(self):
+        self._lock.acquire()
+    def release(self):
+        self._lock.release()
+    def __enter__(self):
+        self.acquire()
+    def __exit__(self, type, value, traceback):
+        self.release()
 
 class Player():
     #TODO
     """
 
     """
-    def __init__(self, loaded_config, launch=True):
+    def __init__(self, loaded_config):
         #TODO
         """
 
         """
-        if launch:
-            logging.info("Killing MPD")
-            os.system("killall mpd")
-            command = unicode("mpd %s" % loaded_config.paths['mpd_conf_file'])
-            #lancement de mpd
-            logging.info("Starting MPD")
-            os.system(command)
+        logging.info("Killing MPD")
+        os.system("killall mpd")
+        command = unicode("mpd %s" % loaded_config.paths['mpd_conf_file'])
+        #lancement de mpd
+        logging.info("Starting MPD")
+        os.system(command)
         #connexion
-        self.client = MPDClient()
+        self.client = LockableMPDClient()
         self.client.timeout = None
         self.client.idletimeout = None
         self.loaded_config = loaded_config
         logging.info("Connecting to MPD")
         self.connect()
+        self.client.update()
         self.last_added = time.time()
         self.client.consume(1)
         self.client.crossfade(1)
@@ -47,10 +61,9 @@ class Player():
 
         """
         try:
-            self.client.connect(self.loaded_config.network['mpd_host'], self.loaded_config.network['mpd_port'])
-            logging.info("Updating MPD client")
-            self.client.update()
-            self.update()
+            with self.client: # acquire lock
+                self.client.connect(self.loaded_config.network['mpd_host'], self.loaded_config.network['mpd_port'])
+                logging.info("Updating MPD client")
         except ConnectionError, socket.error:
             logging.warning("Unable to contact daemon, reconnecting and retry")
             self.connect()
@@ -62,7 +75,8 @@ class Player():
         """
         logging.info("Updating the library")
         try:
-            self.client.update(1)
+            with self.client: # acquire lock
+                self.client.update(1)
         except ConnectionError, socket.error:
             logging.warning("Unable to contact daemon, reconnecting and retry")
             self.connect()
@@ -74,8 +88,9 @@ class Player():
         """
         try:
             logging.info("Adding music %s to queue" % music.path)
-            self.client.add(music.path)
-            self.client.play()
+            with self.client: # acquire lock
+                self.client.add(music.path)
+                self.client.play()
             self.last_added = time.time()
         except KeyboardInterrupt:
             raise
@@ -90,7 +105,8 @@ class Player():
 
         """
         try:
-            status = self.client.status()
+            with self.client: # acquire lock
+                status = self.client.status()
             return status['state'] == 'play'
         except ConnectionError, socket.error:
             logging.warning("Unable to contact daemon, reconnecting and retry")
@@ -103,7 +119,8 @@ class Player():
 
         """
         try:
-            return self.client.currentsong()['title']
+            with self.client: # acquire lock
+                return self.client.currentsong()['title']
         except ConnectionError, socket.error:
             logging.warning("Unable to contact daemon, reconnecting and retry")
             self.connect()
@@ -118,7 +135,8 @@ class Player():
 
         """
         try:
-            return self.client.currentsong()['artist']
+            with self.client: # acquire lock
+                return self.client.currentsong()['artist']
         except ConnectionError, socket.error:
             logging.warning("Unable to contact daemon, reconnecting and retry")
             self.connect()
@@ -133,7 +151,8 @@ class Player():
 
         """
         try:
-            return self.client.currentsong()['file'].split("-")[0]
+            with self.client: # acquire lock
+                return self.client.currentsong()['file'].split("-")[0]
         except ConnectionError, socket.error:
             logging.warning("Unable to contact daemon, reconnecting and retry")
             self.connect()
@@ -148,7 +167,8 @@ class Player():
 
         """
         try:
-            playlist = self.client.playlist()
+            with self.client: # acquire lock
+                playlist = self.client.playlist()
             return len(playlist)
         except ConnectionError, socket.error:
             logging.warning("Unable to contact daemon, reconnecting and retry")
@@ -162,7 +182,8 @@ class Player():
         """
         try:
             logging.info("Disconnecting client")
-            self.client.disconnect()
+            with self.client: # acquire lock
+                self.client.disconnect()
         except ConnectionError, socket.error:
             logging.warning("Unable to contact daemon, reconnecting and retry")
             self.connect()
