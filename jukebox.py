@@ -202,7 +202,7 @@ class Jukebox:
         Just some distracting letters
         """
         print (30 * '-')
-        print ("   j u k e b o X")
+        print ("      j u k e b o X  2.0")
         print (30 * '-')
         print ("A-D + 1-20. Select Song")
         print ("Q. Quit")
