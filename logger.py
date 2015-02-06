@@ -21,15 +21,20 @@ class Logger:
         if less it's nor stored nor displayed
         """
         self.log_formatter = logging.Formatter(log_format)
+
         self.root_logger = logging.getLogger()
+        self.mpd_logger = logging.getLogger('mpd')
+        self.mpd_logger.propagate = False
+
         self.root_logger.setLevel(level)
-        self.root_logger.propagate = False
+        self.mpd_logger.setLevel(level)
+
         self.file_handler = logging.FileHandler(path,)
-        self.print_handler = logging.Handler()
         self.file_handler.setFormatter(self.log_formatter)
-        self.file_handler.addFilter(NoMpd())
+
         self.root_logger.addHandler(self.file_handler)
-        self.root_logger.addFilter(NoMpd())
+        self.mpd_logger.addHandler(self.file_handler)
+
 
 class NoMpd(logging.Filter):
     def filter(self, record):
