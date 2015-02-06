@@ -1,13 +1,7 @@
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
-Import/
-Music/
-jukebox.conf
-jukebox.log
-mpd.conf
-run
-.DS_store
+
 # C extensions
 *.so
 
@@ -59,11 +53,18 @@ coverage.xml
 docs/_build/
 
 
-*.komodoproject
-
+#PyCharm stuff
 .idea/*
 
-Import/*
-Music/*
+#General
+Import/
+Music/
+jukebox.conf
+jukebox.log
+mpd.conf
 
+#Random and/or personal
+*.komodoproject
 run
+run_juke.sh
+
