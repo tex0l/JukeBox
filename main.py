@@ -19,12 +19,14 @@ def main(loaded_config):
     """
     This method main.main() initializes a jukebox.Jukebox class with loaded_config
     """
-
+    # You may toggle to True when debugging to avoid restarting loops
+    debug = True
     try:
         Jukebox(loaded_config)
     except Exception as e:
         logger.critical("Jukebox has crashed with error %s restarting... " % e)
-        main(loaded_config)
+        if not debug:
+            main(loaded_config)
 
 
 if __name__ == '__main__':

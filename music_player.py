@@ -1,5 +1,5 @@
 from __future__ import unicode_literals
-#!/usr/bin/env python
+# !/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 from mpd import MPDClient, ConnectionError
@@ -17,20 +17,26 @@ class LockableMPDClient(MPDClient):
         super(LockableMPDClient, self).__init__()
         self.use_unicode = use_unicode
         self._lock = Lock()
+
     def acquire(self):
         self._lock.acquire()
+
     def release(self):
         self._lock.release()
+
     def __enter__(self):
         self.acquire()
+
     def __exit__(self, type, value, traceback):
         self.release()
+
 
 class Player():
     #TODO
     """
 
     """
+
     def __init__(self, loaded_config):
         #TODO
         """
@@ -43,7 +49,7 @@ class Player():
         logging.info("Starting MPD")
         os.system(command)
         #connexion
-        self.client = LockableMPDClient()
+        self.client = LockableMPDClient(use_unicode=True)
         self.client.timeout = None
         self.client.idletimeout = None
         self.loaded_config = loaded_config
@@ -61,7 +67,7 @@ class Player():
 
         """
         try:
-            with self.client: # acquire lock
+            with self.client:  # acquire lock
                 self.client.connect(self.loaded_config.network['mpd_host'], self.loaded_config.network['mpd_port'])
                 logging.info("Updating MPD client")
         except ConnectionError, socket.error:
@@ -75,7 +81,7 @@ class Player():
         """
         logging.info("Updating the library")
         try:
-            with self.client: # acquire lock
+            with self.client:  # acquire lock
                 self.client.update(1)
         except ConnectionError, socket.error:
             logging.warning("Unable to contact daemon, reconnecting and retry")
@@ -88,7 +94,7 @@ class Player():
         """
         try:
             logging.info("Adding music %s to queue" % music.path)
-            with self.client: # acquire lock
+            with self.client:  # acquire lock
                 self.client.add(music.path)
                 self.client.play()
             self.last_added = time.time()
@@ -105,7 +111,7 @@ class Player():
 
         """
         try:
-            with self.client: # acquire lock
+            with self.client:  # acquire lock
                 status = self.client.status()
             return status['state'] == 'play'
         except ConnectionError, socket.error:
@@ -119,7 +125,7 @@ class Player():
 
         """
         try:
-            with self.client: # acquire lock
+            with self.client:  # acquire lock
                 return self.client.currentsong()['title']
         except ConnectionError, socket.error:
             logging.warning("Unable to contact daemon, reconnecting and retry")
@@ -135,7 +141,7 @@ class Player():
 
         """
         try:
-            with self.client: # acquire lock
+            with self.client:  # acquire lock
                 return self.client.currentsong()['artist']
         except ConnectionError, socket.error:
             logging.warning("Unable to contact daemon, reconnecting and retry")
@@ -151,7 +157,7 @@ class Player():
 
         """
         try:
-            with self.client: # acquire lock
+            with self.client:  # acquire lock
                 return self.client.currentsong()['file'].split("-")[0]
         except ConnectionError, socket.error:
             logging.warning("Unable to contact daemon, reconnecting and retry")
@@ -167,7 +173,7 @@ class Player():
 
         """
         try:
-            with self.client: # acquire lock
+            with self.client:  # acquire lock
                 playlist = self.client.playlist()
             return len(playlist)
         except ConnectionError, socket.error:
@@ -182,7 +188,7 @@ class Player():
         """
         try:
             logging.info("Disconnecting client")
-            with self.client: # acquire lock
+            with self.client:  # acquire lock
                 self.client.disconnect()
         except ConnectionError, socket.error:
             logging.warning("Unable to contact daemon, reconnecting and retry")
@@ -237,7 +243,7 @@ class Player():
         logging.info("All musics in import directory have been processed.")
         logging.debug("Changing directory to %s." % current_path)
         os.chdir(current_path)
-    
+
     @staticmethod
     def get_to_path(export_path, index, title, artist, extension):
         #TODO
@@ -247,7 +253,7 @@ class Player():
         return Player.format_path(export_path) + u"/" + index + u"-" + \
                Player.format_file_name(title) + u"-" + \
                Player.format_file_name(artist) + u"." + extension
-    
+
     @staticmethod
     def get_from_path(import_path, file_path):
         #TODO
@@ -255,7 +261,7 @@ class Player():
 
         """
         return Player.format_path(import_path) + u"/" + Player.format_path(file_path) + u" "
-    
+
     @staticmethod
     def get_absolute_path(path):
         #TODO
@@ -287,14 +293,14 @@ class Player():
 
         """
         logging.debug("index_picker() method started with letter:%s and number %s" % (letter, number))
-        while filled_slots[letter-1][number-1]:
+        while filled_slots[letter - 1][number - 1]:
             number += 1
             if number == 21 and letter < 4:
                 number = 1
                 letter += 1
             if letter == 5:
                 logging.warning("Library is full: empty it ! skipping...")
-        index = dic[letter]+str(number)
-        filled_slots[letter-1][number-1] = True
+        index = dic[letter] + str(number)
+        filled_slots[letter - 1][number - 1] = True
         logging.debug("index_picker() method returns index: %s letter %s number %s" % (index, letter, number))
         return {"index": index, "filled_slots": filled_slots, "letter": letter, "number": number}
