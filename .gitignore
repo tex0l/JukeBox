@@ -62,6 +62,7 @@ Music/
 jukebox.conf
 jukebox.log
 mpd.conf
+.DS_Store
 
 #Random and/or personal
 *.komodoproject
