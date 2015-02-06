@@ -1,11 +1,14 @@
 from __future__ import unicode_literals
 import signal
 
+
 class AlarmException(Exception):
     pass
 
+
 def alarmHandler(signum, frame):
     raise AlarmException
+
 
 def nonBlockingRawInput(prompt='', timeout=20):
     signal.signal(signal.SIGALRM, alarmHandler)

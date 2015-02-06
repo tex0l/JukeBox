@@ -1,12 +1,12 @@
 from __future__ import unicode_literals
-#!/usr/bin/env python
+# !/usr/bin/env python
 # -*- coding: utf-8 -*-
 class Display_LCDd_dummy:
     #TODO
     """
 
     """
-# a dummy class to use on a computer without a lcd screen emulator
+    # a dummy class to use on a computer without a lcd screen emulator
     def __init__(self):
         self.UT = UT()
         return
@@ -30,5 +30,6 @@ class Display_LCDd_dummy:
 class UT:
     def __init__(self):
         return
+
     def join(self):
         return

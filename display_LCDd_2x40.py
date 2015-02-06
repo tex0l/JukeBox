@@ -1,25 +1,25 @@
 from __future__ import unicode_literals
-#!/usr/bin/env python
+# !/usr/bin/env python
 # -*- coding: utf-8 -*-
 from lcdproc.server import Server
-import threading
+from threading import Thread, Event, Timer
 import time
-import music_player
 import logging
 
 
-class UpdateThread(threading.Thread):
+class UpdateThread(Thread):
     #TODO
     """
 
     """
+
     def __init__(self, display, player, loaded_config):
         #TODO
         """
 
         """
-        threading.Thread.__init__(self)
-        self.alive = threading.Event()
+        Thread.__init__(self)
+        self.alive = Event()
         self.alive.set()
         self.display = display
         self.player = player
@@ -49,7 +49,7 @@ class UpdateThread(threading.Thread):
 
         """
         self.alive.clear()
-        threading.Thread.join(self, timeout)
+        Thread.join(self, timeout)
 
 
 class Display_LCDd_2x40:
@@ -57,7 +57,7 @@ class Display_LCDd_2x40:
     """
 
     """
-# a class to handle all the display functions of the jukebox and actually display them on a 40x2 display through pyLCDd
+    # a class to handle all the display functions of the jukebox and actually display them on a 40x2 display through pyLCDd
     def __init__(self, player, loaded_config):
         #TODO
         """
@@ -65,24 +65,25 @@ class Display_LCDd_2x40:
         """
         self.loaded_config = loaded_config
 
-        lcd = Server(hostname=self.loaded_config.lcd['lcdd_host'], port=self.loaded_config.lcd['lcdd_port'])
-        lcd.start_session()
-        screen = lcd.add_screen("jukeboX".encode('ascii', 'ignore'))
-        screen.set_heartbeat("off".encode('ascii', 'ignore'))
-        screen.set_priority("foreground".encode('ascii', 'ignore'))
+        self.lcd = Server(hostname=self.loaded_config.lcd['lcdd_host'], port=self.loaded_config.lcd['lcdd_port'])
 
-        self.entry_string = screen.add_scroller_widget("entry".encode('ascii', 'ignore'),
-                                                      text="Choose song".encode('ascii', 'ignore'), left=1, top=1,
-                                                      right=28, bottom=1, speed=4)
-        self.queue_string = screen.add_string_widget("queue".encode('ascii', 'ignore'),
-                                                    text="Queue : 0".encode('ascii', 'ignore'), x=30, y=1)
-        self.icon = screen.add_icon_widget("playIcon".encode('ascii', 'ignore'), x=1, y=2,
+        with self.lcd:
+            self.lcd.start_session()
+            self.screen = self.lcd.add_screen("jukeboX".encode('ascii', 'ignore'))
+            self.screen.set_heartbeat("off".encode('ascii', 'ignore'))
+            self.screen.set_priority("foreground".encode('ascii', 'ignore'))
+            self.entry_string = self.screen.add_scroller_widget("entry".encode('ascii', 'ignore'),
+                                                       text="Choose song".encode('ascii', 'ignore'), left=1, top=1,
+                                                       right=28, bottom=1, speed=4)
+            self.queue_string = self.screen.add_string_widget("queue".encode('ascii', 'ignore'),
+                                                     text="Queue : 0".encode('ascii', 'ignore'), x=30, y=1)
+            self.icon = self.screen.add_icon_widget("playIcon".encode('ascii', 'ignore'), x=1, y=2,
                                            name="STOP".encode('ascii', 'ignore'))
-        self.playing_string = screen.add_scroller_widget("playing".encode('ascii', 'ignore'),
-                                                        text="Nothing in the playlist. Add a song ?"
-                                                        .encode('ascii', 'ignore'),
-                                                        left=3, top=2, right=40, bottom=2, speed=4)
-        #self.display.addScroller(3, 2, 38, 4)
+            self.playing_string = self.screen.add_scroller_widget("playing".encode('ascii', 'ignore'),
+                                                         text="Nothing in the playlist. Add a song ?"
+                                                         .encode('ascii', 'ignore'),
+                                                         left=3, top=2, right=40, bottom=2, speed=4)
+            #self.display.addScroller(3, 2, 38, 4)
         self.UT = UpdateThread(self, player, loaded_config)
         self.UT.start()
         self.timer = None
@@ -97,7 +98,8 @@ class Display_LCDd_2x40:
 
         """
         self.queue = q
-        self.queue_string.set_text("Queue : %d".encode('ascii', 'ignore') % q)
+        with self.lcd:
+            self.queue_string.set_text("Queue : %d".encode('ascii', 'ignore') % q)
 
     def waiting(self):
         #TODO
@@ -113,7 +115,7 @@ class Display_LCDd_2x40:
 
         """
         self.icon.set_name("PLAY".encode('ascii', 'ignore'))
-        text = "%s - %s - %s"%(number, title, artist)
+        text = "%s - %s - %s" % (number, title, artist)
         self.playing_string.set_text(text.encode('ascii', 'ignore'))
 
     def removeEntry(self):
@@ -131,10 +133,11 @@ class Display_LCDd_2x40:
         """
         if self.entryInProgress is False:
             if (self.queue < self.loaded_config.variables['nb_music']) \
-                    or (time.time()-self.lastAdded > self.loaded_config.variables['add_timeout']):
+                    or (time.time() - self.lastAdded > self.loaded_config.variables['add_timeout']):
                 self.entry_string.set_text("Choose song".encode('ascii', 'ignore'))
             else:
-                text = "Wait %s seconds" % (int(self.loaded_config.variables['add_timeout']+1-time.time()+self.lastAdded))
+                text = "Wait %s seconds" % (
+                int(self.loaded_config.variables['add_timeout'] + 1 - time.time() + self.lastAdded))
                 self.entry_string.set_text(text.encode('ascii', 'ignore'))
 
     def entry(self, entry, song=None):
@@ -149,6 +152,6 @@ class Display_LCDd_2x40:
         if song is not None:
             text += " - %s - %s" % (song.name, song.artist)
             self.lastAdded = time.time()
-            self.timer = threading.Timer(5, self.removeEntry)
+            self.timer = Timer(5, self.removeEntry)
             self.timer.start()
         self.entry_string.set_text(text.encode('ascii', 'ignore'))

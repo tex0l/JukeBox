@@ -1,5 +1,5 @@
 from __future__ import unicode_literals
-#!/usr/bin/env python
+# !/usr/bin/env python
 # -*- coding: utf-8 -*-
 from mutagen.easyid3 import EasyID3
 from mutagen.easymp4 import EasyMP4
@@ -31,7 +31,7 @@ def tag_finder(file_path):
             logging.warning("No title tag found, setting to unknown")
         try:
             result['extension'] = file_path.split(u".")
-            result['extension'] = result['extension'].pop(len(result['extension'])-1)
+            result['extension'] = result['extension'].pop(len(result['extension']) - 1)
             logging.info("Extension found: %s" % result['extension'])
         except:
             logging.warning("No extension found")
@@ -39,6 +39,7 @@ def tag_finder(file_path):
     else:
         logging.info("System file, ignored.")
     return {}
+
 
 def id3_finder(file_path):
     #TODO

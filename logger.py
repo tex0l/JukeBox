@@ -1,5 +1,5 @@
 from __future__ import unicode_literals
-#!/usr/bin/env python
+# !/usr/bin/env python
 # -*- coding: utf-8 -*-
 import logging
 
@@ -13,6 +13,7 @@ class Logger:
     The level is 10 for debug, ..., 50 for critical)
 
     """
+
     def __init__(self, log_format, path, level):
         """
         log_format is the wanted logging format
@@ -29,14 +30,8 @@ class Logger:
         self.root_logger.setLevel(level)
         self.mpd_logger.setLevel(level)
 
-        self.file_handler = logging.FileHandler(path,)
+        self.file_handler = logging.FileHandler(path)
         self.file_handler.setFormatter(self.log_formatter)
 
         self.root_logger.addHandler(self.file_handler)
         self.mpd_logger.addHandler(self.file_handler)
-
-
-class NoMpd(logging.Filter):
-    def filter(self, record):
-        print record.name,record.msg
-        return not record.name.startswith('mpd')

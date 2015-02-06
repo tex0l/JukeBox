@@ -1,5 +1,5 @@
 from __future__ import unicode_literals
-#!/usr/bin/env python
+# !/usr/bin/env python
 # -*- coding: utf-8 -*-
 import glob
 import os
@@ -20,6 +20,7 @@ class MusicDir:
     The MusicDir class indexes the Music directory and provides a
     find_number(index) method
     """
+
     def __init__(self, path):
         #TODO
         """
@@ -38,9 +39,9 @@ class MusicDir:
             try:
                 self.musique.append(Music(file))
                 l = len(self.musique)
-                self.codes.append(self.musique[l-1].number)
+                self.codes.append(self.musique[l - 1].number)
             except:
-                logging.warning(file+" is incorrectly named. Try updating the database")
+                logging.warning(file + " is incorrectly named. Try updating the database")
 
     # impression de la liste des musiques
     def printmusicdir(self):
@@ -58,11 +59,11 @@ class MusicDir:
 
         """
         l = len(self.codes)
-        
-        for i in range(0,l):
+
+        for i in range(0, l):
             if self.codes[i] == test:
                 return self.musique[i]
-            
+
         return ""
 
     def filled_slots(self):
@@ -78,19 +79,20 @@ class MusicDir:
             number = 0
             while number < 20:
                 number += 1
-                if self.find_number(dic[letter]+str(number)) != "":
-                    result[letter-1].append(True)
+                if self.find_number(dic[letter] + str(number)) != "":
+                    result[letter - 1].append(True)
                 else:
-                    result[letter-1].append(False)
+                    result[letter - 1].append(False)
             letter += 1
         return result
-    
-        
+
+
 class Music:
     #TODO
     """
 
     """
+
     def __init__(self, path):
         #TODO
         """
@@ -101,7 +103,7 @@ class Music:
         self.path = path
         #nom du fichier
         self.file_name = path_leaf(self.path)
-        self.number, self.artist, self. name, self.format = self.find_tags()
+        self.number, self.artist, self.name, self.format = self.find_tags()
 
 
     def find_tags(self):
@@ -135,8 +137,8 @@ class Music:
         """
 
         """
-        print self.number+" - "+self.name+" - "+self.artist+" - "+self.format
-    
+        print self.number + " - " + self.name + " - " + self.artist + " - " + self.format
+
     def display(self):
         #TODO
         """

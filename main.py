@@ -1,5 +1,5 @@
 from __future__ import unicode_literals
-#!/usr/bin/env python
+# !/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 from config import Config
@@ -8,13 +8,11 @@ from jukebox import Jukebox
 import logging
 
 loaded_config = Config()
-#Initialilizing the logger with the correct settings
+# Initialilizing the logger with the correct settings
 logger = Logger(log_format=loaded_config.log['format'],
                 path=loaded_config.log['path'],
                 level=loaded_config.log['level']).root_logger
 
-global shutdown
-shutdown = False
 
 
 def main(loaded_config):
@@ -23,15 +21,13 @@ def main(loaded_config):
     """
 
     try:
-         Jukebox(loaded_config)
+        Jukebox(loaded_config)
     except Exception as e:
-        if shutdown != True:
-            logger.critical("Jukebox has crashed with error %s restarting... " % e)
-            main(loaded_config)
-
+        logger.critical("Jukebox has crashed with error %s restarting... " % e)
+        main(loaded_config)
 
 
 if __name__ == '__main__':
-    #This code executes the following if and only if main.py is first started, not another file.
+    # This code executes the following if and only if main.py is first started, not another file.
     logging.warning("Starting...")
     main(loaded_config)

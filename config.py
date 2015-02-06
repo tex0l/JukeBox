@@ -32,14 +32,14 @@ class Config:
             self.generate()
             self.network, self.paths, self.variables, self.lcd, self.log = self.get_sections()
         logging.debug(self.stringify_config())
-        
+
     def get_sections(self):
         return (self.config_section_map('Network'),
                 self.config_section_map('Paths'),
                 self.config_section_map('Variables'),
                 self.config_section_map('LCD'),
                 self.config_section_map('log'))
-    
+
     def stringify_config(self):
         """
         a print method
@@ -72,7 +72,7 @@ class Config:
         self.config.set('Paths', 'index_dir', 'Import')
         self.config.set('Paths', 'mpd_conf_file', '/etc/mpd.conf')
         self.config.add_section('Variables')
-        #indexation au demarrage ?
+        # indexation au demarrage ?
         self.config.set('Variables', 'index', 'True')
         self.config.set('Variables', 'index_timeout', '5')
         #amount of musics in queue before timeout is activated
@@ -88,7 +88,7 @@ class Config:
         self.config.set('log', 'level', '20')
         self.config.write(cfgfile)
         cfgfile.close()
-        
+
     def config_section_map(self, section):
         """
         It is a modified version of a method found on the Internet
@@ -103,21 +103,21 @@ class Config:
                 logging.debug("Found an option : %s" % dict1[option])
                 continue
             except:
-                #The option (or attribute) is not an integer
+                # The option (or attribute) is not an integer
                 pass
             try:
                 dict1[option] = self.config.getboolean(section, option)
                 logging.debug("Found an option : %s" % dict1[option])
                 continue
             except:
-                #The option (or attribute) is not a boolean
+                # The option (or attribute) is not a boolean
                 pass
             try:
                 dict1[option] = self.config.get(section, option)
                 logging.debug("Found an option : %s" % dict1[option])
                 continue
             except:
-                #The option (or attribute) is not a string (!?)
+                # The option (or attribute) is not a string (!?)
                 print("exception on %s!" % option)
                 logging.error("Unknown option in config file, skipping")
 

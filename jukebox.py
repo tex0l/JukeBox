@@ -1,5 +1,5 @@
 from __future__ import unicode_literals
-#!/usr/bin/env python
+# !/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 import sys
@@ -11,6 +11,7 @@ import music_player
 import time
 import logging
 from display import DisplayChooser
+import threading
 
 
 class Jukebox:
@@ -18,7 +19,6 @@ class Jukebox:
     Implements the Jukebox class aka "the core"
     It links the user interface with the rest of the program
     """
-    global shutdown
 
     def __init__(self, loaded_config):
         """
@@ -28,7 +28,6 @@ class Jukebox:
         And it asks if an import is necessary, and completes the library automatically,
         Finally it switches into using mode aka the "normal mode"
         """
-
         # initialisation du dictionnaire
         logging.info("Initializing dictionnary")
         self.dictionary = keyboard_map.Map()
@@ -40,8 +39,9 @@ class Jukebox:
         logging.info("Initializing library")
         self.music_index = parser.MusicDir(loaded_config.paths['music_dir'])
         if loaded_config.variables['index']:
-            user_input = nonBlockingRawInput("To update music directory from import directory\nType 'y' or 'yes', %s secs then skipped: " %
-                                   loaded_config.variables['index_timeout'], timeout=loaded_config.variables['index_timeout'])
+            user_input = nonBlockingRawInput(
+                "To update music directory from import directory\nType 'y' or 'yes', %s secs then skipped: " %
+                loaded_config.variables['index_timeout'], timeout=loaded_config.variables['index_timeout'])
             if user_input == "y" or user_input == "yes":
                 self.generate(loaded_config)
         self.print_help()
@@ -53,7 +53,8 @@ class Jukebox:
         Then it updates the library by totally overwriting it with the new one
         """
         logging.info("Parsing import directory")
-        self.player.generate_library(loaded_config.paths['index_dir'], loaded_config.paths['music_dir'], self.music_index.filled_slots())
+        self.player.generate_library(loaded_config.paths['index_dir'], loaded_config.paths['music_dir'],
+                                     self.music_index.filled_slots())
         logging.info("Updating music library")
         self.music_index = parser.MusicDir(loaded_config.paths['music_dir'])
 
@@ -63,11 +64,10 @@ class Jukebox:
 
         """
         logging.debug("Waiting for the end of the display thread update")
-        self.display.UT.join() #Attend que le thread d'update du display soit termine
+        self.display.UT.join()  # Attend que le thread d'update du display soit termine
         logging.debug("Exiting the player")
         self.player.exit()
-        shutdown = True
-        #display.display.RT.join()
+        # display.display.RT.join()
         print ("Goodbye !")
         logging.info("Exiting program")
         exit()
@@ -120,7 +120,7 @@ class Jukebox:
         """
         if (str(string)).isalpha():
             entry = string.upper()
-            self.display.entry(entry+"_")
+            self.display.entry(entry + "_")
             return entry
         return ""
 
@@ -160,7 +160,7 @@ class Jukebox:
         logging.debug("is_digit_updater(%s,%s) returns is_letter_updater(''+%s)" % (choice,
                                                                                     old_entry,
                                                                                     choice))
-        return self.is_letter_updater(""+choice)
+        return self.is_letter_updater("" + choice)
 
     def music_picker(self, loaded_config, choice, entry):
         """
@@ -174,27 +174,28 @@ class Jukebox:
         Else it processes the choice throughout is_digit_updater()  method and returns the result.
         """
 
-        time_elapsed = time.time()-self.player.last_added
+        time_elapsed = time.time() - self.player.last_added
         if self.player.queue_count() < loaded_config.variables['nb_music'] \
-            or time_elapsed > loaded_config.variables['add_timeout']:
-                # Si on n'a pas deja choisi une lettre
-                if entry == "":
-                    result = self.is_letter_updater(choice)
-                    if result == "":
-                        logging.info("Invalid input")
-                    logging.debug("music_picker(loaded_config,%s,%s) returns %s" % (choice,
-                                                                           entry,
-                                                                           result))
-                    return result
-                else:
-                    result = self.is_digit_updater(choice, entry)
-                    logging.debug("music_picker(loaded_config,%s,%s) returns %s" % (choice,
-                                                                           entry,
-                                                                           result))
-                    return result
+                or time_elapsed > loaded_config.variables['add_timeout']:
+            # Si on n'a pas deja choisi une lettre
+            if entry == "":
+                result = self.is_letter_updater(choice)
+                if result == "":
+                    logging.info("Invalid input")
+                logging.debug("music_picker(loaded_config,%s,%s) returns %s" % (choice,
+                                                                                entry,
+                                                                                result))
+                return result
+            else:
+                result = self.is_digit_updater(choice, entry)
+                logging.debug("music_picker(loaded_config,%s,%s) returns %s" % (choice,
+                                                                                entry,
+                                                                                result))
+                return result
         else:
             remaining_time = loaded_config.variables['add_timeout'] - time_elapsed
             logging.debug("Waiting for timeout, still %s secs to wait" % remaining_time)
+
     @staticmethod
     def print_help():
         """
