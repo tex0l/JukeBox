@@ -18,6 +18,8 @@ class Jukebox:
     Implements the Jukebox class aka "the core"
     It links the user interface with the rest of the program
     """
+    global shutdown
+
     def __init__(self, loaded_config):
         """
         Initializes the jukebox:
@@ -26,10 +28,10 @@ class Jukebox:
         And it asks if an import is necessary, and completes the library automatically,
         Finally it switches into using mode aka the "normal mode"
         """
-        self.shutdown = False
+
         # initialisation du dictionnaire
         logging.info("Initializing dictionnary")
-        self.dictionnary = keyboard_map.Map()
+        self.dictionary = keyboard_map.Map()
         # initialisation du lecteur
         logging.info("Initializing player")
         self.player = music_player.Player(loaded_config, launch=True)
@@ -64,7 +66,7 @@ class Jukebox:
         self.display.UT.join() #Attend que le thread d'update du display soit termine
         logging.debug("Exiting the player")
         self.player.exit()
-        self.shutdown = True
+        shutdown = True
         #display.display.RT.join()
         print ("Goodbye !")
         logging.info("Exiting program")
@@ -98,7 +100,7 @@ class Jukebox:
         logging.debug("Got choice %s through getch" % choice)
         # Conversion avec le dictionnaire
         logging.debug("Mapping choice throughout the dictionary")
-        choice = self.dictionnary.find(choice)
+        choice = self.dictionary.find(choice)
         if choice == 'quit':
             self.exit()
         elif choice == 'list':

@@ -31,7 +31,7 @@ class UpdateThread(threading.Thread):
         """
 
         """
-        logging.debug("Starting thread updating ")
+        logging.debug("Starting updating thread ")
         while self.alive.isSet():
             time.sleep(0.1)
             self.display.setQueue(self.player.queue_count())

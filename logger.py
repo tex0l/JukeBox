@@ -23,6 +23,15 @@ class Logger:
         self.log_formatter = logging.Formatter(log_format)
         self.root_logger = logging.getLogger()
         self.root_logger.setLevel(level)
-        self.file_handler = logging.FileHandler(path)
+        self.root_logger.propagate = False
+        self.file_handler = logging.FileHandler(path,)
+        self.print_handler = logging.Handler()
         self.file_handler.setFormatter(self.log_formatter)
+        self.file_handler.addFilter(NoMpd())
         self.root_logger.addHandler(self.file_handler)
+        self.root_logger.addFilter(NoMpd())
+
+class NoMpd(logging.Filter):
+    def filter(self, record):
+        print record.name,record.msg
+        return not record.name.startswith('mpd')

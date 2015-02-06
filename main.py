@@ -13,17 +13,22 @@ logger = Logger(log_format=loaded_config.log['format'],
                 path=loaded_config.log['path'],
                 level=loaded_config.log['level']).root_logger
 
+global shutdown
+shutdown = False
+
 
 def main(loaded_config):
     """
     This method main.main() initializes a jukebox.Jukebox class with loaded_config
     """
+
     try:
-        jukebox = Jukebox(loaded_config)
+         Jukebox(loaded_config)
     except Exception as e:
-        logger.critical("Jukebox has crashed with error %s restarting... " % e)
-        main(loaded_config)
-    #if jukebox.shutdown != True:
+        if shutdown != True:
+            logger.critical("Jukebox has crashed with error %s restarting... " % e)
+            main(loaded_config)
+
 
 
 if __name__ == '__main__':
