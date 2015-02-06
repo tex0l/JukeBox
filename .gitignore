@@ -67,5 +67,5 @@ mpd.conf
 #Random and/or personal
 *.komodoproject
 run
-run_juke.sh
+jukebox.sh
 
