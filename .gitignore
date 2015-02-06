@@ -4,6 +4,8 @@ __pycache__/
 Import/
 Music/
 jukebox.conf
+jukebox.log
+mpd.conf
 .DS_store
 # C extensions
 *.so
