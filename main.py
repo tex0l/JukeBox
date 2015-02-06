@@ -14,7 +14,6 @@ logger = Logger(log_format=loaded_config.log['format'],
                 level=loaded_config.log['level']).root_logger
 
 
-
 def main(loaded_config):
     """
     This method main.main() initializes a jukebox.Jukebox class with loaded_config
@@ -27,6 +26,8 @@ def main(loaded_config):
         logger.critical("Jukebox has crashed with error %s restarting... " % e)
         if not debug:
             main(loaded_config)
+        else:
+            raise
 
 
 if __name__ == '__main__':
