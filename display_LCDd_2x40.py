@@ -13,7 +13,7 @@ class UpdateThread(threading.Thread):
     """
 
     """
-    def __init__(self, display, loaded_config):
+    def __init__(self, display, player, loaded_config):
         #TODO
         """
 
@@ -22,7 +22,7 @@ class UpdateThread(threading.Thread):
         self.alive = threading.Event()
         self.alive.set()
         self.display = display
-        self.player = music_player.Player(loaded_config, launch=False)
+        self.player = player
         self.playing = ""
         self.loaded_config = loaded_config
 
@@ -58,7 +58,7 @@ class Display_LCDd_2x40:
 
     """
 # a class to handle all the display functions of the jukebox and actually display them on a 40x2 display through pyLCDd
-    def __init__(self, loaded_config):
+    def __init__(self, player, loaded_config):
         #TODO
         """
 
@@ -83,7 +83,7 @@ class Display_LCDd_2x40:
                                                         .encode('ascii', 'ignore'),
                                                         left=3, top=2, right=40, bottom=2, speed=4)
         #self.display.addScroller(3, 2, 38, 4)
-        self.UT = UpdateThread(self, loaded_config)
+        self.UT = UpdateThread(self, player, loaded_config)
         self.UT.start()
         self.timer = None
         self.entryInProgress = False

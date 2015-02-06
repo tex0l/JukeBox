@@ -34,9 +34,9 @@ class Jukebox:
         self.dictionary = keyboard_map.Map()
         # initialisation du lecteur
         logging.info("Initializing player")
-        self.player = music_player.Player(loaded_config, launch=True)
+        self.player = music_player.Player(loaded_config)
         logging.info("Initializing display")
-        self.display = DisplayChooser(loaded_config=loaded_config).display
+        self.display = DisplayChooser(self.player, loaded_config).display
         logging.info("Initializing library")
         self.music_index = parser.MusicDir(loaded_config.paths['music_dir'])
         if loaded_config.variables['index']:
