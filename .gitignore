@@ -6,6 +6,7 @@ Music/
 jukebox.conf
 jukebox.log
 mpd.conf
+run
 .DS_store
 # C extensions
 *.so
@@ -64,3 +65,5 @@ docs/_build/
 
 Import/*
 Music/*
+
+run
