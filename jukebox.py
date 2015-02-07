@@ -41,6 +41,7 @@ class Jukebox:
                 loaded_config.variables['index_timeout'], timeout=loaded_config.variables['index_timeout'])
             if user_input == "y" or user_input == "yes":
                 self.generate(loaded_config)
+                self.player.update()
         self.print_help()
         self.main(loaded_config)
 
