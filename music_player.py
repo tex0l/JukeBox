@@ -15,6 +15,9 @@ from threading import Lock, Thread, Event
 
 # noinspection PyUnusedLocal,PyUnusedLocal,PyUnusedLocal,PyShadowingBuiltins
 class LockableMPDClient(MPDClient):
+    """
+    A subclass of MPDClient to make it thread-safe
+    """
     def __init__(self, use_unicode=False):
         super(LockableMPDClient, self).__init__()
         self.use_unicode = use_unicode
@@ -34,6 +37,10 @@ class LockableMPDClient(MPDClient):
 
 
 class MPDHandler(Thread):
+    """
+    A thread to safely communicate with the mpd client
+    """
+    #Private functions that actually communicate with the client
     def __init__(self, loaded_config):
         Thread.__init__(self)
 
@@ -54,63 +61,58 @@ class MPDHandler(Thread):
         self.last_added = time.time()
         self._stop = Event()
 
-    def __connect(self):
+    def _connect(self):
         try:
             with self._client:
                 self._client.connect(self.loaded_config.network['mpd_host'], self.loaded_config.network['mpd_port'])
             return
         except socket.error, ConnectionError:
-            self.__connect()
+            self._connect()
 
-    def exit(self):
-        self._stop.set()
-
-    def __fetch_status(self):
+    def _fetch_status(self):
         try:
             with self._client:
                 return self._client.status()
         except socket.error:
-            return self.__fetch_status()
+            return self._fetch_status()
         except ConnectionError:
-            self.__connect()
-            return self.__fetch_status()
+            self._connect()
+            return self._fetch_status()
 
-
-    def __fetch_current_song(self):
+    def _fetch_current_song(self):
         try:
             with self._client:
                 return self._client.currentsong()
         except socket.error:
-            return self.__fetch_current_song()
+            return self._fetch_current_song()
         except ConnectionError:
-            self.__connect()
-            return self.__fetch_current_song()
+            self._connect()
+            return self._fetch_current_song()
 
-    def __fetch_playlist(self):
+    def _fetch_playlist(self):
         try:
             with self._client:
                 playlist = self._client.playlist()
                 return playlist
         except socket.error:
-            return self.__fetch_playlist()
+            return self._fetch_playlist()
         except ConnectionError:
-            self.__connect()
-            return self.__fetch_playlist()
+            self._connect()
+            return self._fetch_playlist()
 
-    def __update(self):
+    def _update(self):
         try:
             with self._client:
                 self._update.set()
                 self._client.update()
                 self._update.clear()
         except socket.error:
-            return self.__update()
+            return self._update()
         except ConnectionError:
-            self.__connect()
-            return self.__update()
+            self._connect()
+            return self._update()
 
-
-    def __enqueue(self, music):
+    def _enqueue(self, music):
         try:
             with self._client:
                 # noinspection PyUnresolvedReferences
@@ -120,16 +122,14 @@ class MPDHandler(Thread):
                 self._client.play()
                 return
         except socket.error:
-            return self.__enqueue(music)
+            return self._enqueue(music)
         except ConnectionError:
-            self.__connect()
-            return self.__enqueue(music)
-
-
+            self._connect()
+            return self._enqueue(music)
 
     # Handler core
     def run(self):
-        self.__connect()
+        self._connect()
 
         with self._client:
             # noinspection PyUnresolvedReferences
@@ -138,20 +138,19 @@ class MPDHandler(Thread):
             self._client.crossfade(1)
         while not self._stop.isSet():
             if self._update.isSet():
-                self._client.__update()
+                self._client._update()
             length = len(self.queue)
             for i in range(0, length):
-                self.__enqueue(self.queue[0])
+                self._enqueue(self.queue[0])
                 self.queue.pop(0)
-            self.status = self.__fetch_status()
-            self.current_song = self.__fetch_current_song()
-            self.playlist = self.__fetch_playlist()
+            self.status = self._fetch_status()
+            self.current_song = self._fetch_current_song()
+            self.playlist = self._fetch_playlist()
             time.sleep(1)
-
 
     # Control methods :
     def update(self):
-        return self.__update()
+        return self._update()
 
     def enqueue(self, music):
         self.logger.debug("Adding %s to queue" % music.name)
@@ -165,6 +164,9 @@ class MPDHandler(Thread):
 
     def get_queue_count(self):
         return len(self.playlist)+len(self.queue)
+
+    def exit(self):
+        self._stop.set()
 
 
 class Player():
@@ -224,9 +226,10 @@ class Player():
 
     def generate_library(self, extraction_path, final_path, filled_slots=None):
         """
-
+        An ugly method to import songs in Import directory into the Music directory and name them correctly.
         """
-        if not filled_slots: filled_slots = []
+        if not filled_slots:
+            filled_slots = []
         logging.debug("Getting current path")
         current_path = os.getcwd()
         import_path = self.get_absolute_path(extraction_path)
@@ -271,8 +274,8 @@ class Player():
     @staticmethod
     def get_to_path(export_path, index, title, artist, extension):
         return Player.format_path(export_path) + u"/" + index + u"-" + \
-               Player.format_file_name(title) + u"-" + \
-               Player.format_file_name(artist) + u"." + extension
+            Player.format_file_name(title) + u"-" + \
+            Player.format_file_name(artist) + u"." + extension
 
     @staticmethod
     def get_from_path(import_path, file_path):
@@ -292,9 +295,8 @@ class Player():
 
     @staticmethod
     def index_picker(dic, filled_slots, letter=1, number=1):
-        #TODO
         """
-
+        Picks a free slot
         """
         logging.debug("index_picker() method started with letter:%s and number %s" % (letter, number))
         while filled_slots[letter - 1][number - 1]:

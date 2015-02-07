@@ -157,13 +157,17 @@ class Music:
         """
         return "%s%s : %s by %s" % (self.index, self.name, self.artist)
 
+
 class Index(object):
-    def __init__(self,letter,number):
+    def __init__(self, letter, number):
         self.letter = letter
         self.number = number
+
     def __str__(self):
         return self.letter + unicode(self.number)
+
     def __repr__(self):
         return self.__str__()
+
     def __eq__(self, other):
-        return (self.letter == other.letter and self.number == other.number)
+        return self.letter == other.letter and self.number == other.number
