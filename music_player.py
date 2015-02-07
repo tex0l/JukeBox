@@ -33,6 +33,7 @@ class LockableMPDClient(MPDClient):
         self.release()
 
 class MPDHandler(Thread):
+
     def __init__(self, loaded_config):
         Thread.__init__(self)
 
@@ -50,12 +51,43 @@ class MPDHandler(Thread):
         logging.info("Connecting to MPD")
 
         self.last_added = time.time()
-
-
         self._stop = Event()
 
+    def exit(self):
+        self._stop.set()
+
+    def stopped(self):
+        return self._stop.isSet()
+
+    def __fetch_status(self):
+        with self.client:
+            return self.client.status()
+
+    def __fetch_current_song(self):
+        with self.client:
+            return self.client.currentsong()
+
+    def __connect(self):
+        with self.client:
+            self.client.connect(self.loaded_config.network['mpd_host'], self.loaded_config.network['mpd_port'])
+            return
+
+    def __fetch_playlist(self):
+        with self.client:
+            return self.client.playlist()
+        
+    def __enqueue(self, music):
+        with self.client:
+            # noinspection PyUnresolvedReferences
+            self.logger.debug("Adding %s to playlist" % music.name)
+            self.client.add(music.path)
+            # noinspection PyUnresolvedReferences
+            self.client.play()
+            return
+
+    # Handler core
     def run(self):
-        self._connect()
+        self.__connect()
 
         with self.client:
             # noinspection PyUnresolvedReferences
@@ -66,54 +98,17 @@ class MPDHandler(Thread):
             time.sleep(1)
             length = len(self.queue)
             for i in range(0, length):
-                self._enqueue(self.queue[i])
+                self.__enqueue(self.queue[i])
                 self.queue.pop(i)
-            self.status = self._fetch_status()
-            self.current_song = self._fetch_current_song()
-            self.playlist = self._fetch_playlist()
+            self.status = self.__fetch_status()
+            self.current_song = self.__fetch_current_song()
+            self.playlist = self.__fetch_playlist()
 
 
-    def exit(self):
-        self._stop.set()
-
-    def stopped(self):
-        return self._stop.isSet()
-
-    def _fetch_status(self):
-
-        with self.client:
-            return self.client.status()
-
-    def _fetch_current_song(self):
-
-        with self.client:
-            return self.client.currentsong()
-
-    def _connect(self):
-
-        with self.client:
-            self.client.connect(self.loaded_config.network['mpd_host'], self.loaded_config.network['mpd_port'])
-            return
-
-    def _fetch_playlist(self):
-
-        with self.client:
-            return self.client.playlist()
-
+    # Control methods :
     def update(self):
-
         with self.client:
-            self.client.update(1)
-            return
-
-    def _enqueue(self, music):
-
-        with self.client:
-            # noinspection PyUnresolvedReferences
-            self.logger.debug("Adding %s to playlist" % music.name)
-            self.client.add(music.path)
-            # noinspection PyUnresolvedReferences
-            self.client.play()
+            self.client.update()
             return
 
     def enqueue(self, music):
@@ -154,70 +149,37 @@ class Player():
         self.last_added = time.time()
 
     def update(self):
-        #TODO
-        """
-
-        """
         logging.info("Updating the library")
         return self.mpd_handler.update()
 
     def enqueue(self, music):
-        #TODO
-        """
-
-        """
         logging.info("Enqueueing %s to playlist" % music.name)
         self.mpd_handler.enqueue(music)
         self.last_added = time.time()
 
     def is_playing(self):
-        #TODO
-        """
-
-        """
         return self.mpd_handler.status['state'] == 'play'
 
     def title(self):
-        #TODO
-        """
-
-        """
         return self.mpd_handler.current_song['title']
 
 
     def artist(self):
-        #TODO
-        """
-
-        """
         return self.mpd_handler.current_song['artist']
 
     def number(self):
-        #TODO
-        """
-
-        """
         return self.mpd_handler.current_song['file'].split("-")[0]
 
     def queue_count(self):
-        #TODO
-        """
-
-        """
         return len(self.mpd_handler.playlist)
 
     def exit(self):
-        #TODO
-        """
-
-        """
         logging.info("Disconnecting client")
         self.mpd_handler.exit()
         logging.info('Killing MPD')
         os.system("killall mpd")
 
     def generate_library(self, extraction_path, final_path, filled_slots=None):
-        #TODO
         """
 
         """
@@ -265,44 +227,24 @@ class Player():
 
     @staticmethod
     def get_to_path(export_path, index, title, artist, extension):
-        #TODO
-        """
-
-        """
         return Player.format_path(export_path) + u"/" + index + u"-" + \
                Player.format_file_name(title) + u"-" + \
                Player.format_file_name(artist) + u"." + extension
 
     @staticmethod
     def get_from_path(import_path, file_path):
-        #TODO
-        """
-
-        """
         return Player.format_path(import_path) + u"/" + Player.format_path(file_path) + u" "
 
     @staticmethod
     def get_absolute_path(path):
-        #TODO
-        """
-
-        """
         return os.path.join(os.path.dirname(__file__), path)
 
     @staticmethod
     def format_file_name(path):
-        #TODO
-        """
-
-        """
         return Player.format_path(path).replace("/", "\ ")
 
     @staticmethod
     def format_path(path):
-        #TODO
-        """
-
-        """
         return path.replace(" ", "\ ").replace("'", "\\'").replace("&", "\\&").replace("(", "\(").replace(")", "\)")
 
     @staticmethod
