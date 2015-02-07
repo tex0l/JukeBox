@@ -2,7 +2,7 @@ from __future__ import unicode_literals
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from mpd import MPDClient, ConnectionError
+from mpd import MPDClient, ConnectionError, CommandError
 import os
 import time
 import logging
@@ -10,7 +10,7 @@ from tags import tag_finder
 # noinspection PyPackageRequirements
 from slugify import slugify
 import socket
-from threading import Lock
+from threading import Lock, Thread, Event
 
 
 # noinspection PyUnusedLocal,PyUnusedLocal,PyUnusedLocal,PyShadowingBuiltins
@@ -32,6 +32,102 @@ class LockableMPDClient(MPDClient):
     def __exit__(self, type, value, traceback):
         self.release()
 
+class MPDHandler(Thread):
+    def __init__(self, loaded_config):
+        Thread.__init__(self)
+
+        self.loaded_config = loaded_config
+        self.logger = logging.getLogger('mpd')
+        self.client = LockableMPDClient(use_unicode=True)
+        self.client.timeout = None
+        self.client.idletimeout = 1
+
+        self.is_idle = False
+        self.status = {'state':'unknown'}
+        self.current_song = {}
+        self.playlist = []
+        self.queue = []
+        logging.info("Connecting to MPD")
+
+        self.last_added = time.time()
+
+
+        self._stop = Event()
+
+    def run(self):
+        self._connect()
+
+        with self.client:
+            # noinspection PyUnresolvedReferences
+            self.client.consume(1)
+            # noinspection PyUnresolvedReferences
+            self.client.crossfade(1)
+        while 1:
+            time.sleep(1)
+            length = len(self.queue)
+            for i in range(0, length):
+                self._enqueue(self.queue[i])
+                self.queue.pop(i)
+            self.status = self._fetch_status()
+            self.current_song = self._fetch_current_song()
+            self.playlist = self._fetch_playlist()
+
+
+    def exit(self):
+        self._stop.set()
+
+    def stopped(self):
+        return self._stop.isSet()
+
+    def _fetch_status(self):
+
+        with self.client:
+            return self.client.status()
+
+    def _fetch_current_song(self):
+
+        with self.client:
+            return self.client.currentsong()
+
+    def _connect(self):
+
+        with self.client:
+            self.client.connect(self.loaded_config.network['mpd_host'], self.loaded_config.network['mpd_port'])
+            return
+
+    def _fetch_playlist(self):
+
+        with self.client:
+            return self.client.playlist()
+
+    def update(self):
+
+        with self.client:
+            self.client.update(1)
+            return
+
+    def _enqueue(self, music):
+
+        with self.client:
+            # noinspection PyUnresolvedReferences
+            self.logger.debug("Adding %s to playlist" % music.name)
+            self.client.add(music.path)
+            # noinspection PyUnresolvedReferences
+            self.client.play()
+            return
+
+    def enqueue(self, music):
+        self.logger.debug("Adding %s to queue" % music.name)
+        self.queue.append(music)
+
+    def get_current_song(self):
+        return self.current_song
+
+    def get_status(self):
+        return self.status
+
+    def get_playlist(self):
+        return self.playlist
 
 class Player():
     #TODO
@@ -50,34 +146,12 @@ class Player():
         #lancement de mpd
         logging.info("Starting MPD")
         os.system(command)
-        #connexion
-        self.client = LockableMPDClient(use_unicode=True)
-        self.client.timeout = None
-        self.client.idletimeout = None
-        self.loaded_config = loaded_config
-        logging.info("Connecting to MPD")
-        self.connect()
-        # noinspection PyUnresolvedReferences
-        self.client.update()
-        self.last_added = time.time()
-        # noinspection PyUnresolvedReferences
-        self.client.consume(1)
-        # noinspection PyUnresolvedReferences
-        self.client.crossfade(1)
+        self.mpd_handler = MPDHandler(loaded_config)
+        self.mpd_handler.setDaemon(True)
+        self.mpd_handler.start()
+        self.mpd_handler.join(1)
         self.dic = dict([(1, 'A'), (2, 'B'), (3, 'C'), (4, 'D')])
-
-    def connect(self):
-        #TODO
-        """
-
-        """
-        try:
-            with self.client:  # acquire lock
-                self.client.connect(self.loaded_config.network['mpd_host'], self.loaded_config.network['mpd_port'])
-                logging.info("Updating MPD client")
-        except ConnectionError, socket.error:
-            logging.warning("Unable to contact daemon, reconnecting and retry")
-            self.connect()
+        self.last_added = time.time()
 
     def update(self):
         #TODO
@@ -85,132 +159,60 @@ class Player():
 
         """
         logging.info("Updating the library")
-        try:
-            with self.client:  # acquire lock
-                # noinspection PyUnresolvedReferences
-                self.client.update(1)
-        except ConnectionError, socket.error:
-            logging.warning("Unable to contact daemon, reconnecting and retry")
-            self.connect()
+        return self.mpd_handler.update()
 
     def enqueue(self, music):
         #TODO
         """
 
         """
-        try:
-            logging.info("Adding music %s to queue" % music.path)
-            with self.client:  # acquire lock
-                # noinspection PyUnresolvedReferences
-                self.client.add(music.path)
-                # noinspection PyUnresolvedReferences
-                self.client.play()
-            self.last_added = time.time()
-        except KeyboardInterrupt:
-            raise
-        except ConnectionError, socket.error:
-            logging.warning("Unable to contact daemon, reconnecting and retry")
-            self.connect()
-            self.enqueue(music)
+        logging.info("Enqueueing %s to playlist" % music.name)
+        self.mpd_handler.enqueue(music)
+        self.last_added = time.time()
 
     def is_playing(self):
         #TODO
         """
 
         """
-        try:
-            with self.client:  # acquire lock
-                # noinspection PyUnresolvedReferences
-                status = self.client.status()
-            return status['state'] == 'play'
-        except ConnectionError, socket.error:
-            logging.warning("Unable to contact daemon, reconnecting and retry")
-            self.connect()
-            return self.is_playing()
+        return self.mpd_handler.status['state'] == 'play'
 
     def title(self):
         #TODO
         """
 
         """
-        # noinspection PyBroadException
-        try:
-            with self.client:  # acquire lock
-                # noinspection PyUnresolvedReferences
-                return self.client.currentsong()['title']
-        except ConnectionError, socket.error:
-            logging.warning("Unable to contact daemon, reconnecting and retry")
-            self.connect()
-            return self.title()
-        except:
-            logging.error("Unable to get the title index of the song")
-            return ""
+        return self.mpd_handler.current_song['title']
+
 
     def artist(self):
         #TODO
         """
 
         """
-        # noinspection PyBroadException
-        try:
-            with self.client:  # acquire lock
-                # noinspection PyUnresolvedReferences
-                return self.client.currentsong()['artist']
-        except ConnectionError, socket.error:
-            logging.warning("Unable to contact daemon, reconnecting and retry")
-            self.connect()
-            return self.artist()
-        except:
-            logging.error("Unable to get the artist of the song")
-            return ""
+        return self.mpd_handler.current_song['artist']
 
     def number(self):
         #TODO
         """
 
         """
-        # noinspection PyBroadException
-        try:
-            with self.client:  # acquire lock
-                # noinspection PyUnresolvedReferences
-                return self.client.currentsong()['file'].split("-")[0]
-        except ConnectionError, socket.error:
-            logging.warning("Unable to contact daemon, reconnecting and retry")
-            self.connect()
-            return self.number()
-        except:
-            logging.error("Unable to get the index of the song")
-            return ""
+        return self.mpd_handler.current_song['file'].split("-")[0]
 
     def queue_count(self):
         #TODO
         """
 
         """
-        try:
-            with self.client:  # acquire lock
-                # noinspection PyUnresolvedReferences
-                playlist = self.client.playlist()
-            return len(playlist)
-        except ConnectionError, socket.error:
-            logging.warning("Unable to contact daemon, reconnecting and retry")
-            self.connect()
-            return self.queue_count()
+        return len(self.mpd_handler.playlist)
 
     def exit(self):
         #TODO
         """
 
         """
-        try:
-            logging.info("Disconnecting client")
-            with self.client:  # acquire lock
-                self.client.disconnect()
-        except ConnectionError, socket.error:
-            logging.warning("Unable to contact daemon, reconnecting and retry")
-            self.connect()
-            self.exit()
-            return
+        logging.info("Disconnecting client")
+        self.mpd_handler.exit()
         logging.info('Killing MPD')
         os.system("killall mpd")
 
