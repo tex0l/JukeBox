@@ -27,7 +27,7 @@ class LockableServer(Server):
 
 
 class UpdateThread(Thread):
-    #TODO
+    # TODO
     """
 
     """
@@ -72,7 +72,7 @@ class UpdateThread(Thread):
 
 
 class DisplayLCDd2x40:
-    #TODO
+    # TODO
     """
 
     """
@@ -84,23 +84,25 @@ class DisplayLCDd2x40:
         """
         self.loaded_config = loaded_config
 
-        self.lcd = LockableServer(hostname=self.loaded_config.lcd['lcdd_host'], port=self.loaded_config.lcd['lcdd_port'])
+        self.lcd = LockableServer(hostname=self.loaded_config.lcd['lcdd_host'],
+                                  port=self.loaded_config.lcd['lcdd_port'])
         with self.lcd:
             self.lcd.start_session()
             self.screen = self.lcd.add_screen("jukebox".encode('ascii', 'ignore'))
             self.screen.set_heartbeat("off".encode('ascii', 'ignore'))
             self.screen.set_priority("foreground".encode('ascii', 'ignore'))
             self.entry_string = self.screen.add_scroller_widget("entry".encode('ascii', 'ignore'),
-                                                       text="Choose song".encode('ascii', 'ignore'), left=1, top=1,
-                                                       right=28, bottom=1, speed=4)
+                                                                text="Choose song".encode('ascii', 'ignore'), left=1,
+                                                                top=1,
+                                                                right=28, bottom=1, speed=4)
             self.queue_string = self.screen.add_string_widget("queue".encode('ascii', 'ignore'),
-                                                     text="Queue : 0".encode('ascii', 'ignore'), x=30, y=1)
+                                                              text="Queue : 0".encode('ascii', 'ignore'), x=30, y=1)
             self.icon = self.screen.add_icon_widget("playIcon".encode('ascii', 'ignore'), x=1, y=2,
-                                           name="STOP".encode('ascii', 'ignore'))
+                                                    name="STOP".encode('ascii', 'ignore'))
             self.playing_string = self.screen.add_scroller_widget("playing".encode('ascii', 'ignore'),
-                                                         text="Nothing in the playlist. Add a song ?"
-                                                         .encode('ascii', 'ignore'),
-                                                         left=3, top=2, right=40, bottom=2, speed=4)
+                                                                  text="Nothing in the playlist. Add a song ?"
+                                                                  .encode('ascii', 'ignore'),
+                                                                  left=3, top=2, right=40, bottom=2, speed=4)
         self.UT = UpdateThread(self, player, loaded_config)
         self.UT.start()
         self.timer = None
@@ -157,7 +159,7 @@ class DisplayLCDd2x40:
                     self.entry_string.set_text("Choose song".encode('ascii', 'ignore'))
             else:
                 text = "Wait %s seconds" % (
-                int(self.loaded_config.variables['add_timeout'] + 1 - time.time() + self.lastAdded))
+                    int(self.loaded_config.variables['add_timeout'] + 1 - time.time() + self.lastAdded))
                 with self.lcd:
                     self.entry_string.set_text(text.encode('ascii', 'ignore'))
 

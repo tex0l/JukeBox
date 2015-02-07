@@ -32,8 +32,8 @@ class LockableMPDClient(MPDClient):
     def __exit__(self, type, value, traceback):
         self.release()
 
-class MPDHandler(Thread):
 
+class MPDHandler(Thread):
     def __init__(self, loaded_config):
         Thread.__init__(self)
 
@@ -44,7 +44,7 @@ class MPDHandler(Thread):
         self.client.idletimeout = 1
 
         self.is_idle = False
-        self.status = {'state':'unknown'}
+        self.status = {'state': 'unknown'}
         self.current_song = {}
         self.playlist = []
         self.queue = []
@@ -53,37 +53,61 @@ class MPDHandler(Thread):
         self.last_added = time.time()
         self._stop = Event()
 
-    def exit(self):
-        self._stop.set()
-
-    def stopped(self):
-        return self._stop.isSet()
-
-    def __fetch_status(self):
-        with self.client:
-            return self.client.status()
-
-    def __fetch_current_song(self):
-        with self.client:
-            return self.client.currentsong()
-
     def __connect(self):
         with self.client:
             self.client.connect(self.loaded_config.network['mpd_host'], self.loaded_config.network['mpd_port'])
             return
 
+    def exit(self):
+        self._stop.set()
+
+    def __fetch_status(self):
+        try:
+            with self.client:
+                return self.client.status()
+        except socket.error:
+            return self.__fetch_status()
+        except ConnectionError:
+            self.__connect()
+            return self.__fetch_status()
+
+
+    def __fetch_current_song(self):
+        try:
+            with self.client:
+                return self.client.currentsong()
+        except socket.error:
+            return self.__fetch_current_song()
+        except ConnectionError:
+            self.__connect()
+            return self.__fetch_current_song()
+
     def __fetch_playlist(self):
-        with self.client:
-            return self.client.playlist()
-        
+        try:
+            with self.client:
+                return self.client.playlist()
+        except socket.error:
+            return self.__fetch_playlist()
+        except ConnectionError:
+            self.__connect()
+            return self.__fetch_playlist()
+
     def __enqueue(self, music):
-        with self.client:
-            # noinspection PyUnresolvedReferences
-            self.logger.debug("Adding %s to playlist" % music.name)
-            self.client.add(music.path)
-            # noinspection PyUnresolvedReferences
-            self.client.play()
-            return
+        try:
+            with self.client:
+                # noinspection PyUnresolvedReferences
+                self.logger.debug("Adding %s to playlist" % music.name)
+                self.client.add(music.path)
+                # noinspection PyUnresolvedReferences
+                self.client.play()
+                return
+        except socket.error:
+            return self.__enqueue(music)
+        except ConnectionError:
+            self.__connect()
+            return self.__enqueue(music)
+
+
 
     # Handler core
     def run(self):
@@ -94,8 +118,7 @@ class MPDHandler(Thread):
             self.client.consume(1)
             # noinspection PyUnresolvedReferences
             self.client.crossfade(1)
-        while 1:
-            time.sleep(1)
+        while not self._stop.isSet():
             length = len(self.queue)
             for i in range(0, length):
                 self.__enqueue(self.queue[i])
@@ -103,6 +126,7 @@ class MPDHandler(Thread):
             self.status = self.__fetch_status()
             self.current_song = self.__fetch_current_song()
             self.playlist = self.__fetch_playlist()
+            time.sleep(1)
 
 
     # Control methods :
@@ -124,8 +148,9 @@ class MPDHandler(Thread):
     def get_playlist(self):
         return self.playlist
 
+
 class Player():
-    #TODO
+    # TODO
     """
 
     """

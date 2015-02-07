@@ -56,7 +56,7 @@ class Jukebox:
         self.music_index = parser.MusicDir(loaded_config.paths['music_dir'])
 
     def exit(self):
-        #TODO
+        # TODO
         """
 
         """
@@ -70,7 +70,7 @@ class Jukebox:
         exit()
 
     def list(self):
-        #TODO
+        # TODO
         """
 
         """
@@ -132,7 +132,7 @@ class Jukebox:
         """
         print("Song chosen : " + song.artist + "'s " + song.name)
         logging.debug("Song %s picked from entry %s" % (song.name, entry))
-        #ajout a la playlist
+        # ajout a la playlist
         self.player.enqueue(song)
         queue_count = self.player.queue_count()
         print("Songs queued :" + str(queue_count))
