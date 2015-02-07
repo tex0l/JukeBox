@@ -101,7 +101,7 @@ class Jukebox:
         sys.stdout.write('Enter your choice : ')
         sys.stdout.flush()
         choice = getch.getch()
-        logging.debug("Got choice %s through getch" % choice)
+        logging.debug("Got choice %s through getch".encode('ascii', 'backslashreplace') % choice)
         logging.debug("Mapping choice throughout the dictionary")
         choice = self.dictionary.find(choice)
         if choice == 'quit':
