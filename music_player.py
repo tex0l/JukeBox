@@ -41,7 +41,7 @@ class MPDHandler(Thread):
         self.logger = logging.getLogger('mpd')
         self.client = LockableMPDClient(use_unicode=True)
         self.client.timeout = None
-        self.client.idletimeout = 1
+        self.client.idleTimeout = 1
 
         self.is_idle = False
         self.status = {'state':'unknown'}
