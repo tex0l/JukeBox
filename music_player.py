@@ -147,8 +147,8 @@ class MPDHandler(Thread):
     def get_status(self):
         return self.status
 
-    def get_playlist(self):
-        return self.playlist
+    def get_queue_count(self):
+        return len(self.playlist)+len(self.queue)
 
 
 class Player():
@@ -198,7 +198,7 @@ class Player():
         return self.mpd_handler.current_song['file'].split("-")[0]
 
     def queue_count(self):
-        return len(self.mpd_handler.playlist)
+        return self.mpd_handler.get_queue_count()
 
     def exit(self):
         logging.info("Disconnecting client")
