@@ -71,23 +71,25 @@ class DisplayLCDd2x40:
     def __init__(self, player, loaded_config):
         self.loaded_config = loaded_config
 
-        self.lcd = LockableServer(hostname=self.loaded_config.lcd['lcdd_host'], port=self.loaded_config.lcd['lcdd_port'])
+        self.lcd = LockableServer(hostname=self.loaded_config.lcd['lcdd_host'],
+                                  port=self.loaded_config.lcd['lcdd_port'])
         with self.lcd:
             self.lcd.start_session()
             self.screen = self.lcd.add_screen("jukebox".encode('ascii', 'replace'))
             self.screen.set_heartbeat("off".encode('ascii', 'replace'))
             self.screen.set_priority("foreground".encode('ascii', 'replace'))
             self.entry_string = self.screen.add_scroller_widget("entry".encode('ascii', 'replace'),
-                                                       text="Choose song".encode('ascii', 'replace'), left=1, top=1,
-                                                       right=28, bottom=1, speed=4)
+                                                                text="Choose song".encode('ascii', 'replace'), left=1,
+                                                                top=1,
+                                                                right=28, bottom=1, speed=4)
             self.queue_string = self.screen.add_string_widget("queue".encode('ascii', 'replace'),
-                                                     text="Queue : 0".encode('ascii', 'replace'), x=30, y=1)
+                                                              text="Queue : 0".encode('ascii', 'replace'), x=30, y=1)
             self.icon = self.screen.add_icon_widget("playIcon".encode('ascii', 'replace'), x=1, y=2,
-                                           name="STOP".encode('ascii', 'replace'))
+                                                    name="STOP".encode('ascii', 'replace'))
             self.playing_string = self.screen.add_scroller_widget("playing".encode('ascii', 'replace'),
-                                                         text="Nothing in the playlist. Add a song ?"
-                                                         .encode('ascii', 'replace'),
-                                                         left=3, top=2, right=40, bottom=2, speed=4)
+                                                                  text="Nothing in the playlist. Add a song ?"
+                                                                  .encode('ascii', 'replace'),
+                                                                  left=3, top=2, right=40, bottom=2, speed=4)
         self.UT = UpdateThread(self, player, loaded_config)
         self.UT.start()
         self.timer = None
@@ -139,7 +141,7 @@ class DisplayLCDd2x40:
                     self.entry_string.set_text("Choose song".encode('ascii', 'replace'))
             else:
                 text = "Wait %s seconds" % (
-                int(self.loaded_config.variables['add_timeout'] + 1 - time.time() + self.lastAdded))
+                    int(self.loaded_config.variables['add_timeout'] + 1 - time.time() + self.lastAdded))
                 with self.lcd:
                     self.entry_string.set_text(text.encode('ascii', 'replace'))
 

@@ -22,7 +22,7 @@ class MusicDir:
     """
 
     def __init__(self, path):
-        #TODO
+        # TODO
         """
 
         """
@@ -44,7 +44,7 @@ class MusicDir:
 
 
     def print_music_dir(self):
-        #TODO
+        # TODO
         """
 
         """
@@ -53,7 +53,7 @@ class MusicDir:
         return
 
     def find_number(self, index):
-        #TODO
+        # TODO
         """
         Returns the Music corresponding to the index
         """
@@ -66,7 +66,7 @@ class MusicDir:
         return ""
 
     def filled_slots(self):
-        #TODO
+        # TODO
         """
 
         """
@@ -89,7 +89,7 @@ class MusicDir:
 
 
 class Music:
-    #TODO
+    # TODO
     """
 
     """

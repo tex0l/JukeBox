@@ -7,7 +7,7 @@ import logging
 
 
 def tag_finder(file_path):
-    #TODO
+    # TODO
     """
 
     """
@@ -43,7 +43,7 @@ def tag_finder(file_path):
 
 
 def id3_finder(file_path):
-    #TODO
+    # TODO
     """
 
     """
