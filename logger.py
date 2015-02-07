@@ -30,7 +30,7 @@ class Logger:
         self.root_logger.setLevel(level)
         self.mpd_logger.setLevel(level)
 
-        self.file_handler = logging.FileHandler(path)
+        self.file_handler = logging.FileHandler(path, mode='a')
         self.file_handler.setFormatter(self.log_formatter)
 
         self.root_logger.addHandler(self.file_handler)

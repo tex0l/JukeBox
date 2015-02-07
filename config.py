@@ -70,7 +70,7 @@ class Config:
         self.config.add_section('Paths')
         self.config.set('Paths', 'music_dir', 'Music')
         self.config.set('Paths', 'index_dir', 'Import')
-        self.config.set('Paths', 'mpd_conf_file', '/etc/mpd.conf')
+        self.config.set('Paths', 'mpd_conf_file', 'mpd.conf')
         self.config.add_section('Variables')
         # indexation au demarrage ?
         self.config.set('Variables', 'index', 'True')
@@ -84,7 +84,7 @@ class Config:
         self.config.set('LCD', 'lcdd_port', '13666')
         self.config.add_section('log')
         self.config.set('log', 'format', "%%(asctime)s %%(levelname)s %%(message)s")
-        self.config.set('log', 'path', "/var/log/jukebox.log")
+        self.config.set('log', 'path', "jukebox.log")
         self.config.set('log', 'level', '20')
         self.config.add_section('Map')
         self.config.set('Map', 'l',  "list")
