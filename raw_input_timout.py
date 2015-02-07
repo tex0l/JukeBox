@@ -6,12 +6,13 @@ class AlarmException(Exception):
     pass
 
 
-def alarmHandler(signum, frame):
+# noinspection PyUnusedLocal,PyUnusedLocal
+def alarm_handler(signum, frame):
     raise AlarmException
 
 
-def nonBlockingRawInput(prompt='', timeout=20):
-    signal.signal(signal.SIGALRM, alarmHandler)
+def non_blocking_raw_input(prompt='', timeout=20):
+    signal.signal(signal.SIGALRM, alarm_handler)
     signal.alarm(timeout)
     try:
         text = raw_input(prompt)

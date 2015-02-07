@@ -7,11 +7,13 @@ import os
 import time
 import logging
 from tags import tag_finder
+# noinspection PyPackageRequirements
 from slugify import slugify
 import socket
 from threading import Lock
 
 
+# noinspection PyUnusedLocal,PyUnusedLocal,PyUnusedLocal,PyShadowingBuiltins
 class LockableMPDClient(MPDClient):
     def __init__(self, use_unicode=False):
         super(LockableMPDClient, self).__init__()
@@ -55,9 +57,12 @@ class Player():
         self.loaded_config = loaded_config
         logging.info("Connecting to MPD")
         self.connect()
+        # noinspection PyUnresolvedReferences
         self.client.update()
         self.last_added = time.time()
+        # noinspection PyUnresolvedReferences
         self.client.consume(1)
+        # noinspection PyUnresolvedReferences
         self.client.crossfade(1)
         self.dic = dict([(1, 'A'), (2, 'B'), (3, 'C'), (4, 'D')])
 
@@ -82,6 +87,7 @@ class Player():
         logging.info("Updating the library")
         try:
             with self.client:  # acquire lock
+                # noinspection PyUnresolvedReferences
                 self.client.update(1)
         except ConnectionError, socket.error:
             logging.warning("Unable to contact daemon, reconnecting and retry")
@@ -95,7 +101,9 @@ class Player():
         try:
             logging.info("Adding music %s to queue" % music.path)
             with self.client:  # acquire lock
+                # noinspection PyUnresolvedReferences
                 self.client.add(music.path)
+                # noinspection PyUnresolvedReferences
                 self.client.play()
             self.last_added = time.time()
         except KeyboardInterrupt:
@@ -112,6 +120,7 @@ class Player():
         """
         try:
             with self.client:  # acquire lock
+                # noinspection PyUnresolvedReferences
                 status = self.client.status()
             return status['state'] == 'play'
         except ConnectionError, socket.error:
@@ -124,8 +133,10 @@ class Player():
         """
 
         """
+        # noinspection PyBroadException
         try:
             with self.client:  # acquire lock
+                # noinspection PyUnresolvedReferences
                 return self.client.currentsong()['title']
         except ConnectionError, socket.error:
             logging.warning("Unable to contact daemon, reconnecting and retry")
@@ -140,8 +151,10 @@ class Player():
         """
 
         """
+        # noinspection PyBroadException
         try:
             with self.client:  # acquire lock
+                # noinspection PyUnresolvedReferences
                 return self.client.currentsong()['artist']
         except ConnectionError, socket.error:
             logging.warning("Unable to contact daemon, reconnecting and retry")
@@ -156,8 +169,10 @@ class Player():
         """
 
         """
+        # noinspection PyBroadException
         try:
             with self.client:  # acquire lock
+                # noinspection PyUnresolvedReferences
                 return self.client.currentsong()['file'].split("-")[0]
         except ConnectionError, socket.error:
             logging.warning("Unable to contact daemon, reconnecting and retry")
@@ -174,6 +189,7 @@ class Player():
         """
         try:
             with self.client:  # acquire lock
+                # noinspection PyUnresolvedReferences
                 playlist = self.client.playlist()
             return len(playlist)
         except ConnectionError, socket.error:
@@ -234,6 +250,7 @@ class Player():
                                        slugify(tags['artist'], separator=" "),
                                        tags['extension'])
             cp_command = "mv " + from_path + " " + to_path
+            # noinspection PyBroadException
             try:
                 os.system(cp_command)
                 logging.info("Successfully moved %s to %s " % (from_path, to_path))

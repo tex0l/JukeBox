@@ -29,6 +29,7 @@ def tag_finder(file_path):
         except KeyError:
             result['title'] = "unknown"
             logging.warning("No title tag found, setting to unknown")
+        # noinspection PyBroadException
         try:
             result['extension'] = file_path.split(u".")
             result['extension'] = result['extension'].pop(len(result['extension']) - 1)
@@ -46,12 +47,14 @@ def id3_finder(file_path):
     """
 
     """
+    # noinspection PyBroadException
     try:
         tags = EasyID3(file_path)
         logging.info("ID3 tags found")
         return tags
     except:
         logging.info("no ID3 tags found")
+    # noinspection PyBroadException
     try:
         tags = EasyMP4(file_path)
         logging.info("MP4 tags found")

@@ -21,6 +21,7 @@ class LockableServer(Server):
     def __enter__(self):
         self.acquire()
 
+    # noinspection PyShadowingBuiltins,PyUnusedLocal,PyUnusedLocal,PyUnusedLocal
     def __exit__(self, type, value, traceback):
         self.release()
 
@@ -52,11 +53,11 @@ class UpdateThread(Thread):
         logging.debug("Starting updating thread ")
         while self.alive.isSet():
             time.sleep(0.1)
-            self.display.setQueue(self.player.queue_count())
-            self.display.waitingEntry()
+            self.display.set_queue(self.player.queue_count())
+            self.display.waiting_entry()
             if self.player.is_playing():
                 if self.player.number() != self.playing:
-                    self.display.playingSong(self.player.number(), self.player.title(), self.player.artist())
+                    self.display.playing_song(self.player.number(), self.player.title(), self.player.artist())
             else:
                 self.display.waiting()
                 self.playing = ""
@@ -70,7 +71,7 @@ class UpdateThread(Thread):
         Thread.join(self, timeout)
 
 
-class Display_LCDd_2x40:
+class DisplayLCDd2x40:
     #TODO
     """
 
@@ -86,7 +87,7 @@ class Display_LCDd_2x40:
         self.lcd = LockableServer(hostname=self.loaded_config.lcd['lcdd_host'], port=self.loaded_config.lcd['lcdd_port'])
         with self.lcd:
             self.lcd.start_session()
-            self.screen = self.lcd.add_screen("jukeboX".encode('ascii', 'ignore'))
+            self.screen = self.lcd.add_screen("jukebox".encode('ascii', 'ignore'))
             self.screen.set_heartbeat("off".encode('ascii', 'ignore'))
             self.screen.set_priority("foreground".encode('ascii', 'ignore'))
             self.entry_string = self.screen.add_scroller_widget("entry".encode('ascii', 'ignore'),
@@ -100,7 +101,6 @@ class Display_LCDd_2x40:
                                                          text="Nothing in the playlist. Add a song ?"
                                                          .encode('ascii', 'ignore'),
                                                          left=3, top=2, right=40, bottom=2, speed=4)
-        #self.display.addScroller(3, 2, 38, 4)
         self.UT = UpdateThread(self, player, loaded_config)
         self.UT.start()
         self.timer = None
@@ -109,7 +109,7 @@ class Display_LCDd_2x40:
         self.queue = 0
 
 
-    def setQueue(self, q):  # Change the length of the queue displayed
+    def set_queue(self, q):  # Change the length of the queue displayed
         #TODO
         """
 
@@ -127,7 +127,7 @@ class Display_LCDd_2x40:
             self.icon.set_name("STOP".encode('ascii', 'ignore'))
             self.playing_string.set_text("Nothing in the playlist. Add a song ?".encode('ascii', 'ignore'))
 
-    def playingSong(self, number, title, artist):
+    def playing_song(self, number, title, artist):
         #TODO
         """
 
@@ -137,15 +137,15 @@ class Display_LCDd_2x40:
             text = "%s - %s - %s" % (number, title, artist)
             self.playing_string.set_text(text.encode('ascii', 'ignore'))
 
-    def removeEntry(self):
+    def remove_entry(self):
         #TODO
         """
 
         """
         self.entryInProgress = False
-        self.waitingEntry()
+        self.waiting_entry()
 
-    def waitingEntry(self):
+    def waiting_entry(self):
         #TODO
         """
 
@@ -173,7 +173,7 @@ class Display_LCDd_2x40:
         if song is not None:
             text += " - %s - %s" % (song.name, song.artist)
             self.lastAdded = time.time()
-            self.timer = Timer(5, self.removeEntry)
+            self.timer = Timer(5, self.remove_entry)
             self.timer.start()
         with self.lcd:
             self.entry_string.set_text(text.encode('ascii', 'ignore'))

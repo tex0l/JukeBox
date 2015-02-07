@@ -6,12 +6,11 @@ import sys
 import getch
 import keyboard_map
 import parser
-from raw_input_timout import nonBlockingRawInput
+from raw_input_timout import non_blocking_raw_input
 import music_player
 import time
 import logging
 from display import DisplayChooser
-import threading
 
 
 class Jukebox:
@@ -23,15 +22,13 @@ class Jukebox:
     def __init__(self, loaded_config):
         """
         Initializes the jukebox:
-        First it retrieves the dictionnary,
+        First it retrieves the dictionary,
         Then it initializes the player, the display and the library,
         And it asks if an import is necessary, and completes the library automatically,
         Finally it switches into using mode aka the "normal mode"
         """
-        # initialisation du dictionnaire
-        logging.info("Initializing dictionnary")
+        logging.info("Initializing dictionary")
         self.dictionary = keyboard_map.Map(loaded_config)
-        # initialisation du lecteur
         logging.info("Initializing player")
         self.player = music_player.Player(loaded_config)
         logging.info("Initializing display")
@@ -39,7 +36,7 @@ class Jukebox:
         logging.info("Initializing library")
         self.music_index = parser.MusicDir(loaded_config.paths['music_dir'])
         if loaded_config.variables['index']:
-            user_input = nonBlockingRawInput(
+            user_input = non_blocking_raw_input(
                 "To update music directory from import directory\nType 'y' or 'yes', %s secs then skipped: " %
                 loaded_config.variables['index_timeout'], timeout=loaded_config.variables['index_timeout'])
             if user_input == "y" or user_input == "yes":
@@ -49,7 +46,7 @@ class Jukebox:
 
     def generate(self, loaded_config):
         """
-        The generate() method first parses the import directory with Player().generatelibrary() method,
+        The generate() method first parses the import directory with Player().generate_library() method,
         Then it updates the library by totally overwriting it with the new one
         """
         logging.info("Parsing import directory")
@@ -64,7 +61,7 @@ class Jukebox:
 
         """
         logging.debug("Waiting for the end of the display thread update")
-        self.display.UT.join()  # Attend que le thread d'update du display soit termine
+        self.display.UT.join()  # Waits until UpdateThread() thread dies
         logging.debug("Exiting the player")
         self.player.exit()
         # display.display.RT.join()
@@ -78,7 +75,7 @@ class Jukebox:
 
         """
         print ("List of songs :")
-        self.music_index.printmusicdir()
+        self.music_index.print_music_dir()
 
     def main(self, loaded_config):
         """
@@ -90,22 +87,20 @@ class Jukebox:
 
     def switch_man(self, loaded_config, entry):
         """
-        The switchman() method is the user interface
+        The switch_man() method is the user interface
         It asks the choice then it processes it to the dictionary and the as it follows:
         If it is "quit", then it exits the program           # Those two functions are allowed only
         If it is "list", the it prints the lis of the musics # with another keyboard than the 24 keys
-        Else it calls returns the result given by self.musicpicker(entry) method:
+        Else it calls returns the result given by self.music_picker(entry) method:
         It is the precedent choice, if you've chosen a letter
         Hence, entry equals choice in all cases except when you've picked a letter on the last round,
         Then it will equals this letter concatenated with the current choice when you pick a number
         """
-        logging.debug("Entering switchman()")
+        logging.debug("Entering switch_man()")
         sys.stdout.write('Enter your choice : ')
         sys.stdout.flush()
-        # Recuperation de la frappe clavier
         choice = getch.getch()
         logging.debug("Got choice %s through getch" % choice)
-        # Conversion avec le dictionnaire
         logging.debug("Mapping choice throughout the dictionary")
         choice = self.dictionary.find(choice)
         if choice == 'quit':
@@ -142,7 +137,7 @@ class Jukebox:
         queue_count = self.player.queue_count()
         print("Songs queued :" + str(queue_count))
         self.display.entry(entry, song)
-        self.display.setQueue(queue_count)
+        self.display.set_queue(queue_count)
 
     def is_digit_updater(self, choice, entry):
         """
@@ -184,7 +179,7 @@ class Jukebox:
         time_elapsed = time.time() - self.player.last_added
         if self.player.queue_count() < loaded_config.variables['nb_music'] \
                 or time_elapsed > loaded_config.variables['add_timeout']:
-            # Si on n'a pas deja choisi une lettre
+            # If we didn't already choose a letter
             if entry == "":
                 result = self.is_letter_updater(choice)
                 if result == "":

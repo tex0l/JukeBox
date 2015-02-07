@@ -21,6 +21,7 @@ class _Getch:
 
 
 class _GetchUnix:
+    # noinspection PyUnresolvedReferences,PyUnresolvedReferences
     def __init__(self):
         import tty
         import sys
@@ -41,10 +42,13 @@ class _GetchUnix:
 
 
 class _GetchWindows:
+    # noinspection PyUnresolvedReferences
     def __init__(self):
+        # noinspection PyUnresolvedReferences
         import msvcrt
 
     def __call__(self):
+        # noinspection PyUnresolvedReferences
         import msvcrt
 
         return msvcrt.getch()

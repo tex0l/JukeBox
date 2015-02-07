@@ -26,43 +26,42 @@ class MusicDir:
         """
 
         """
-        #chemin du repertoire
         self.path = os.path.join(os.path.dirname(__file__), path)
         os.chdir(self.path)
-        fichiers = glob.glob("*")
-        #listes des objets Music
-        self.musique = []
-        #listes des index des musiques (type A1, B12, etc.)
-        self.codes = []
-        #indexation iterative
-        for file in fichiers:
+        files = glob.glob("*")
+        # Music objects list
+        self.music = []
+        # Music index list (A12, B1, ...)
+        self.index = []
+        for music_file in files:
+            # noinspection PyBroadException
             try:
-                self.musique.append(Music(file))
-                l = len(self.musique)
-                self.codes.append(self.musique[l - 1].number)
+                self.music.append(Music(music_file))
+                l = len(self.music)
+                self.index.append(self.music[l - 1].number)
             except:
-                logging.warning(file + " is incorrectly named. Try updating the database")
+                logging.warning(music_file + " is incorrectly named. Try updating the database")
 
-    # impression de la liste des musiques
-    def printmusicdir(self):
+
+    def print_music_dir(self):
         #TODO
         """
 
         """
-        for music in self.musique:
-            music.printmusic()
+        for music in self.music:
+            music.print_music()
+        return
 
-    # renvoie l'objet Music correspondant a l'index test
-    def find_number(self, test):
+    def find_number(self, index):
         #TODO
         """
-
+        Returns the Music corresponding to the index
         """
-        l = len(self.codes)
+        l = len(self.index)
 
         for i in range(0, l):
-            if self.codes[i] == test:
-                return self.musique[i]
+            if self.index[i] == index:
+                return self.music[i]
 
         return ""
 
@@ -80,8 +79,10 @@ class MusicDir:
             while number < 20:
                 number += 1
                 if self.find_number(dic[letter] + str(number)) != "":
+                    # noinspection PyTypeChecker
                     result[letter - 1].append(True)
                 else:
+                    # noinspection PyTypeChecker
                     result[letter - 1].append(False)
             letter += 1
         return result
@@ -99,9 +100,7 @@ class Music:
 
         """
         #file named : CODE-Name-Artist.format
-        #chemin
         self.path = path
-        #nom du fichier
         self.file_name = path_leaf(self.path)
         self.number, self.artist, self.name, self.format = self.find_tags()
 
@@ -129,10 +128,10 @@ class Music:
             name = "unknown"
         #format
         logging.debug("Title:" + name)
-        format = self.file_name.split(".")[-1]
-        return index, artist, name, format
+        extension = self.file_name.split(".")[-1]
+        return index, artist, name, extension
 
-    def printmusic(self):
+    def print_music(self):
         #TODO
         """
 
