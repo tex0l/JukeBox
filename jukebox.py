@@ -80,19 +80,26 @@ class Jukebox:
         print ("List of songs :")
         self.music_index.printmusicdir()
 
-    def main(self, loaded_config, entry=""):
+    def main(self, loaded_config):
         """
-        The main() method is the user interface
-        The argument entry is "" by default,
+        main method() is the loop of the user interface
+        """
+        entry = ""
+        while 1:
+            entry = self.switch_man(loaded_config, entry)
+
+    def switch_man(self, loaded_config, entry):
+        """
+        The switchman() method is the user interface
         It asks the choice then it processes it to the dictionary and the as it follows:
         If it is "quit", then it exits the program           # Those two functions are allowed only
         If it is "list", the it prints the lis of the musics # with another keyboard than the 24 keys
-        Else it calls itself with the entry argument given by self.musicpicker() method:
-        It is the precedent choice, if you've chosen a letter)
+        Else it calls returns the result given by self.musicpicker(entry) method:
+        It is the precedent choice, if you've chosen a letter
         Hence, entry equals choice in all cases except when you've picked a letter on the last round,
         Then it will equals this letter concatenated with the current choice when you pick a number
         """
-        logging.debug("Entering main() loop (once) again")
+        logging.debug("Entering switchman()")
         sys.stdout.write('Enter your choice : ')
         sys.stdout.flush()
         # Recuperation de la frappe clavier
@@ -105,13 +112,13 @@ class Jukebox:
             self.exit()
         elif choice == 'list':
             self.list()
-            self.main(loaded_config)
+            return ''
         elif choice == '':
             print("Invalid Entry")
             logging.debug("Invalid entry")
-            self.main(loaded_config)
+            return ''
         else:
-            self.main(loaded_config, self.music_picker(loaded_config, choice, entry))
+            return self.music_picker(loaded_config, choice, entry)
 
     def is_letter_updater(self, string):
         """
