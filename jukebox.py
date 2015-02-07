@@ -151,8 +151,10 @@ class Jukebox:
         old_entry = entry
         if (str(choice)).isdigit():
             entry += choice
-            song = self.music_index.find_number(entry)
-            if song != "":
+            index = parser.Index(entry[:1], int(entry[1:]))
+            song = self.music_index.find_index(index)
+            logging.debug(song)
+            if song:
                 self.add_song(song, entry)
                 logging.debug("is_digit_updater(%s,%s) returns " % (choice, old_entry))
                 return ''

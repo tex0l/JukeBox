@@ -6,6 +6,7 @@ import os
 from tags import tag_finder
 import logging
 
+from operator import itemgetter, attrgetter, methodcaller
 
 def path_leaf(path):
     """
@@ -30,40 +31,44 @@ class MusicDir:
         os.chdir(self.path)
         files = glob.glob("*")
         # Music objects list
-        self.music = []
+        self.musics = []
         # Music index list (A12, B1, ...)
-        self.index = []
+        self.indexes = []
         for music_file in files:
             # noinspection PyBroadException
             try:
-                self.music.append(Music(music_file))
-                l = len(self.music)
-                self.index.append(self.music[l - 1].number)
+                self.musics.append(Music(music_file))
+                l = len(self.musics)
+                self.indexes.append(self.musics[l - 1].index)
             except:
                 logging.warning(music_file + " is incorrectly named. Try updating the database")
+        self._sort()
 
+    def _sort(self):
+        self.musics = sorted(self.musics, key=attrgetter('index.letter', 'index.number'))
+        self.indexes = sorted(self.indexes, key=attrgetter('letter', 'number'))
 
     def print_music_dir(self):
         # TODO
         """
 
         """
-        for music in self.music:
+        for music in self.musics:
             music.print_music()
         return
 
-    def find_number(self, index):
+    def find_index(self, index):
         # TODO
         """
         Returns the Music corresponding to the index
         """
-        l = len(self.index)
-
+        l = len(self.musics)
         for i in range(0, l):
-            if self.index[i] == index:
-                return self.music[i]
+            condition = index.__eq__(self.musics[i].index)
+            if condition:
+                return self.musics[i]
 
-        return ""
+        return None
 
     def filled_slots(self):
         # TODO
@@ -78,7 +83,7 @@ class MusicDir:
             number = 0
             while number < 20:
                 number += 1
-                if self.find_number(dic[letter] + str(number)) != "":
+                if self.find_index(Index(dic[letter], number)) != None:
                     # noinspection PyTypeChecker
                     result[letter - 1].append(True)
                 else:
@@ -102,8 +107,13 @@ class Music:
         #file named : CODE-Name-Artist.format
         self.path = path
         self.file_name = path_leaf(self.path)
-        self.number, self.artist, self.name, self.format = self.find_tags()
+        self.index, self.artist, self.name, self.format = self.find_tags()
 
+    def __str__(self):
+        return self.index.__str__() + "  - " + self.name + " - " + self.artist + " - "+ self.format
+
+    def __repr__(self):
+        return self.__str__()
 
     def find_tags(self):
         #TODO
@@ -115,6 +125,8 @@ class Music:
         #Audio file mode
         #index
         index = self.file_name.split("-")[0]
+        index = Index(index[:1], int(index[1:]))
+        logging.debug(index)
         #artiste
         try:
             artist = tags['artist']
@@ -136,11 +148,22 @@ class Music:
         """
 
         """
-        print self.number + " - " + self.name + " - " + self.artist + " - " + self.format
+        print self.index.__str__() + " - " + self.name + " - " + self.artist + " - " + self.format
 
     def display(self):
         #TODO
         """
 
         """
-        return "%s : %s by %s" % (self.number, self.name, self.artist)
+        return "%s%s : %s by %s" % (self.index, self.name, self.artist)
+
+class Index(object):
+    def __init__(self,letter,number):
+        self.letter = letter
+        self.number = number
+    def __str__(self):
+        return self.letter + unicode(self.number)
+    def __repr__(self):
+        return self.__str__()
+    def __eq__(self, other):
+        return (self.letter == other.letter and self.number == other.number)

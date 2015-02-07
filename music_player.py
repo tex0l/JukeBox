@@ -39,32 +39,36 @@ class MPDHandler(Thread):
 
         self.loaded_config = loaded_config
         self.logger = logging.getLogger('mpd')
-        self.client = LockableMPDClient(use_unicode=True)
-        self.client.timeout = None
-        self.client.idletimeout = 1
+        self._client = LockableMPDClient(use_unicode=True)
+        self._client.timeout = None
+        self._client.idletimeout = 1
 
         self.is_idle = False
         self.status = {'state': 'unknown'}
         self.current_song = {}
         self.playlist = []
         self.queue = []
+        self._update = Event()
         logging.info("Connecting to MPD")
 
         self.last_added = time.time()
         self._stop = Event()
 
     def __connect(self):
-        with self.client:
-            self.client.connect(self.loaded_config.network['mpd_host'], self.loaded_config.network['mpd_port'])
+        try:
+            with self._client:
+                self._client.connect(self.loaded_config.network['mpd_host'], self.loaded_config.network['mpd_port'])
             return
+        except socket.error, ConnectionError:
+            self.__connect()
 
     def exit(self):
         self._stop.set()
 
     def __fetch_status(self):
         try:
-            with self.client:
-                return self.client.status()
+            with self._client:
+                return self._client.status()
         except socket.error:
             return self.__fetch_status()
         except ConnectionError:
@@ -74,8 +78,8 @@ class MPDHandler(Thread):
 
     def __fetch_current_song(self):
         try:
-            with self.client:
-                return self.client.currentsong()
+            with self._client:
+                return self._client.currentsong()
         except socket.error:
             return self.__fetch_current_song()
         except ConnectionError:
@@ -84,9 +88,8 @@ class MPDHandler(Thread):
 
     def __fetch_playlist(self):
         try:
-            with self.client:
-                playlist = self.client.playlist()
-                logging.debug("Got playlist, length= %s" % len(playlist) )
+            with self._client:
+                playlist = self._client.playlist()
                 return playlist
         except socket.error:
             return self.__fetch_playlist()
@@ -94,14 +97,27 @@ class MPDHandler(Thread):
             self.__connect()
             return self.__fetch_playlist()
 
+    def __update(self):
+        try:
+            with self._client:
+                self._update.set()
+                self._client.update()
+                self._update.clear()
+        except socket.error:
+            return self.__update()
+        except ConnectionError:
+            self.__connect()
+            return self.__update()
+
+
     def __enqueue(self, music):
         try:
-            with self.client:
+            with self._client:
                 # noinspection PyUnresolvedReferences
                 self.logger.debug("Adding %s to playlist" % music.name)
-                self.client.add(music.path)
+                self._client.add(music.path)
                 # noinspection PyUnresolvedReferences
-                self.client.play()
+                self._client.play()
                 return
         except socket.error:
             return self.__enqueue(music)
@@ -115,12 +131,14 @@ class MPDHandler(Thread):
     def run(self):
         self.__connect()
 
-        with self.client:
+        with self._client:
             # noinspection PyUnresolvedReferences
-            self.client.consume(1)
+            self._client.consume(1)
             # noinspection PyUnresolvedReferences
-            self.client.crossfade(1)
+            self._client.crossfade(1)
         while not self._stop.isSet():
+            if self._update.isSet():
+                self._client.__update()
             length = len(self.queue)
             for i in range(0, length):
                 self.__enqueue(self.queue[0])
@@ -133,9 +151,7 @@ class MPDHandler(Thread):
 
     # Control methods :
     def update(self):
-        with self.client:
-            self.client.update()
-            return
+        return self.__update()
 
     def enqueue(self, music):
         self.logger.debug("Adding %s to queue" % music.name)
@@ -169,7 +185,6 @@ class Player():
         logging.info("Starting MPD")
         os.system(command)
         self.mpd_handler = MPDHandler(loaded_config)
-        self.mpd_handler.setDaemon(True)
         self.mpd_handler.start()
         self.mpd_handler.join(1)
         self.dic = dict([(1, 'A'), (2, 'B'), (3, 'C'), (4, 'D')])
@@ -188,14 +203,15 @@ class Player():
         return self.mpd_handler.status['state'] == 'play'
 
     def title(self):
-        return self.mpd_handler.current_song['title']
+        return self.mpd_handler.get_current_song()['title']
 
 
     def artist(self):
-        return self.mpd_handler.current_song['artist']
+        return self.mpd_handler.get_current_song()['artist']
 
-    def number(self):
-        return self.mpd_handler.current_song['file'].split("-")[0]
+    def index(self):
+        index = self.mpd_handler.get_current_song()['file'].split("-")[0]
+        return [index[:1], index[1:]]
 
     def queue_count(self):
         return self.mpd_handler.get_queue_count()

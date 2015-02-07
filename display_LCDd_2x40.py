@@ -42,7 +42,7 @@ class UpdateThread(Thread):
         self.alive.set()
         self.display = display
         self.player = player
-        self.playing = ""
+        self.playing = ["",""]
         self.loaded_config = loaded_config
 
     def run(self):
@@ -56,8 +56,8 @@ class UpdateThread(Thread):
             self.display.set_queue(self.player.queue_count())
             self.display.waiting_entry()
             if self.player.is_playing():
-                if self.player.number() != self.playing:
-                    self.display.playing_song(self.player.number(), self.player.title(), self.player.artist())
+                if self.player.index() != self.playing:
+                    self.display.playing_song(self.player.index(), self.player.title(), self.player.artist())
             else:
                 self.display.waiting()
                 self.playing = ""
@@ -129,14 +129,15 @@ class DisplayLCDd2x40:
             self.icon.set_name("STOP".encode('ascii', 'ignore'))
             self.playing_string.set_text("Nothing in the playlist. Add a song ?".encode('ascii', 'ignore'))
 
-    def playing_song(self, number, title, artist):
+    def playing_song(self, index, title, artist):
         #TODO
         """
 
         """
         with self.lcd:
             self.icon.set_name("PLAY".encode('ascii', 'ignore'))
-            text = "%s - %s - %s" % (number, title, artist)
+            index = unicode(index[0])+unicode(index[1])
+            text = "%s - %s - %s" % (index, title, artist)
             self.playing_string.set_text(text.encode('ascii', 'ignore'))
 
     def remove_entry(self):
