@@ -30,7 +30,7 @@ class Jukebox:
         """
         # initialisation du dictionnaire
         logging.info("Initializing dictionnary")
-        self.dictionary = keyboard_map.Map()
+        self.dictionary = keyboard_map.Map(loaded_config)
         # initialisation du lecteur
         logging.info("Initializing player")
         self.player = music_player.Player(loaded_config)

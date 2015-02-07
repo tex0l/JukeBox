@@ -25,12 +25,11 @@ class Config:
             print "config file is empty"
             self.generate()
         try:
-            self.network, self.paths, self.variables, self.lcd, self.log = self.get_sections()
+            self.network, self.paths, self.variables, self.lcd, self.log, self.map = self.get_sections()
         except ConfigParser.NoSectionError:
             print "config file is incomplete, regenerating"
             os.remove(self.config_file)
-            self.generate()
-            self.network, self.paths, self.variables, self.lcd, self.log = self.get_sections()
+            self.__init__()
         logging.debug(self.stringify_config())
 
     def get_sections(self):
@@ -38,7 +37,8 @@ class Config:
                 self.config_section_map('Paths'),
                 self.config_section_map('Variables'),
                 self.config_section_map('LCD'),
-                self.config_section_map('log'))
+                self.config_section_map('log'),
+                self.config_section_map('Map', force_string=True))
 
     def stringify_config(self):
         """
@@ -86,10 +86,38 @@ class Config:
         self.config.set('log', 'format', "%%(asctime)s %%(levelname)s %%(message)s")
         self.config.set('log', 'path', "/var/log/jukebox.log")
         self.config.set('log', 'level', '20')
+        self.config.add_section('Map')
+        self.config.set('Map', 'l',  "list")
+        self.config.set('Map', 'q',  "quit")
+        self.config.set('Map', 'h',  "help")
+        self.config.set('Map', 'a',  "a")
+        self.config.set('Map', 'b',  "b")
+        self.config.set('Map', 'c',  "c")
+        self.config.set('Map', 'd',  "d")
+        self.config.set('Map', '1',  "1")
+        self.config.set('Map', '2',  "2")
+        self.config.set('Map', '3',  "3")
+        self.config.set('Map', '4',  "4")
+        self.config.set('Map', '5',  "5")
+        self.config.set('Map', '6',  "6")
+        self.config.set('Map', '7',  "7")
+        self.config.set('Map', '8',  "8")
+        self.config.set('Map', '9',  "9")
+        self.config.set('Map', '0',  "10")
+        self.config.set('Map', 'e',  "11")
+        self.config.set('Map', 'f',  "12")
+        self.config.set('Map', 'g',  "13")
+        self.config.set('Map', 'i',  "14")
+        self.config.set('Map', 'k',  "15")
+        self.config.set('Map', 'm',  "16")
+        self.config.set('Map', 'n',  "17")
+        self.config.set('Map', 'o',  "18")
+        self.config.set('Map', 'r',  "19")
+        self.config.set('Map', 's',  "20")
         self.config.write(cfgfile)
         cfgfile.close()
 
-    def config_section_map(self, section):
+    def config_section_map(self, section, force_string=False):
         """
         It is a modified version of a method found on the Internet
         Basically it reads a section a gets the values in the appropriate type (integer, boolean or string)
@@ -98,20 +126,21 @@ class Config:
         dict1 = {}
         options = self.config.options(section)
         for option in options:
-            try:
-                dict1[option] = self.config.getint(section, option)
-                logging.debug("Found an option : %s" % dict1[option])
-                continue
-            except:
-                # The option (or attribute) is not an integer
-                pass
-            try:
-                dict1[option] = self.config.getboolean(section, option)
-                logging.debug("Found an option : %s" % dict1[option])
-                continue
-            except:
-                # The option (or attribute) is not a boolean
-                pass
+            if not force_string:
+                try:
+                    dict1[option] = self.config.getint(section, option)
+                    logging.debug("Found an option : %s" % dict1[option])
+                    continue
+                except:
+                    # The option (or attribute) is not an integer
+                    pass
+                try:
+                    dict1[option] = self.config.getboolean(section, option)
+                    logging.debug("Found an option : %s" % dict1[option])
+                    continue
+                except:
+                    # The option (or attribute) is not a boolean
+                    pass
             try:
                 dict1[option] = self.config.get(section, option)
                 logging.debug("Found an option : %s" % dict1[option])

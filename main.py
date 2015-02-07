@@ -6,6 +6,7 @@ from config import Config
 from logger import Logger
 from jukebox import Jukebox
 import logging
+import sys
 
 loaded_config = Config()
 # Initialilizing the logger with the correct settings
@@ -33,4 +34,6 @@ def main(loaded_config):
 if __name__ == '__main__':
     # This code executes the following if and only if main.py is first started, not another file.
     logging.warning("Starting...")
+    if len(sys.argv) >= 2 and sys.argv[1] == 'dummy':
+        loaded_config.lcd['type'] = 'dummy'
     main(loaded_config)
