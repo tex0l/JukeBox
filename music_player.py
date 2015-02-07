@@ -55,7 +55,7 @@ class MPDHandler(Thread):
         self.current_song = {}
         self.playlist = []
         self.queue = []
-        self._update = Event()
+        self._update_or_not = Event()
         logging.info("Connecting to MPD")
 
         self.last_added = time.time()
@@ -103,14 +103,14 @@ class MPDHandler(Thread):
     def _update(self):
         try:
             with self._client:
-                self._update.set()
+                self._update_or_not.set()
                 self._client.update()
-                self._update.clear()
+                self._update_or_not.clear()
         except socket.error:
-            return self._update()
+            self._update()
         except ConnectionError:
             self._connect()
-            return self._update()
+            self._update()
 
     def _enqueue(self, music):
         try:
@@ -137,7 +137,7 @@ class MPDHandler(Thread):
             # noinspection PyUnresolvedReferences
             self._client.crossfade(1)
         while not self._stop.isSet():
-            if self._update.isSet():
+            if self._update_or_not.isSet():
                 self._client._update()
             length = len(self.queue)
             for i in range(0, length):
