@@ -85,7 +85,9 @@ class MPDHandler(Thread):
     def __fetch_playlist(self):
         try:
             with self.client:
-                return self.client.playlist()
+                playlist = self.client.playlist()
+                logging.debug("Got playlist, length= %s" % len(playlist) )
+                return playlist
         except socket.error:
             return self.__fetch_playlist()
         except ConnectionError:
@@ -121,8 +123,8 @@ class MPDHandler(Thread):
         while not self._stop.isSet():
             length = len(self.queue)
             for i in range(0, length):
-                self.__enqueue(self.queue[i])
-                self.queue.pop(i)
+                self.__enqueue(self.queue[0])
+                self.queue.pop(0)
             self.status = self.__fetch_status()
             self.current_song = self.__fetch_current_song()
             self.playlist = self.__fetch_playlist()
@@ -145,8 +147,8 @@ class MPDHandler(Thread):
     def get_status(self):
         return self.status
 
-    def get_playlist(self):
-        return self.playlist
+    def get_queue_count(self):
+        return len(self.playlist)+len(self.queue)
 
 
 class Player():
@@ -196,7 +198,7 @@ class Player():
         return self.mpd_handler.current_song['file'].split("-")[0]
 
     def queue_count(self):
-        return len(self.mpd_handler.playlist)
+        return self.mpd_handler.get_queue_count()
 
     def exit(self):
         logging.info("Disconnecting client")
