@@ -5,7 +5,7 @@ from lcdproc.server import Server
 from threading import Thread, Event, Timer, Lock
 import time
 import logging
-
+from unidecode import unidecode
 
 class LockableServer(Server):
     """
@@ -75,20 +75,18 @@ class DisplayLCDd2x40:
                                   port=self.loaded_config.lcd['lcdd_port'])
         with self.lcd:
             self.lcd.start_session()
-            self.screen = self.lcd.add_screen("jukebox".encode('ascii', 'replace'))
-            self.screen.set_heartbeat("off".encode('ascii', 'replace'))
-            self.screen.set_priority("foreground".encode('ascii', 'replace'))
-            self.entry_string = self.screen.add_scroller_widget("entry".encode('ascii', 'replace'),
-                                                                text="Choose song".encode('ascii', 'replace'), left=1,
-                                                                top=1,
+            self.screen = self.lcd.add_screen(unidecode("jukebox"))
+            self.screen.set_heartbeat(unidecode("off"))
+            self.screen.set_priority(unidecode("foreground"))
+            self.entry_string = self.screen.add_scroller_widget(unidecode("entry"),
+                                                                text=unidecode("Choose song"), left=1, top=1,
                                                                 right=28, bottom=1, speed=4)
-            self.queue_string = self.screen.add_string_widget("queue".encode('ascii', 'replace'),
-                                                              text="Queue : 0".encode('ascii', 'replace'), x=30, y=1)
-            self.icon = self.screen.add_icon_widget("playIcon".encode('ascii', 'replace'), x=1, y=2,
-                                                    name="STOP".encode('ascii', 'replace'))
-            self.playing_string = self.screen.add_scroller_widget("playing".encode('ascii', 'replace'),
-                                                                  text="Nothing in the playlist. Add a song ?"
-                                                                  .encode('ascii', 'replace'),
+            self.queue_string = self.screen.add_string_widget(unidecode("queue"),
+                                                              text=unidecode("Queue : 0"), x=30, y=1)
+            self.icon = self.screen.add_icon_widget(unidecode("playIcon"), x=1, y=2, name=unidecode("STOP"))
+            self.playing_string = self.screen.add_scroller_widget(unidecode("playing"),
+                                                                  text=unidecode("Nothing in the playlist."
+                                                                                 " Add a song ?"),
                                                                   left=3, top=2, right=40, bottom=2, speed=4)
         self.UT = UpdateThread(self, player, loaded_config)
         self.UT.start()
@@ -98,30 +96,30 @@ class DisplayLCDd2x40:
         self.queue = 0
 
 
-    def set_queue(self, q): 
+    def set_queue(self, q):
         """
         Change the length of the queue displayed on the LCD
         """
         self.queue = q
         with self.lcd:
-            self.queue_string.set_text("Queue : %d".encode('ascii', 'replace') % q)
+            self.queue_string.set_text(unidecode("Queue : %d" % q))
 
     def waiting(self):
         """
         Tell the display that no song is playing
         """
         with self.lcd:
-            self.icon.set_name("STOP".encode('ascii', 'replace'))
-            self.playing_string.set_text("Nothing in the playlist. Add a song ?".encode('ascii', 'replace'))
+            self.icon.set_name(unidecode("STOP"))
+            self.playing_string.set_text(unidecode("Nothing in the playlist. Add a song ?"))
 
     def playing_song(self, number, title, artist):
         """
         Tell the display which song is playing
         """
         with self.lcd:
-            self.icon.set_name("PLAY".encode('ascii', 'replace'))
+            self.icon.set_name(unidecode("PLAY"))
             text = "%s - %s - %s" % (number, title, artist)
-            self.playing_string.set_text(text.encode('ascii', 'replace'))
+            self.playing_string.set_text(unidecode(text))
 
     def remove_entry(self):
         """
@@ -138,12 +136,12 @@ class DisplayLCDd2x40:
             if (self.queue < self.loaded_config.variables['nb_music']) \
                     or (time.time() - self.lastAdded > self.loaded_config.variables['add_timeout']):
                 with self.lcd:
-                    self.entry_string.set_text("Choose song".encode('ascii', 'replace'))
+                    self.entry_string.set_text(unidecode("Choose song"))
             else:
                 text = "Wait %s seconds" % (
                     int(self.loaded_config.variables['add_timeout'] + 1 - time.time() + self.lastAdded))
                 with self.lcd:
-                    self.entry_string.set_text(text.encode('ascii', 'replace'))
+                    self.entry_string.set_text(unidecode(text))
 
     def entry(self, entry, song=None):
         """
@@ -159,4 +157,4 @@ class DisplayLCDd2x40:
             self.timer = Timer(5, self.remove_entry)
             self.timer.start()
         with self.lcd:
-            self.entry_string.set_text(text.encode('ascii', 'replace'))
+            self.entry_string.set_text(unidecode(text))

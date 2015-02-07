@@ -180,7 +180,7 @@ class Player():
         return self.mpd_handler.update()
 
     def enqueue(self, music):
-        logging.info("Enqueueing %s to playlist" % music.name)
+        logging.info("Enqueueing %s" % music.number)
         self.mpd_handler.enqueue(music)
         self.last_added = time.time()
 
