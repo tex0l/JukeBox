@@ -6,6 +6,7 @@ from threading import Thread, Event, Timer, Lock
 import time
 import logging
 from unidecode import unidecode
+import music_player
 
 class LockableServer(Server):
     """
@@ -35,12 +36,12 @@ class UpdateThread(Thread):
     A thread to update the display regularly
     """
 
-    def __init__(self, display, player, loaded_config):
+    def __init__(self, display, loaded_config):
         Thread.__init__(self)
         self.alive = Event()
         self.alive.set()
         self.display = display
-        self.player = player
+        self.player = music_player.Player(loaded_config)
         self.playing = ["",""]
         self.loaded_config = loaded_config
 
@@ -68,7 +69,7 @@ class DisplayLCDd2x40:
     display through the python lcdproc module
     """
     
-    def __init__(self, player, loaded_config):
+    def __init__(self, loaded_config):
         self.loaded_config = loaded_config
 
         self.lcd = LockableServer(hostname=self.loaded_config.lcd['lcdd_host'],
@@ -88,7 +89,7 @@ class DisplayLCDd2x40:
                                                                   text=unidecode("Nothing in the playlist."
                                                                                  " Add a song ?"),
                                                                   left=3, top=2, right=40, bottom=2, speed=4)
-        self.UT = UpdateThread(self, player, loaded_config)
+        self.UT = UpdateThread(self, loaded_config)
         self.UT.start()
         self.timer = None
         self.entryInProgress = False
