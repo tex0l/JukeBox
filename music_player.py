@@ -11,7 +11,7 @@ from tags import tag_finder
 from slugify import slugify
 import socket
 from threading import Lock, Thread, Event
-
+import subprocess
 
 # noinspection PyUnusedLocal,PyUnusedLocal,PyUnusedLocal,PyShadowingBuiltins
 class LockableMPDClient(MPDClient):
@@ -42,7 +42,7 @@ class MPDHandler(Thread):
     """
     #Private functions that actually communicate with the client
     def __init__(self, loaded_config):
-        Thread.__init__(self)
+        Thread.__init__(self,name="MPDHandler")
 
         self.loaded_config = loaded_config
         self.logger = logging.getLogger('mpd')
@@ -182,11 +182,11 @@ class Player():
         """
         if not Player.thread:
             logging.info("Killing MPD")
-            os.system("killall mpd")
-            command = unicode("mpd %s" % loaded_config.paths['mpd_conf_file'])
+            subprocess.call(('killall', 'mpd'), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            command = ("mpd", unicode(loaded_config.paths['mpd_conf_file']))
             #lancement de mpd
             logging.info("Starting MPD")
-            os.system(command)
+            subprocess.call(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             self.mpd_handler = MPDHandler(loaded_config)
             self.mpd_handler.start()
             self.mpd_handler.join(1)

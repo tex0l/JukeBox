@@ -37,7 +37,7 @@ class UpdateThread(Thread):
     """
 
     def __init__(self, display, loaded_config):
-        Thread.__init__(self)
+        Thread.__init__(self, name='UpdateThread')
         self.alive = Event()
         self.alive.set()
         self.display = display
