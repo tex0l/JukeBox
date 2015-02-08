@@ -114,6 +114,9 @@ class Config:
         self.config.set('Map', 'o', "18")
         self.config.set('Map', 'r', "19")
         self.config.set('Map', 's', "20")
+        self.config.set('Map', 't', "E99")
+        self.config.set('Map', 'j', "next")
+
         self.config.write(config_open)
         config_open.close()
 
