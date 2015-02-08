@@ -40,8 +40,9 @@ class MusicDir:
                 self.musics.append(Music(music_file))
                 l = len(self.musics)
                 self.indexes.append(self.musics[l - 1].index)
+                logging.info("Successfully added %s to library" % music_file)
             except:
-                logging.warning(music_file + " is incorrectly named. Try updating the database")
+                logging.warning("Unable to load %s to library" % music_file)
         self._sort()
 
     def _sort(self):
