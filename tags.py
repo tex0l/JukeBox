@@ -7,7 +7,7 @@ import logging
 
 
 def tag_finder(file_path):
-    #TODO
+    # TODO
     """
 
     """
@@ -18,43 +18,46 @@ def tag_finder(file_path):
         tags = id3_finder(file_path)
         try:
             result['artist'] = tags['artist'][0]
-            logging.info("Artist found: %s" % result['artist'])
+            logging.debug("Artist found: %s" % result['artist'])
         except KeyError:
             result['artist'] = "unknown"
             logging.warning("No artist tag found, setting to unknown")
 
         try:
             result['title'] = tags['title'][0]
-            logging.info("Title found: %s" % result['title'])
+            logging.debug("Title found: %s" % result['title'])
         except KeyError:
             result['title'] = "unknown"
             logging.warning("No title tag found, setting to unknown")
+        # noinspection PyBroadException
         try:
             result['extension'] = file_path.split(u".")
             result['extension'] = result['extension'].pop(len(result['extension']) - 1)
-            logging.info("Extension found: %s" % result['extension'])
+            logging.debug("Extension found: %s" % result['extension'])
         except:
             logging.warning("No extension found")
         return result
     else:
-        logging.info("System file, ignored.")
+        logging.debug("System file, ignored.")
     return {}
 
 
 def id3_finder(file_path):
-    #TODO
+    # TODO
     """
 
     """
+    # noinspection PyBroadException
     try:
         tags = EasyID3(file_path)
-        logging.info("ID3 tags found")
+        logging.debug("ID3 tags found")
         return tags
     except:
         logging.info("no ID3 tags found")
+    # noinspection PyBroadException
     try:
         tags = EasyMP4(file_path)
-        logging.info("MP4 tags found")
+        logging.debug("MP4 tags found")
         return tags
     except:
         logging.info("no MP4 tags found")

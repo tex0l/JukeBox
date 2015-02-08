@@ -5,23 +5,18 @@ import logging
 
 
 class DisplayChooser():
-    #TODO
+    """
+    Chooses the display according to the config file
     """
 
-    """
-
-    def __init__(self, player, loaded_config):
-        #TODO
-        """
-
-        """
+    def __init__(self, loaded_config):
         if loaded_config.lcd['type'] == '2x40':
-            from display_LCDd_2x40 import Display_LCDd_2x40
+            from display_LCDd_2x40 import DisplayLCDd2x40
 
             logging.debug("Imported Display_LCDd_2x40 library, initializing")
-            self.display = Display_LCDd_2x40(player, loaded_config)
+            self.display = DisplayLCDd2x40(loaded_config)
         else:
-            from display_LCD_dummy import Display_LCDd_dummy
+            from display_dummy import DisplayDummy
 
-            logging.debug("Imported Display_LCDd_dummy library, initializing")
-            self.display = Display_LCDd_dummy()
+            logging.debug("Imported Display_dummy library, initializing")
+            self.display = DisplayDummy()

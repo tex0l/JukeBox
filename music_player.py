@@ -2,17 +2,22 @@ from __future__ import unicode_literals
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from mpd import MPDClient, ConnectionError
+from mpd import MPDClient, ConnectionError, CommandError
 import os
 import time
 import logging
 from tags import tag_finder
+# noinspection PyPackageRequirements
 from slugify import slugify
 import socket
-from threading import Lock
+from threading import Lock, Thread, Event
+import subprocess
 
-
+# noinspection PyUnusedLocal,PyUnusedLocal,PyUnusedLocal,PyShadowingBuiltins
 class LockableMPDClient(MPDClient):
+    """
+    A subclass of MPDClient to make it thread-safe
+    """
     def __init__(self, use_unicode=False):
         super(LockableMPDClient, self).__init__()
         self.use_unicode = use_unicode
@@ -31,179 +36,250 @@ class LockableMPDClient(MPDClient):
         self.release()
 
 
-class Player():
-    #TODO
+class MPDHandler(Thread):
     """
-
+    A thread to safely communicate with the mpd client
     """
-
+    #Private functions that actually communicate with the client
     def __init__(self, loaded_config):
-        #TODO
-        """
+        Thread.__init__(self,name="MPDHandler")
 
-        """
-        logging.info("Killing MPD")
-        os.system("killall mpd")
-        command = unicode("mpd %s" % loaded_config.paths['mpd_conf_file'])
-        #lancement de mpd
-        logging.info("Starting MPD")
-        os.system(command)
-        #connexion
-        self.client = LockableMPDClient(use_unicode=True)
-        self.client.timeout = None
-        self.client.idletimeout = None
         self.loaded_config = loaded_config
+        self.logger = logging.getLogger('mpd')
+        self._client = LockableMPDClient(use_unicode=True)
+        self._client.timeout = None
+        self._client.idletimeout = None
+
+        self.is_idle = False
+        self.status = {'state': 'unknown'}
+        self.current_song = {}
+        self.playlist = []
+        self.queue = []
+        self._update_or_not = Event()
+        self._clear_or_not = Event()
+        self._next_or_not = Event()
         logging.info("Connecting to MPD")
-        self.connect()
-        self.client.update()
+
         self.last_added = time.time()
-        self.client.consume(1)
-        self.client.crossfade(1)
-        self.dic = dict([(1, 'A'), (2, 'B'), (3, 'C'), (4, 'D')])
+        self._stop = Event()
 
-    def connect(self):
-        #TODO
-        """
-
-        """
+    def _connect(self):
         try:
-            with self.client:  # acquire lock
-                self.client.connect(self.loaded_config.network['mpd_host'], self.loaded_config.network['mpd_port'])
-                logging.info("Updating MPD client")
-        except ConnectionError, socket.error:
-            logging.warning("Unable to contact daemon, reconnecting and retry")
-            self.connect()
+            with self._client:
+                self._client.connect(self.loaded_config.network['mpd_host'], self.loaded_config.network['mpd_port'])
+            return
+        except socket.error, ConnectionError:
+            self._connect()
+
+    def _fetch_status(self):
+        try:
+            with self._client:
+                return self._client.status()
+        except socket.error:
+            return self._fetch_status()
+        except ConnectionError:
+            self._connect()
+            return self._fetch_status()
+
+    def _fetch_current_song(self):
+        try:
+            with self._client:
+                return self._client.currentsong()
+        except socket.error:
+            return self._fetch_current_song()
+        except ConnectionError:
+            self._connect()
+            return self._fetch_current_song()
+
+    def _fetch_playlist(self):
+        try:
+            with self._client:
+                playlist = self._client.playlist()
+                return playlist
+        except socket.error:
+            return self._fetch_playlist()
+        except ConnectionError:
+            self._connect()
+            return self._fetch_playlist()
+
+    def _update(self):
+        try:
+            with self._client:
+                self._client.update()
+                self._update_or_not.clear()
+        except socket.error:
+            self._update()
+        except ConnectionError:
+            self._connect()
+            self._update()
+
+    def _enqueue(self, music):
+        try:
+            with self._client:
+                # noinspection PyUnresolvedReferences
+                self.logger.debug("Adding %s to playlist" % music.name)
+                self._client.add(music.path)
+                # noinspection PyUnresolvedReferences
+                self._client.play()
+                return
+        except socket.error:
+            return self._enqueue(music)
+        except ConnectionError:
+            self._connect()
+            return self._enqueue(music)
+
+    def _clear(self):
+        try:
+            with self._client:
+                self._client.clear()
+                self._clear_or_not.clear()
+        except socket.error:
+            self._clear()
+        except ConnectionError:
+            self._connect()
+            self._clear()
+
+    def _next(self):
+        try:
+            with self._client:
+                self._client.next()
+                self._next_or_not.clear()
+        except socket.error:
+            self._clear()
+        except ConnectionError:
+            self._connect()
+            self._clear()
+
+    # Handler core
+    def run(self):
+        self._connect()
+
+        with self._client:
+            # noinspection PyUnresolvedReferences
+            self._client.consume(1)
+            # noinspection PyUnresolvedReferences
+            self._client.crossfade(1)
+        while not self._stop.isSet():
+            if self._update_or_not.isSet():
+                self._update()
+
+            if self._clear_or_not.isSet():
+                self._clear()
+
+            length = len(self.queue)
+            for i in range(0, length):
+                self._enqueue(self.queue[0])
+                self.queue.pop(0)
+            self.status = self._fetch_status()
+            self.current_song = self._fetch_current_song()
+            self.playlist = self._fetch_playlist()
+
+            if self._next_or_not.isSet():
+                self._next()
+
+            time.sleep(1)
+# Control methods :
+
+    def next(self):
+        self._next_or_not.set()
+
+    def clear(self):
+        self._clear_or_not.set()
+        self.queue = []
+        self.playlist = []
 
     def update(self):
-        #TODO
-        """
-
-        """
-        logging.info("Updating the library")
-        try:
-            with self.client:  # acquire lock
-                self.client.update(1)
-        except ConnectionError, socket.error:
-            logging.warning("Unable to contact daemon, reconnecting and retry")
-            self.connect()
+        self._update_or_not.set()
 
     def enqueue(self, music):
-        #TODO
-        """
+        self.logger.debug("Adding %s to queue" % music.name)
+        self.queue.append(music)
 
-        """
-        try:
-            logging.info("Adding music %s to queue" % music.path)
-            with self.client:  # acquire lock
-                self.client.add(music.path)
-                self.client.play()
-            self.last_added = time.time()
-        except KeyboardInterrupt:
-            raise
-        except ConnectionError, socket.error:
-            logging.warning("Unable to contact daemon, reconnecting and retry")
-            self.connect()
-            self.enqueue(music)
+    def get_current_song(self):
+        return self.current_song
 
-    def is_playing(self):
-        #TODO
-        """
+    def get_status(self):
+        return self.status
 
-        """
-        try:
-            with self.client:  # acquire lock
-                status = self.client.status()
-            return status['state'] == 'play'
-        except ConnectionError, socket.error:
-            logging.warning("Unable to contact daemon, reconnecting and retry")
-            self.connect()
-            return self.is_playing()
-
-    def title(self):
-        #TODO
-        """
-
-        """
-        try:
-            with self.client:  # acquire lock
-                return self.client.currentsong()['title']
-        except ConnectionError, socket.error:
-            logging.warning("Unable to contact daemon, reconnecting and retry")
-            self.connect()
-            return self.title()
-        except:
-            logging.error("Unable to get the title index of the song")
-            return ""
-
-    def artist(self):
-        #TODO
-        """
-
-        """
-        try:
-            with self.client:  # acquire lock
-                return self.client.currentsong()['artist']
-        except ConnectionError, socket.error:
-            logging.warning("Unable to contact daemon, reconnecting and retry")
-            self.connect()
-            return self.artist()
-        except:
-            logging.error("Unable to get the artist of the song")
-            return ""
-
-    def number(self):
-        #TODO
-        """
-
-        """
-        try:
-            with self.client:  # acquire lock
-                return self.client.currentsong()['file'].split("-")[0]
-        except ConnectionError, socket.error:
-            logging.warning("Unable to contact daemon, reconnecting and retry")
-            self.connect()
-            return self.number()
-        except:
-            logging.error("Unable to get the index of the song")
-            return ""
-
-    def queue_count(self):
-        #TODO
-        """
-
-        """
-        try:
-            with self.client:  # acquire lock
-                playlist = self.client.playlist()
-            return len(playlist)
-        except ConnectionError, socket.error:
-            logging.warning("Unable to contact daemon, reconnecting and retry")
-            self.connect()
-            return self.queue_count()
+    def get_queue_count(self):
+        return len(self.playlist)+len(self.queue)
 
     def exit(self):
+        self._stop.set()
+
+
+class Player():
+    # TODO
+    """
+
+    """
+    thread = None
+    def __init__(self, loaded_config=None):
         #TODO
         """
 
         """
-        try:
-            logging.info("Disconnecting client")
-            with self.client:  # acquire lock
-                self.client.disconnect()
-        except ConnectionError, socket.error:
-            logging.warning("Unable to contact daemon, reconnecting and retry")
-            self.connect()
-            self.exit()
-            return
+        if not Player.thread:
+            logging.info("Killing MPD")
+            subprocess.call(('killall', 'mpd'), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            command = ("mpd", unicode(loaded_config.paths['mpd_conf_file']))
+            #lancement de mpd
+            logging.info("Starting MPD")
+            subprocess.call(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            self.mpd_handler = MPDHandler(loaded_config)
+            self.mpd_handler.start()
+            self.mpd_handler.join(1)
+            Player.thread = self.mpd_handler
+            self.update()
+        else:
+            self.mpd_handler = Player.thread
+        self.dic = dict([(1, 'A'), (2, 'B'), (3, 'C'), (4, 'D')])
+        self.last_added = time.time()
+
+    def update(self):
+        logging.info("Updating the library")
+        return self.mpd_handler.update()
+
+    def enqueue(self, music):
+        logging.info("Enqueueing %s" % music.index.__str__())
+        self.mpd_handler.enqueue(music)
+        self.last_added = time.time()
+
+    def is_playing(self):
+        return self.mpd_handler.status['state'] == 'play'
+
+    def title(self):
+        return self.mpd_handler.get_current_song()['title']
+
+
+    def artist(self):
+        return self.mpd_handler.get_current_song()['artist']
+
+    def index(self):
+        index = self.mpd_handler.get_current_song()['file'].split("-")[0]
+        return [index[:1], index[1:]]
+
+    def queue_count(self):
+        return self.mpd_handler.get_queue_count()
+
+    def clear(self):
+        self.mpd_handler.clear()
+
+    def next(self):
+        self.mpd_handler.next()
+
+    def exit(self):
+        logging.info("Disconnecting client")
+        self.mpd_handler.exit()
         logging.info('Killing MPD')
         os.system("killall mpd")
 
     def generate_library(self, extraction_path, final_path, filled_slots=None):
-        #TODO
         """
-
+        An ugly method to import songs in Import directory into the Music directory and name them correctly.
         """
-        if not filled_slots: filled_slots = []
+        if not filled_slots:
+            filled_slots = []
         logging.debug("Getting current path")
         current_path = os.getcwd()
         import_path = self.get_absolute_path(extraction_path)
@@ -234,6 +310,7 @@ class Player():
                                        slugify(tags['artist'], separator=" "),
                                        tags['extension'])
             cp_command = "mv " + from_path + " " + to_path
+            # noinspection PyBroadException
             try:
                 os.system(cp_command)
                 logging.info("Successfully moved %s to %s " % (from_path, to_path))
@@ -246,51 +323,30 @@ class Player():
 
     @staticmethod
     def get_to_path(export_path, index, title, artist, extension):
-        #TODO
-        """
-
-        """
         return Player.format_path(export_path) + u"/" + index + u"-" + \
-               Player.format_file_name(title) + u"-" + \
-               Player.format_file_name(artist) + u"." + extension
+            Player.format_file_name(title) + u"-" + \
+            Player.format_file_name(artist) + u"." + extension
 
     @staticmethod
     def get_from_path(import_path, file_path):
-        #TODO
-        """
-
-        """
         return Player.format_path(import_path) + u"/" + Player.format_path(file_path) + u" "
 
     @staticmethod
     def get_absolute_path(path):
-        #TODO
-        """
-
-        """
         return os.path.join(os.path.dirname(__file__), path)
 
     @staticmethod
     def format_file_name(path):
-        #TODO
-        """
-
-        """
         return Player.format_path(path).replace("/", "\ ")
 
     @staticmethod
     def format_path(path):
-        #TODO
-        """
-
-        """
         return path.replace(" ", "\ ").replace("'", "\\'").replace("&", "\\&").replace("(", "\(").replace(")", "\)")
 
     @staticmethod
     def index_picker(dic, filled_slots, letter=1, number=1):
-        #TODO
         """
-
+        Picks a free slot
         """
         logging.debug("index_picker() method started with letter:%s and number %s" % (letter, number))
         while filled_slots[letter - 1][number - 1]:

@@ -5,6 +5,9 @@ import logging
 
 
 class Map():
+    """
+    Get the keyboard mapping from the config file
+    """
     def __init__(self, loaded_config):
         self.map = loaded_config.map
         logging.debug("Map retrieved : %s" % self.map)

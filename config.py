@@ -63,7 +63,7 @@ class Config:
         Then it writes the config in RAM into the file well-formatted, and closes the file.
         """
         print "writing config file..."
-        cfgfile = open(self.config_file, 'w')
+        config_open = open(self.config_file, 'w')
         self.config.add_section('Network')
         self.config.set('Network', 'mpd_host', 'localhost')
         self.config.set('Network', 'mpd_port', '6600')
@@ -72,10 +72,10 @@ class Config:
         self.config.set('Paths', 'index_dir', 'Import')
         self.config.set('Paths', 'mpd_conf_file', 'mpd.conf')
         self.config.add_section('Variables')
-        # indexation au demarrage ?
+        # index on startup ?
         self.config.set('Variables', 'index', 'True')
         self.config.set('Variables', 'index_timeout', '5')
-        #amount of musics in queue before timeout is activated
+        # amount of musics in queue before timeout is activated
         self.config.set('Variables', 'add_timeout', '30')
         self.config.set('Variables', 'nb_music', '5')
         self.config.add_section('LCD')
@@ -87,35 +87,38 @@ class Config:
         self.config.set('log', 'path', "jukebox.log")
         self.config.set('log', 'level', '20')
         self.config.add_section('Map')
-        self.config.set('Map', 'l',  "list")
-        self.config.set('Map', 'q',  "quit")
-        self.config.set('Map', 'h',  "help")
-        self.config.set('Map', 'a',  "a")
-        self.config.set('Map', 'b',  "b")
-        self.config.set('Map', 'c',  "c")
-        self.config.set('Map', 'd',  "d")
-        self.config.set('Map', '1',  "1")
-        self.config.set('Map', '2',  "2")
-        self.config.set('Map', '3',  "3")
-        self.config.set('Map', '4',  "4")
-        self.config.set('Map', '5',  "5")
-        self.config.set('Map', '6',  "6")
-        self.config.set('Map', '7',  "7")
-        self.config.set('Map', '8',  "8")
-        self.config.set('Map', '9',  "9")
-        self.config.set('Map', '0',  "10")
-        self.config.set('Map', 'e',  "11")
-        self.config.set('Map', 'f',  "12")
-        self.config.set('Map', 'g',  "13")
-        self.config.set('Map', 'i',  "14")
-        self.config.set('Map', 'k',  "15")
-        self.config.set('Map', 'm',  "16")
-        self.config.set('Map', 'n',  "17")
-        self.config.set('Map', 'o',  "18")
-        self.config.set('Map', 'r',  "19")
-        self.config.set('Map', 's',  "20")
-        self.config.write(cfgfile)
-        cfgfile.close()
+        self.config.set('Map', 'l', "list")
+        self.config.set('Map', 'q', "quit")
+        self.config.set('Map', 'h', "help")
+        self.config.set('Map', 'a', "a")
+        self.config.set('Map', 'b', "b")
+        self.config.set('Map', 'c', "c")
+        self.config.set('Map', 'd', "d")
+        self.config.set('Map', '1', "1")
+        self.config.set('Map', '2', "2")
+        self.config.set('Map', '3', "3")
+        self.config.set('Map', '4', "4")
+        self.config.set('Map', '5', "5")
+        self.config.set('Map', '6', "6")
+        self.config.set('Map', '7', "7")
+        self.config.set('Map', '8', "8")
+        self.config.set('Map', '9', "9")
+        self.config.set('Map', '0', "10")
+        self.config.set('Map', 'e', "11")
+        self.config.set('Map', 'f', "12")
+        self.config.set('Map', 'g', "13")
+        self.config.set('Map', 'i', "14")
+        self.config.set('Map', 'k', "15")
+        self.config.set('Map', 'm', "16")
+        self.config.set('Map', 'n', "17")
+        self.config.set('Map', 'o', "18")
+        self.config.set('Map', 'r', "19")
+        self.config.set('Map', 's', "20")
+        self.config.set('Map', 't', "E99")
+        self.config.set('Map', 'j', "next")
+
+        self.config.write(config_open)
+        config_open.close()
 
     def config_section_map(self, section, force_string=False):
         """
@@ -127,6 +130,7 @@ class Config:
         options = self.config.options(section)
         for option in options:
             if not force_string:
+                # noinspection PyBroadException
                 try:
                     dict1[option] = self.config.getint(section, option)
                     logging.debug("Found an option : %s" % dict1[option])
@@ -134,6 +138,7 @@ class Config:
                 except:
                     # The option (or attribute) is not an integer
                     pass
+                # noinspection PyBroadException
                 try:
                     dict1[option] = self.config.getboolean(section, option)
                     logging.debug("Found an option : %s" % dict1[option])
@@ -141,6 +146,7 @@ class Config:
                 except:
                     # The option (or attribute) is not a boolean
                     pass
+            # noinspection PyBroadException
             try:
                 dict1[option] = self.config.get(section, option)
                 logging.debug("Found an option : %s" % dict1[option])

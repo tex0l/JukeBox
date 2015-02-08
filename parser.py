@@ -6,6 +6,7 @@ import os
 from tags import tag_finder
 import logging
 
+from operator import itemgetter, attrgetter, methodcaller
 
 def path_leaf(path):
     """
@@ -22,52 +23,55 @@ class MusicDir:
     """
 
     def __init__(self, path):
-        #TODO
+        # TODO
         """
 
         """
-        #chemin du repertoire
         self.path = os.path.join(os.path.dirname(__file__), path)
         os.chdir(self.path)
-        fichiers = glob.glob("*")
-        #listes des objets Music
-        self.musique = []
-        #listes des index des musiques (type A1, B12, etc.)
-        self.codes = []
-        #indexation iterative
-        for file in fichiers:
+        files = glob.glob("*")
+        # Music objects list
+        self.musics = []
+        # Music index list (A12, B1, ...)
+        self.indexes = []
+        for music_file in files:
+            # noinspection PyBroadException
             try:
-                self.musique.append(Music(file))
-                l = len(self.musique)
-                self.codes.append(self.musique[l - 1].number)
+                self.musics.append(Music(music_file))
+                l = len(self.musics)
+                self.indexes.append(self.musics[l - 1].index)
+                logging.info("Successfully added %s to library" % music_file)
             except:
-                logging.warning(file + " is incorrectly named. Try updating the database")
+                logging.warning("Unable to load %s to library" % music_file)
+        self._sort()
 
-    # impression de la liste des musiques
-    def printmusicdir(self):
-        #TODO
+    def _sort(self):
+        self.musics = sorted(self.musics, key=attrgetter('index.letter', 'index.number'))
+        self.indexes = sorted(self.indexes, key=attrgetter('letter', 'number'))
+
+    def print_music_dir(self):
+        # TODO
         """
 
         """
-        for music in self.musique:
-            music.printmusic()
+        for music in self.musics:
+            music.print_music()
+        return
 
-    # renvoie l'objet Music correspondant a l'index test
-    def find_number(self, test):
-        #TODO
+    def find_index(self, index):
+        # TODO
         """
-
+        Returns the Music corresponding to the index
         """
-        l = len(self.codes)
+        for i in range(0, len(self.musics)):
+            condition = index.__eq__(self.musics[i].index)
+            if condition:
+                return self.musics[i]
 
-        for i in range(0, l):
-            if self.codes[i] == test:
-                return self.musique[i]
-
-        return ""
+        return None
 
     def filled_slots(self):
-        #TODO
+        # TODO
         """
 
         """
@@ -79,16 +83,18 @@ class MusicDir:
             number = 0
             while number < 20:
                 number += 1
-                if self.find_number(dic[letter] + str(number)) != "":
+                if self.find_index(Index(dic[letter], number)) != None:
+                    # noinspection PyTypeChecker
                     result[letter - 1].append(True)
                 else:
+                    # noinspection PyTypeChecker
                     result[letter - 1].append(False)
             letter += 1
         return result
 
 
 class Music:
-    #TODO
+    # TODO
     """
 
     """
@@ -99,12 +105,15 @@ class Music:
 
         """
         #file named : CODE-Name-Artist.format
-        #chemin
         self.path = path
-        #nom du fichier
         self.file_name = path_leaf(self.path)
-        self.number, self.artist, self.name, self.format = self.find_tags()
+        self.index, self.artist, self.name, self.format = self.find_tags()
 
+    def __str__(self):
+        return self.index.__str__() + "  - " + self.name + " - " + self.artist + " - "+ self.format
+
+    def __repr__(self):
+        return self.__str__()
 
     def find_tags(self):
         #TODO
@@ -116,6 +125,8 @@ class Music:
         #Audio file mode
         #index
         index = self.file_name.split("-")[0]
+        index = Index(index[:1], int(index[1:]))
+        logging.debug(index)
         #artiste
         try:
             artist = tags['artist']
@@ -129,19 +140,34 @@ class Music:
             name = "unknown"
         #format
         logging.debug("Title:" + name)
-        format = self.file_name.split(".")[-1]
-        return index, artist, name, format
+        extension = self.file_name.split(".")[-1]
+        return index, artist, name, extension
 
-    def printmusic(self):
+    def print_music(self):
         #TODO
         """
 
         """
-        print self.number + " - " + self.name + " - " + self.artist + " - " + self.format
+        print self.index.__str__() + " - " + self.name + " - " + self.artist + " - " + self.format
 
     def display(self):
         #TODO
         """
 
         """
-        return "%s : %s by %s" % (self.number, self.name, self.artist)
+        return "%s%s : %s by %s" % (self.index, self.name, self.artist)
+
+
+class Index(object):
+    def __init__(self, letter, number):
+        self.letter = letter
+        self.number = number
+
+    def __str__(self):
+        return self.letter + unicode(self.number)
+
+    def __repr__(self):
+        return self.__str__()
+
+    def __eq__(self, other):
+        return self.letter == other.letter and self.number == other.number

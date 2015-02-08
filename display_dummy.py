@@ -1,26 +1,26 @@
 from __future__ import unicode_literals
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
-class Display_LCDd_dummy:
-    #TODO
-    """
 
+
+class DisplayDummy:
     """
-    # a dummy class to use on a computer without a lcd screen emulator
+    A dummy class to use on a computer without any display
+    """
     def __init__(self):
         self.UT = UT()
         return
 
-    def setQueue(self, q):  # Change the length of the queue displayed
+    def set_queue(self, q):
         return
 
     def waiting(self):
         return
 
-    def playingSong(self, number, title, artist):
+    def playing_song(self, number, title, artist):
         return
 
-    def removeEntry(self):
+    def remove_entry(self):
         return
 
     def entry(self, letter, number=None, song=None):
