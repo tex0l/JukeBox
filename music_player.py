@@ -56,6 +56,8 @@ class MPDHandler(Thread):
         self.playlist = []
         self.queue = []
         self._update_or_not = Event()
+        self._clear_or_not = Event()
+        self._next_or_not = Event()
         logging.info("Connecting to MPD")
 
         self.last_added = time.time()
@@ -103,7 +105,6 @@ class MPDHandler(Thread):
     def _update(self):
         try:
             with self._client:
-                self._update_or_not.set()
                 self._client.update()
                 self._update_or_not.clear()
         except socket.error:
@@ -127,6 +128,28 @@ class MPDHandler(Thread):
             self._connect()
             return self._enqueue(music)
 
+    def _clear(self):
+        try:
+            with self._client:
+                self._client.clear()
+                self._clear_or_not.clear()
+        except socket.error:
+            self._clear()
+        except ConnectionError:
+            self._connect()
+            self._clear()
+
+    def _next(self):
+        try:
+            with self._client:
+                self._client.next()
+                self._next_or_not.clear()
+        except socket.error:
+            self._clear()
+        except ConnectionError:
+            self._connect()
+            self._clear()
+
     # Handler core
     def run(self):
         self._connect()
@@ -138,7 +161,14 @@ class MPDHandler(Thread):
             self._client.crossfade(1)
         while not self._stop.isSet():
             if self._update_or_not.isSet():
-                self._client._update()
+                self._update()
+
+            if self._clear_or_not.isSet():
+                self._clear()
+
+            if self._next_or_not.isSet():
+                self._next()
+
             length = len(self.queue)
             for i in range(0, length):
                 self._enqueue(self.queue[0])
@@ -147,10 +177,16 @@ class MPDHandler(Thread):
             self.current_song = self._fetch_current_song()
             self.playlist = self._fetch_playlist()
             time.sleep(1)
+# Control methods :
 
-    # Control methods :
+    def next(self):
+        self._next_or_not.set()
+
+    def clear(self):
+        self._clear_or_not.set()
+
     def update(self):
-        return self._update()
+        self._update_or_not.set()
 
     def enqueue(self, music):
         self.logger.debug("Adding %s to queue" % music.name)
@@ -221,6 +257,12 @@ class Player():
 
     def queue_count(self):
         return self.mpd_handler.get_queue_count()
+
+    def clear(self):
+        self.mpd_handler.clear()
+
+    def next(self):
+        self.mpd_handler.next()
 
     def exit(self):
         logging.info("Disconnecting client")

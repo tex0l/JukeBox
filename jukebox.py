@@ -93,7 +93,7 @@ class Jukebox:
         It asks the choice then it processes it to the dictionary and the as it follows:
         If it is "quit", then it exits the program           # Those two functions are allowed only
         If it is "list", the it prints the lis of the musics # with another keyboard than the 24 keys
-        Else it calls returns the result given by self.music_picker(entry) method:
+        Else it returns the result given by self.music_picker(entry) method:
         It is the precedent choice, if you've chosen a letter
         Hence, entry equals choice in all cases except when you've picked a letter on the last round,
         Then it will equals this letter concatenated with the current choice when you pick a number
@@ -110,6 +110,11 @@ class Jukebox:
         elif choice == 'list':
             self.list()
             return ''
+        elif choice == 'E99':
+            self.player.clear()
+            return self.music_picker(loaded_config, choice[1:], choice[:1])
+        elif choice == 'next':
+            self.player.next()
         elif choice == '':
             print("Invalid Entry")
             logging.debug("Invalid entry")
@@ -159,8 +164,7 @@ class Jukebox:
                 self.add_song(song, entry)
                 logging.debug("is_digit_updater(%s,%s) returns " % (choice, old_entry))
                 return ''
-            print("This song does not exist")
-            logging.debug("No song found for entry %s" % entry)
+            logging.info("No song found for entry %s" % entry)
             logging.debug("is_digit_updater(%s,%s) returns " % (choice, old_entry))
             return ""
         logging.debug("is_digit_updater(%s,%s) returns is_letter_updater(''+%s)" % (choice,
