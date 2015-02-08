@@ -11,6 +11,7 @@ import music_player
 import time
 import logging
 from display import DisplayChooser
+from unidecode import unidecode
 
 
 class Jukebox:
@@ -101,7 +102,7 @@ class Jukebox:
         sys.stdout.write('Enter your choice : ')
         sys.stdout.flush()
         choice = getch.getch()
-        logging.debug("Got choice %s through getch".encode('ascii', 'backslashreplace') % choice)
+        logging.debug(unidecode("Got choice %s through getch") % choice)
         logging.debug("Mapping choice throughout the dictionary")
         choice = self.dictionary.find(choice)
         if choice == 'quit':
