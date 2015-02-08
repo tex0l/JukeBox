@@ -1,3 +1,4 @@
+from __future__ import unicode_literals
 """
 Django settings for jukebox2web project.
 
