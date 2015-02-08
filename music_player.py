@@ -174,21 +174,25 @@ class Player():
     """
 
     """
-
-    def __init__(self, loaded_config):
+    thread = None
+    def __init__(self, loaded_config=None):
         #TODO
         """
 
         """
-        logging.info("Killing MPD")
-        os.system("killall mpd")
-        command = unicode("mpd %s" % loaded_config.paths['mpd_conf_file'])
-        #lancement de mpd
-        logging.info("Starting MPD")
-        os.system(command)
-        self.mpd_handler = MPDHandler(loaded_config)
-        self.mpd_handler.start()
-        self.mpd_handler.join(1)
+        if not Player.thread:
+            logging.info("Killing MPD")
+            os.system("killall mpd")
+            command = unicode("mpd %s" % loaded_config.paths['mpd_conf_file'])
+            #lancement de mpd
+            logging.info("Starting MPD")
+            os.system(command)
+            self.mpd_handler = MPDHandler(loaded_config)
+            self.mpd_handler.start()
+            self.mpd_handler.join(1)
+            Player.thread = self.mpd_handler
+        else:
+            self.mpd_handler = Player.thread
         self.dic = dict([(1, 'A'), (2, 'B'), (3, 'C'), (4, 'D')])
         self.last_added = time.time()
 
