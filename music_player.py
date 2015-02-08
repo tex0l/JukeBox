@@ -160,6 +160,12 @@ class MPDHandler(Thread):
             # noinspection PyUnresolvedReferences
             self._client.crossfade(1)
         while not self._stop.isSet():
+            if self._update_or_not.isSet():
+                self._update()
+
+            if self._clear_or_not.isSet():
+                self._clear()
+
             length = len(self.queue)
             for i in range(0, length):
                 self._enqueue(self.queue[0])
@@ -168,14 +174,8 @@ class MPDHandler(Thread):
             self.current_song = self._fetch_current_song()
             self.playlist = self._fetch_playlist()
 
-            if self._clear_or_not.isSet():
-                self._clear()
-
             if self._next_or_not.isSet():
                 self._next()
-
-            if self._update_or_not.isSet():
-                self._update()
 
             time.sleep(1)
 # Control methods :
