@@ -12,7 +12,7 @@
     <title>4 Col Portfolio - Start Bootstrap Template</title>
 
     <!-- Bootstrap Core CSS -->
-    {# <link href='{% static '' %}' rel="stylesheet"> #}
+    <link href='{% static 'bootstrap/css/bootstrap.min.css' %}' rel="stylesheet">
 
     <!-- Custom CSS -->
     <link href='{% static "css/4-col-portfolio.css" %}' rel="stylesheet">
@@ -194,9 +194,9 @@
 
 </div>
 {% block javascript %}
-<script src='{% static "/javascript/index.js" %}'></script>
-<script src='{% static "/javascript/jquery.js" %}'></script>
-<script src='{% static "/bootstrap/js/bootstrap.min.js" %}'></script>
+<script src='{% static "javascript/index.js" %}'></script>
+<script src='{% static "javascript/jquery.js" %}'></script>
+<script src='{% static "bootstrap/js/bootstrap.min.js" %}'></script>
 {% endblock %}
 </body>
 </html>
