@@ -69,5 +69,4 @@ mpd.conf
 *.komodoproject
 run
 jukebox.sh
-
-
+run_compass.sh
