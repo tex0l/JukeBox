@@ -2,7 +2,7 @@ from __future__ import unicode_literals
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 import logging
-
+import os
 
 class Logger:
     """
@@ -30,7 +30,7 @@ class Logger:
         self.root_logger.setLevel(level)
         self.mpd_logger.setLevel(level)
 
-        self.file_handler = logging.FileHandler(path, mode='a')
+        self.file_handler = logging.FileHandler(os.path.join(os.path.dirname(__file__), path), mode='a')
         self.file_handler.setFormatter(self.log_formatter)
 
         self.root_logger.addHandler(self.file_handler)
