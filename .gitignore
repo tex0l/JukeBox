@@ -59,6 +59,7 @@ docs/_build/
 #General
 Import/
 Music/
+Media/
 *.conf
 *.sh
 .DS_Store
@@ -66,5 +67,3 @@ Music/
 #Random and/or personal
 *.komodoproject
 run
-
-

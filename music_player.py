@@ -118,6 +118,7 @@ class MPDHandler(Thread):
             with self._client:
                 # noinspection PyUnresolvedReferences
                 self.logger.debug("Adding %s to playlist" % music.name)
+                self.logger.info("path : %s" % music.path)
                 self._client.add(music.path)
                 # noinspection PyUnresolvedReferences
                 self._client.play()
@@ -230,7 +231,7 @@ class Player():
             self.mpd_handler.start()
             self.mpd_handler.join(1)
             Player.thread = self.mpd_handler
-            self.update()
+            #self.update()
         else:
             self.mpd_handler = Player.thread
         self.dic = dict([(1, 'A'), (2, 'B'), (3, 'C'), (4, 'D')])

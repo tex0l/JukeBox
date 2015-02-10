@@ -1,4 +1,4 @@
-from __future__ import unicode_literals
+# -*- coding: utf-8 -*-
 from django.db import models
 import os
 
@@ -6,7 +6,7 @@ import os
 class Music(models.Model):
     title = models.CharField('title', max_length=100)
     artist = models.CharField('artist', max_length=100)
-    file_field = models.FileField(unique=True)
+    file_field = models.FileField(upload_to="Library", storage="media")
 
 
 class Index(models.Model):
@@ -14,5 +14,4 @@ class Index(models.Model):
     number = models.IntegerField('number')
 
     def __eq__(self, other):
-        return other.letter == letter and other.number == number
-
+        return other.letter == self.letter and other.number == self.number

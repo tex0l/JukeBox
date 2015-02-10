@@ -1,14 +1,9 @@
-from __future__ import unicode_literals
+# -*- coding: utf-8 -*-
 from django.conf.urls import patterns, include, url
-from django.contrib import admin
-
-from library_manager.views import Library
+from django.conf import settings
+from django.conf.urls.static import static
 
 
 urlpatterns = patterns('',
-    # Examples:
-    # url(r'^$', 'jukebox2web.views.home', name='home'),
-    # url(r'^blog/', include('blog.urls')),
-
-    url(r'^$', Library.as_view(),name='Library'),
-)
+    (r'^', include('library_manager.urls')),
+) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT, show_indexes=True)
