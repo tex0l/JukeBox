@@ -49,6 +49,7 @@ coverage.xml
 *.log
 *.pot
 *.sqlite3
+jukebox2web/*
 
 # Sphinx documentation
 docs/_build/
