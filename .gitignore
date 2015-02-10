@@ -49,7 +49,6 @@ coverage.xml
 *.log
 *.pot
 *.sqlite3
-
 # Sphinx documentation
 docs/_build/
 
@@ -60,13 +59,12 @@ docs/_build/
 #General
 Import/
 Music/
-jukebox.conf
-jukebox.log
-mpd.conf
+*.conf
+*.sh
 .DS_Store
 
 #Random and/or personal
 *.komodoproject
 run
-jukebox.sh
-run_compass.sh
+
+

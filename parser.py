@@ -63,8 +63,7 @@ class MusicDir:
         """
         Returns the Music corresponding to the index
         """
-        l = len(self.musics)
-        for i in range(0, l):
+        for i in range(0, len(self.musics)):
             condition = index.__eq__(self.musics[i].index)
             if condition:
                 return self.musics[i]
