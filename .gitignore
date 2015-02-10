@@ -60,14 +60,12 @@ docs/_build/
 #General
 Import/
 Music/
-jukebox.conf
-jukebox.log
-mpd.conf
+*.conf
+*.sh
 .DS_Store
 
 #Random and/or personal
 *.komodoproject
 run
-jukebox.sh
 
 
