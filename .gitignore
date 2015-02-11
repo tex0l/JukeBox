@@ -62,6 +62,7 @@ docs/_build/
 Import/
 Music/
 *.conf
+Media/*
 *.sh
 .DS_Store
 
