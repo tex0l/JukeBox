@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
-from django.shortcuts import render, render_to_response
+from django.shortcuts import render_to_response
 from django.views.generic import View
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponseRedirect
 from django.template import RequestContext
 from forms import MusicForm
-from django.core.urlresolvers import reverse
 
 from models import Music
 class Upload(View):

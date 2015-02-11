@@ -7,8 +7,6 @@ class RestrictedFileField(forms.FileField):
     def __init__(self, *args, **kwargs):
         self.content_types = kwargs.pop('content_types', None)
         self.max_upload_size = kwargs.pop('max_upload_size', None)
-        if not self.max_upload_size:
-            self.max_upload_size = settings.MAX_UPLOAD_SIZE
         super(RestrictedFileField, self).__init__(*args, **kwargs)
  
     def clean(self, *args, **kwargs):
