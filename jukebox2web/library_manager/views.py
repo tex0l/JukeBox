@@ -27,8 +27,9 @@ class Upload(View):
     def post(self, request):
         form = MusicForm(request.POST, request.FILES)
         print request.FILES
+        print form.is_valid()
         if form.is_valid():
-            new_music = Music(file_field=request.FILES['music_file'])
+            new_music = Music(file_field=request.FILES['file_field'])
             new_music.save()
             # Redirect to the document list after POST
             return HttpResponseRedirect('upload')

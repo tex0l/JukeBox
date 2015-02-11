@@ -9,7 +9,7 @@
     {% if musics %}
         <ul>
         {% for music in musics %}
-            <li><a href="{{ music.music_file.storage }} + {{ music.music_file.name }}">{{ music.music_file.name }}</a></li>
+            <li><a href="{{ music.file_field.url }}">{{ music.file_field.name }}</a></li>
         {% endfor %}
         </ul>
     {% else %}
@@ -20,10 +20,10 @@
         <form action="{% url 'Upload' %}" method="post" enctype="multipart/form-data">
             {% csrf_token %}
             <p>{{ form.non_field_errors }}</p>
-            <p>{{ form.music_file.label_tag }} {{ form.music_file.help_text }}</p>
-            <p>
-                {{ form.music_file.errors }}
-                {{ form.music_file }}
+            <p>{{ form.file_field.label_tag }} {{ form.file_field.help_text }}</p>
+            <p>{{ form.file_field.errors }}
+                {{ form.file_field }}
+
             </p>
             <p><input type="submit" value="Upload" /></p>
         </form>
