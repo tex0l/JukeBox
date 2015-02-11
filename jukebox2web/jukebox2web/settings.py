@@ -13,33 +13,6 @@ import os
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 MEDIA_ROOT = os.path.join(BASE_DIR, '../Media/')
 MEDIA_URL = '/media/'
-
-MUSIC_TYPES = [
-'audio/vorbis-config', 'audio/vorbis', 'audio/vnd.vmx.cvsd', 'audio/vnd.sealedmedia.softseal-mpeg', 'audio/vnd.rip',
-'audio/vnd.rhetorex.32kadpcm', 'audio/vnd.qcelp', 'audio/vnd.octel.sbc', 'audio/vnd.nuera.ecelp9600',
-'audio/vnd.nuera.ecelp7470', 'audio/vnd.nuera.ecelp4800', 'audio/vnd.nortel.vbk', 'audio/vnd.nokia.mobile-xmf',
-'audio/vnd.ms-playready.media.pya', 'audio/vnd.lucent.voice', 'audio/vnd.hns.audio', 'audio/vnd.everad.plj',
-'audio/vnd.dvb.file', 'audio/vnd.dts.hd', 'audio/vnd.dts', 'audio/vnd.dra', 'audio/vnd.dolby.pulse.1',
-'audio/vnd.dolby.pl2z', 'audio/vnd.dolby.pl2x', 'audio/vnd.dolby.pl2', 'audio/vnd.dolby.mps', 'audio/vnd.dolby.mlp',
-'audio/vnd.dolby.heaac.2', 'audio/vnd.dolby.heaac.1', 'audio/vnd.dlna.adts', 'audio/vnd.digital-winds',
-'audio/vnd.dece.audio', 'audio/vnd.cns.inf1', 'audio/vnd.cns.anp1', 'audio/vnd.cmles.radio-events',
-'audio/vnd.cisco.nse', 'audio/vnd.CELP', 'audio/vnd.audiokoz', 'audio/vnd.4SB', 'audio/vnd.3gpp.iufp', 'audio/VMR-WB',
-'audio/VDVI', 'audio/ulpfec', 'audio/UEMCLIP', 'audio/tone', 'audio/telephone-event', 'audio/t38', 'audio/t140c',
-'audio/speex', 'audio/sp-midi', 'audio/SMV-QCP', 'audio/SMV0', 'audio/SMV', 'audio/rtx', 'audio/rtp-midi',
-'audio/rtploopback', 'audio/rtp-enc-aescm128', 'audio/RED', 'audio/raptorfec', '', 'audio/prs.sid', 'audio/PCMU-WB',
-'audio/PCMU', 'audio/PCMA-WB', 'audio/PCMA', '', 'audio/ogg', 'audio/mpeg4-generic', 'audio/mpeg', 'audio/mpa-robust',
-'audio/MP4A-LATM', 'audio/mp4', 'audio/MPA', 'audio/mobile-xmf', 'audio/LPC', 'audio/L24', 'audio/L20', 'audio/L16',
-'audio/L8', 'audio/ip-mr_v2.5', 'audio/iLBC', 'audio/GSM-HR-08', 'audio/GSM-EFR', 'audio/GSM', 'audio/G729E',
-'audio/G729D', '', 'audio/G729', 'audio/G728', 'audio/G726-40', 'audio/G726-32', 'audio/G726-24', 'audio/G726-16',
-'audio/G723', 'audio/G722', 'audio/G721', '', 'audio/G719', 'audio/fwdred', 'audio/example', 'audio/EVRCWB1',
-'audio/EVRCWB0', 'audio/EVRCWB', 'audio/EVRCNW1', 'audio/EVRCNW0', 'audio/EVRCNW', 'audio/EVRCB1', 'audio/EVRCB0',
-'audio/EVRCB', 'audio/EVRC1', 'audio/EVRC0', 'audio/EVRC-QCP', 'audio/EVRC', 'audio/encaprtp', 'audio/eac3',
-'audio/DVI4', 'audio/DV', 'audio/dsr-es202212', 'audio/dsr-es202211', 'audio/dsr-es202050', 'audio/dsr-es201108',
-'audio/dls', 'audio/DAT12', 'audio/CN', 'audio/clearmode', 'audio/BV32', 'audio/BV16', 'audio/basic', 'audio/ATRAC3',
-'audio/ATRAC-X', 'audio/ATRAC-ADVANCED-LOSSLESS', 'audio/asc', 'audio/aptx', 'audio/amr-wb+', 'audio/AMR-WB',
-'audio/AMR', 'audio/ac3', 'audio/3gpp2', 'audio/3gpp', 'audio/32kadpcm', 'audio/1d-interleaved-parityfec']
-
-MAX_UPLOAD_SIZE = 20971520
 TEMPLATE_DIRS = (os.path.join(BASE_DIR, 'templates'),)
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
 STATIC_URL = '/static/'
