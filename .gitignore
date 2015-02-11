@@ -59,7 +59,7 @@ docs/_build/
 #General
 Import/
 Music/
-Media/
+Media/*
 *.conf
 *.sh
 .DS_Store
