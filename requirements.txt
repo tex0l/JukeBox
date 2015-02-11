@@ -1,3 +1,4 @@
+Django==1.7.4
 lcdproc==0.3
 mutagen==1.27
 pbr==0.10.7
