@@ -1,67 +1,102 @@
 <!DOCTYPE html>
 {% load staticfiles %}
-<html>
 <head>
-    <title>Basic Layout Example</title>
-    
-    <!-- Bootstrap Core CSS -->
-    <link href='{% static 'bootstrap/css/bootstrap.min.css' %}' rel="stylesheet">
+    <title>Playlist Manager</title>
+    <meta charset="utf-8">
+    <link href='{% static 'css/jquery-ui.min.css' %}' rel="stylesheet">
 
-    <script type="text/javascript" src='{% static "javascript/jquery.js" %}'></script>
-    <script type="text/javascript" src='{% static "javascript/jquery-ui.js" %}'></script>
-    <script type="text/javascript" src='{% static "javascript/jquery.layout.js" %}'></script>
+    <script type="text/javascript" src='{% static "js/jquery.js" %}'></script>
+    <script type="text/javascript" src='{% static "js/jquery-ui.js" %}'></script>
+    <script type="text/javascript" src='{% static "js/jlayout/jquery.sizes.js" %}'></script>
+    <script type="text/javascript" src='{% static "js/jlayout/jlayout.border.js" %}'></script>
+    <script type="text/javascript" src='{% static "js/jlayout/jquery.jlayout.js" %}'></script>
 
     <script type="text/javascript">
-        $(document).ready(function(){
-            $("body").layout({ applyDemoStyles: true });
+        jQuery(function($)
+        {
+            var container = $('.layout');
+
+            function relayout() {
+                container.layout({resize: false});
+            }
+            relayout();
+
+            $(window).resize(relayout);
         });
 
-        jQuery(function($) {
-            var panelList = $('#draggablePanelList');
-
-            panelList.sortable({
-                // Only make the .panel-heading child elements support dragging.
-                // Omit this to make then entire <li>...</li> draggable.
-                handle: '.panel-heading',
-                update: function() {
-                    $('.panel', panelList).each(function(index, elem) {
-                        var $listItem = $(elem),
-                                newIndex = $listItem.index();
-
-                        // Persist the new indices.
-                    });
+        $(function() {
+            $( "#draggable" ).draggable({
+                revert: 'invalid',
+                helper: 'clone'
+            });
+            $( "#droppable" ).droppable({
+                drop: function( event, ui ) {
+                    $( this )
+                            .addClass( "ui-state-highlight" )
+                            .find( "p" )
+                            .html( "Dropped!" );
+                    ui.helper.position( { of: $(this), my: 'left top', at: 'left top' } );
                 }
             });
         });
+
     </script>
 
-    <style type="text/css">
-        /* show the move cursor as the user moves the mouse over the panel header.*/
-        #draggablePanelList .panel-heading {
-            cursor: move;
+    <style>
+        html, body {
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
         }
+
+        .layout {
+            height: 100%;
+        }
+
+        .center, .south {
+            background-color: rgb(220,220,220);
+            border: 1px solid rgb(200,200,200);
+            text-align: center;
+            display: inline-block;
+        }
+
+        .center {
+            overflow: visible;
+            z-index: 2;
+        }
+
+        .south {
+            height: 35%;
+            z-index: 1;
+        }
+
     </style>
+
+    <style>
+        #draggable { width: 100px; height: 100px; padding: 0.5em; float: left; margin: 10px 10px 10px 0;  }
+        #droppable { width: 150px; height: 150px; padding: 0.5em; float: left; margin: 10px; }
+    </style>
+
 
 </head>
 <body>
 
-<div class="ui-layout-center">Center
-    <p> Library</p>
-</div>
-<div class="ui-layout-south">
-    <p> Playlist</p>
-    <!-- Bootstrap 3 panel list. -->
-    <ul id="draggablePanelList" class="list-unstyled">
-        <li class="panel panel-info">
-            <div class="panel-heading">You can drag this panel.</div>
-            <div class="panel-body">Content ...</div>
-        </li>
-        <li class="panel panel-info">
-            <div class="panel-heading">You can drag this panel too.</div>
-            <div class="panel-body">Content ...</div>
-        </li>
-    </ul>
-</div>
 
+
+<div data-layout='{"type": "border", "hgap": 3, "vgap": 3}' class="layout">
+
+    <div class="center">
+        <div id="draggable" class="ui-widget-content">
+            <p>Drag me to my target</p>
+        </div>
+    </div>
+
+    <div class="south">
+        <div id="droppable" class="ui-widget-header">
+            <p>Drop here</p>
+        </div>
+    </div>
+</div>
 </body>
 </html>
