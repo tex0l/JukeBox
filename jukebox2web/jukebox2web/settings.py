@@ -29,6 +29,9 @@ TEMPLATE_DEBUG = True
 
 ALLOWED_HOSTS = []
 
+LETTER_DICT = ['A', 'B', 'C', 'D']
+NUMBER_DICT = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10',
+               '11', '12', '13', '14', '15', '16', '17', '18', '19', '20']
 
 # Application definition
 
@@ -39,7 +42,8 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'library_manager'
+    'library_manager',
+    'jukebox_manager'
 )
 
 MIDDLEWARE_CLASSES = (

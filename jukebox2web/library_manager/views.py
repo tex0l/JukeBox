@@ -30,7 +30,14 @@ class Upload(View):
         if form.is_valid():
             new_music = Music(file_field=request.FILES['file_field'])
             new_music.save()
+            new_music.clean()
             # Redirect to the document list after POST
             return HttpResponseRedirect('upload')
         else:
             return self.get(request)
+
+class Main(View):
+
+    def get(self, request):
+        library = Music.objects.all()
+

@@ -1,8 +1,8 @@
 from django import forms
 from django.template.defaultfilters import filesizeformat
 from django.utils.translation import ugettext_lazy as _
-from django.conf import settings
- 
+
+
 class RestrictedFileField(forms.FileField):
     def __init__(self, *args, **kwargs):
         self.content_types = kwargs.pop('content_types', None)
