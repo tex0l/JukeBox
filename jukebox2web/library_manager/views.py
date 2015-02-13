@@ -10,7 +10,7 @@ class Upload(View):
 
 
     def get(self, request):
-
+        print "Upload Chosen"
         form = MusicForm() # A empty, unbound form
         musics = Music.objects.all()
         for music in musics:
@@ -36,8 +36,22 @@ class Upload(View):
         else:
             return self.get(request)
 
-class Main(View):
+
+class PlaylistManager(View):
 
     def get(self, request):
-        library = Music.objects.all()
+        print "Playlist Manager Chosen"
+        letters = ['A', ]
+        numbers = range(1, 21)
+        slots = []
+        for letter in letters:
+            for number in numbers:
+                slots.append(letter + str(number))
 
+        return render_to_response(
+            'playlist_manager.html',
+            {'slots': slots,
+             'rows': 10,
+             'cols': 2},
+            context_instance=RequestContext(request)
+        )

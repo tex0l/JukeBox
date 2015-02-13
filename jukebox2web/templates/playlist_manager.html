@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<head>
+    <title>Playlist Manager</title>
+    <meta charset="utf-8">
+    <link href='{% static 'css/jquery-ui.min.css' %}' rel="stylesheet">
+
+    <script type="text/javascript" src='{% static "js/jquery.js" %}'></script>
+    <script type="text/javascript" src='{% static "js/jquery-ui.js" %}'></script>
+    <script type="text/javascript" src='{% static "js/jlayout/jquery.sizes.js" %}'></script>
+    <script type="text/javascript" src='{% static "js/jlayout/jlayout.border.js" %}'></script>
+    <script type="text/javascript" src='{% static "js/jlayout/jlayout.grid.js" %}'></script>
+    <script type="text/javascript" src='{% static "js/jlayout/jquery.jlayout.js" %}'></script>
+
+    <script type="text/javascript">
+        jQuery(function($)
+        {
+            var container = $('.layout');
+
+            function relayout() {
+                container.layout({resize: false});
+            }
+            relayout();
+
+            $(window).resize(relayout);
+
+            $('.grid').layout({
+                fill: 'vertical'
+            });
+
+        });
+
+        $(function() {
+            $( ".library_music" ).draggable({
+                revert: 'invalid',
+                helper: 'clone'
+            });
+            $( ".playlist_slot" ).droppable({
+                drop: function( event, ui ) {
+                    $( this )
+                            .addClass( "ui-state-highlight" )
+                            .find( "p" )
+                            .html( "Dropped!" );
+                    ui.helper.position( { of: $(this), my: 'left top', at: 'left top' } );
+                },
+                hoverClass: "library_music_hoovered"
+            });
+        });
+
+    </script>
+
+    <style>
+        html, body {
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+        }
+
+        .layout {
+            height: 100%;
+        }
+
+        .center, .west {
+            background-color: rgb(220,220,220);
+            border: 1px solid rgb(200,200,200);
+            text-align: center;
+            display: inline-block;
+        }
+
+        .center {
+            width: auto;
+            z-index: 2;
+        }
+
+        .west {
+            width: 30%;
+            z-index: 1;
+        }
+
+        .playlist_slot {
+            background-color: rgb(220,220,220);
+            border: 1px solid rgb(200,200,200);
+            text-align: center;
+            width: 200px;
+            height: 60px;
+            display: inline-block;
+        }
+
+        .library_music {
+            background-color: rgb(220,220,220);
+            border: 1px solid rgb(200,200,200);
+            text-align: center;
+            width: 200px;
+            height: 80px;
+            display: inline-block;
+        }
+
+        .library_music_hoovered {
+            background-color: rgb(200,200,200);
+        }
+
+    </style>
+
+
+
+</head>
+<body>
+
+
+
+<div data-layout='{"type": "border", "hgap": 3, "vgap": 3}' class="layout">
+
+    <div class="center">
+        {% include "playlist_manager/library_music.html" %}
+    </div>
+
+    <div class="west">
+
+		{% include "playlist_manager/group_editor.html" %}
+
+    </div>
+
+</div>
+</body>
+</html>
