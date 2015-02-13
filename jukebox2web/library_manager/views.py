@@ -40,8 +40,17 @@ class PlaylistManager(View):
 
     def get(self, request):
         print "Playlist Manager Chosen"
+        letters = ['A', 'B', 'C', 'D']
+        numbers = range(1, 21)
+        slots = []
+        for letter in letters:
+            for number in numbers:
+                slots.append(letter + str(number))
+
         return render_to_response(
             'playlist_manager.html',
-            {},
+            {'slots': slots,
+             'rows': 10,
+             'cols': 8},
             context_instance=RequestContext(request)
         )

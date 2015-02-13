@@ -9,6 +9,7 @@
     <script type="text/javascript" src='{% static "js/jquery-ui.js" %}'></script>
     <script type="text/javascript" src='{% static "js/jlayout/jquery.sizes.js" %}'></script>
     <script type="text/javascript" src='{% static "js/jlayout/jlayout.border.js" %}'></script>
+    <script type="text/javascript" src='{% static "js/jlayout/jlayout.grid.js" %}'></script>
     <script type="text/javascript" src='{% static "js/jlayout/jquery.jlayout.js" %}'></script>
 
     <script type="text/javascript">
@@ -22,6 +23,11 @@
             relayout();
 
             $(window).resize(relayout);
+
+            $('.grid').layout({
+                fill: 'vertical'
+            });
+
         });
 
         $(function() {
@@ -29,7 +35,7 @@
                 revert: 'invalid',
                 helper: 'clone'
             });
-            $( "#droppable" ).droppable({
+            $( ".playlist_slot" ).droppable({
                 drop: function( event, ui ) {
                     $( this )
                             .addClass( "ui-state-highlight" )
@@ -67,8 +73,18 @@
         }
 
         .south {
-            height: 35%;
+            overflow: auto;
+            height: auto;
             z-index: 1;
+        }
+
+        .playlist_slot {
+            background-color: rgb(220,220,220);
+            border: 1px solid rgb(200,200,200);
+            text-align: center;
+            width: 150px;
+            height: 30px;
+            display: inline-block;
         }
 
     </style>
@@ -93,10 +109,14 @@
     </div>
 
     <div class="south">
-        <div id="droppable" class="ui-widget-header">
+        <!-- <div id="droppable" class="ui-widget-header">
             <p>Drop here</p>
-        </div>
+        </div> -->
+
+		{% include "playlist_manager/playlist.html" %}
+
     </div>
+
 </div>
 </body>
 </html>
