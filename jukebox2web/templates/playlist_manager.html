@@ -31,7 +31,7 @@
         });
 
         $(function() {
-            $( "#draggable" ).draggable({
+            $( ".library_music" ).draggable({
                 revert: 'invalid',
                 helper: 'clone'
             });
@@ -42,7 +42,8 @@
                             .find( "p" )
                             .html( "Dropped!" );
                     ui.helper.position( { of: $(this), my: 'left top', at: 'left top' } );
-                }
+                },
+                hoverClass: "library_music_hoovered"
             });
         });
 
@@ -60,7 +61,7 @@
             height: 100%;
         }
 
-        .center, .south {
+        .center, .west {
             background-color: rgb(220,220,220);
             border: 1px solid rgb(200,200,200);
             text-align: center;
@@ -68,13 +69,12 @@
         }
 
         .center {
-            overflow: visible;
+            width: auto;
             z-index: 2;
         }
 
-        .south {
-            overflow: auto;
-            height: auto;
+        .west {
+            width: 30%;
             z-index: 1;
         }
 
@@ -82,17 +82,26 @@
             background-color: rgb(220,220,220);
             border: 1px solid rgb(200,200,200);
             text-align: center;
-            width: 150px;
-            height: 30px;
+            width: 200px;
+            height: 60px;
             display: inline-block;
+        }
+
+        .library_music {
+            background-color: rgb(220,220,220);
+            border: 1px solid rgb(200,200,200);
+            text-align: center;
+            width: 200px;
+            height: 80px;
+            display: inline-block;
+        }
+
+        .library_music_hoovered {
+            background-color: rgb(200,200,200);
         }
 
     </style>
 
-    <style>
-        #draggable { width: 100px; height: 100px; padding: 0.5em; float: left; margin: 10px 10px 10px 0;  }
-        #droppable { width: 150px; height: 150px; padding: 0.5em; float: left; margin: 10px; }
-    </style>
 
 
 </head>
@@ -103,17 +112,12 @@
 <div data-layout='{"type": "border", "hgap": 3, "vgap": 3}' class="layout">
 
     <div class="center">
-        <div id="draggable" class="ui-widget-content">
-            <p>Drag me to my target</p>
-        </div>
+        {% include "playlist_manager/library_music.html" %}
     </div>
 
-    <div class="south">
-        <!-- <div id="droppable" class="ui-widget-header">
-            <p>Drop here</p>
-        </div> -->
+    <div class="west">
 
-		{% include "playlist_manager/playlist.html" %}
+		{% include "playlist_manager/group_editor.html" %}
 
     </div>
 
