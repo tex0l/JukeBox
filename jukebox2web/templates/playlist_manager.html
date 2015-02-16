@@ -22,11 +22,14 @@
             }
             relayout();
 
+            $('.album_viewer').layout({}); <!-- Pose probleme ! -->
+
             $(window).resize(relayout);
 
-            $('.grid').layout({
+            $('.group_editor').layout({
                 fill: 'vertical'
             });
+
 
         });
 
@@ -55,29 +58,20 @@
             height: 100%;
             padding: 0;
             margin: 0;
+            overflow: hidden;
         }
 
-        .layout {
+        .page_layout {
             height: 100%;
         }
 
-        .center, .west {
+        .library_col, .artists_col, .groups_col {
             background-color: rgb(220,220,220);
             border: 1px solid rgb(200,200,200);
             text-align: center;
             display: inline-block;
         }
-
-        .center {
-            width: auto;
-            z-index: 2;
-        }
-
-        .west {
-            width: 30%;
-            z-index: 1;
-        }
-
+        
         .playlist_slot {
             background-color: rgb(220,220,220);
             border: 1px solid rgb(200,200,200);
@@ -92,12 +86,53 @@
             border: 1px solid rgb(200,200,200);
             text-align: center;
             width: 200px;
-            height: 80px;
+            height: 120px;
             display: inline-block;
+            z-index: 100;
         }
 
         .library_music_hoovered {
             background-color: rgb(200,200,200);
+        }
+
+        .artists_col {
+            width: 150px;
+            text-align: justify;
+            display: inline-block;
+            overflow: auto;
+            z-index: 1;
+        }
+
+        .musics_col {
+            height: 100%;
+            width: auto;
+            text-align: justify;
+            display: inline-block;
+            overflow-y: auto;
+            overflow-x: hidden;
+            z-index: 3;
+        }
+
+        .album_viewer {
+            width: inherit;
+            height: auto;
+            overflow: auto;
+        }
+
+        .groups_col {
+            width: 400px;
+            z-index: 2;
+        }
+
+        .album_title, .album_artwork, .album_musics {
+            background-color: rgb(220,220,220);
+            border: 1px solid rgb(200,200,200);
+            text-align: center;
+            display: inline-block;
+        }
+
+        .album_artwork {
+            width: 150px;
         }
 
     </style>
@@ -109,15 +144,25 @@
 
 
 
-<div data-layout='{"type": "border", "hgap": 3, "vgap": 3}' class="layout">
+<div data-layout='{"type": "border", "hgap": 3, "vgap": 3}' class="page_layout layout">
 
-    <div class="center">
-        {% include "playlist_manager/library_music.html" %}
+    <div class="artists_col west">
+        Artists<br/>Artists<br/>Artists<br/>Artists<br/>Artists<br/>Artists<br/>Artists<br/>Artists<br/>Artists<br/>Artists<br/>Artists<br/>Artists<br/>Artists<br/>Artists<br/>Artists<br/>Artists<br/>Artists<br/>
+        Artists<br/>Artists<br/>Artists<br/>Artists<br/>Artists<br/>Artists<br/>Artists<br/>Artists<br/>Artists<br/>Artists<br/>Artists<br/>Artists<br/>Artists<br/>Artists<br/>Artists<br/>Artists<br/>Artists<br/>Artists<br/>Artists<br/>
+        Artists<br/>Artists<br/>Artists<br/>Artists<br/>Artists<br/>Artists<br/>Artists<br/>Artists<br/>
     </div>
 
-    <div class="west">
+    <div class="center library_col">
 
-		{% include "playlist_manager/group_editor.html" %}
+        <div class="musics_col">
+            {% include "playlist_manager/album_viewer.html" %}
+        </div>
+
+    </div>
+
+    <div class="east groups_col">
+
+        {% include "playlist_manager/group_editor.html" %}
 
     </div>
 
