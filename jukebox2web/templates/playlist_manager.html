@@ -16,17 +16,28 @@
         jQuery(function($)
         {
             var container = $('.layout');
+            var album_viewer = $('.album_viewer');
+            var albums_list = $('.albums_list').layout({
+                fill: 'vertical'
+            });
 
             function relayout() {
                 container.layout({resize: false});
+                albums_list.layout({
+                    fill: 'vertical'
+                });
+                album_viewer.layout({resize: false});
             }
             relayout();
 
-            $('.album_viewer').layout({}); <!-- Pose probleme ! -->
 
             $(window).resize(relayout);
 
-            $('.group_editor').layout({
+            $('.music_set_editor').layout({
+                fill: 'vertical'
+            });
+
+            $('.albums_list').layout({
                 fill: 'vertical'
             });
 
@@ -65,10 +76,9 @@
             height: 100%;
         }
 
-        .library_col, .artists_col, .groups_col {
+        .library_col, .artists_col, .music_set_col {
             background-color: rgb(220,220,220);
             border: 1px solid rgb(200,200,200);
-            text-align: center;
             display: inline-block;
         }
         
@@ -115,11 +125,12 @@
 
         .album_viewer {
             width: inherit;
-            height: auto;
-            overflow: auto;
+            height: 300px;
+            overflow: visible;
+            display: inline-block;
         }
 
-        .groups_col {
+        .music_set_col {
             width: 400px;
             z-index: 2;
         }
@@ -127,12 +138,14 @@
         .album_title, .album_artwork, .album_musics {
             background-color: rgb(220,220,220);
             border: 1px solid rgb(200,200,200);
-            text-align: center;
-            display: inline-block;
         }
 
         .album_artwork {
             width: 150px;
+        }
+
+        .album_musics {
+            height: auto;
         }
 
     </style>
@@ -154,15 +167,16 @@
 
     <div class="center library_col">
 
-        <div class="musics_col">
+        <div data-layout='{"type": "grid", "columns": 1 }' class="albums_list grid">
+            {% include "playlist_manager/album_viewer.html" %}
             {% include "playlist_manager/album_viewer.html" %}
         </div>
 
     </div>
 
-    <div class="east groups_col">
+    <div class="east music_set_col">
 
-        {% include "playlist_manager/group_editor.html" %}
+        {% include "playlist_manager/music_set_editor.html" %}
 
     </div>
 

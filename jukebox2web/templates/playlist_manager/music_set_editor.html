@@ -1,0 +1,5 @@
+<div data-layout='{"type": "grid", "hgap": 3, "vgap": 3, "columns": {{ cols }}, "rows": {{ rows }} }' class="music_set_editor grid">
+    {%   for name in slots %}
+        {%include "playlist_manager/music_slot.html" %}
+    {% endfor %}
+</div>
