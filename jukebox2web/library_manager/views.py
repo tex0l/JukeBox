@@ -4,13 +4,15 @@ from django.views.generic import View
 from django.http import HttpResponseRedirect
 from django.template import RequestContext
 from forms import MusicForm
+import logging
 
 from models import Music
+
+
 class Upload(View):
 
 
     def get(self, request):
-        print "Upload Chosen"
         form = MusicForm() # A empty, unbound form
         musics = Music.objects.all()
         for music in musics:
@@ -25,8 +27,6 @@ class Upload(View):
 
     def post(self, request):
         form = MusicForm(request.POST, request.FILES)
-        print request.FILES
-        print form.is_valid()
         if form.is_valid():
             new_music = Music(file_field=request.FILES['file_field'])
             new_music.save()

@@ -1,6 +1,7 @@
 Django==1.7.4
 lcdproc==0.3
-mutagen==1.27
+mutagen==1.21
+mutagenwrapper==0.0.5
 pbr==0.10.7
 python-mpd2==0.5.4
 python-slugify==0.1.0

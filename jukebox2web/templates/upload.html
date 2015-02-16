@@ -10,7 +10,7 @@
     {% if musics %}
         <ul>
         {% for music in musics %}
-            <li><a href="{{ music.file_field.url }}">{{ music.file_field.name }}</a></li>
+            <li><a href="{{ music.file_field.url }}">{{ music.title }} - {{ music.artist.name }}</a></li>
         {% endfor %}
         </ul>
     {% else %}
