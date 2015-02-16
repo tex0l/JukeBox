@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.db import models
+from tempfile import NamedTemporaryFile
+from django.core.files import File
 import time
 import mutagenwrapper
 
@@ -24,6 +26,7 @@ class Music(models.Model):
     date_added = models.DateTimeField(auto_now=True, editable=False)
     track_number = models.IntegerField(name='track_number', null=True, blank=True)
     disc_number = models.IntegerField(name='disc_number', null=True, blank=True)
+    artwork = models.ImageField(upload_to="Library", null=True, blank=True)
 
     def clean(self):
         file_path = self.file_field.path
@@ -40,8 +43,6 @@ class Music(models.Model):
         album, created = Album.objects.get_or_create(name=tags.find('album','unknown'),
                                                  year=tags.find('year','unknown'),
                                                  album_artist=album_artist,
-                                                 #number_of_tracks=tags.find('tracktotal', u''),
-                                                 #number_of_discs=tags.find('disctotal', u'')
                                                  )
         if created:
             album.number_of_tracks = tags.find('tracktotal')
@@ -52,4 +53,10 @@ class Music(models.Model):
         self.year = tags.find('year','unknown')
         self.track_number = tags.find('tracknumber')
         self.disc_number = tags.find('discnumber')
+        artwork = tags.find('pictures')
+        if artwork:
+            with NamedTemporaryFile(mode="w+b",) as f:
+                f.write(artwork)
+                f.flush()
+                self.artwork.save("%s.jpg" % self.title, File(f), save=True)
         self.save()
