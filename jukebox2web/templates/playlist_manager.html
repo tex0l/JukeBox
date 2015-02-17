@@ -45,7 +45,11 @@
         $(function() {
             $( ".library_music" ).draggable({
                 revert: 'invalid',
-                helper: 'clone',
+                helper: function() {
+                    //debugger;
+                    return $("<div></div>").append($(this).find('.name').clone());
+                },
+                appendTo: $('.page_layout'),
                 scroll: false,
                 zIndex: 100
             });
@@ -55,9 +59,8 @@
                             .addClass( "ui-state-highlight" )
                             .find( "p" )
                             .html( "Dropped!" );
-                    ui.helper.position( { of: $(this), my: 'left top', at: 'left top' } );
                 },
-                hoverClass: "library_music_hoovered"
+                hoverClass: "music_slot_hoovered"
             });
         });
 
@@ -101,7 +104,7 @@
             z-index: 100;
         }
 
-        .library_music_hoovered {
+        .music_slot_hoovered {
             background-color: rgb(200,200,200);
         }
 
