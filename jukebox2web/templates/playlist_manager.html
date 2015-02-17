@@ -10,34 +10,32 @@
     <script type="text/javascript" src='{% static "js/jlayout/jquery.sizes.js" %}'></script>
     <script type="text/javascript" src='{% static "js/jlayout/jlayout.border.js" %}'></script>
     <script type="text/javascript" src='{% static "js/jlayout/jlayout.grid.js" %}'></script>
+    <script type="text/javascript" src='{% static "js/jlayout/jlayout.flexgrid.js" %}'></script>
+    <script type="text/javascript" src='{% static "js/jlayout/jlayout.flow.js" %}'></script>
     <script type="text/javascript" src='{% static "js/jlayout/jquery.jlayout.js" %}'></script>
 
     <script type="text/javascript">
         jQuery(function($)
         {
-            var container = $('.layout');
-            var album_viewer = $('.album_viewer');
-            var albums_list = $('.albums_list').layout({
-                fill: 'vertical'
-            });
+            var container = $('.page_layout');
+            var album_viewer = $('.album_viewer')
+            var albums_list = $('.albums_list');
+            var album_musics = $('.album_musics');
+            var album_artwork = $('.album_artwork');
 
             function relayout() {
                 container.layout({resize: false});
-                albums_list.layout({
-                    fill: 'vertical'
-                });
-                album_viewer.layout({resize: false});
+                album_musics.height('auto');
+                album_artwork.height('auto');
+                album_viewer.layout({resize: true});
+                albums_list.layout({resize: false});
             }
             relayout();
-
+            relayout();
 
             $(window).resize(relayout);
 
             $('.music_set_editor').layout({
-                fill: 'vertical'
-            });
-
-            $('.albums_list').layout({
                 fill: 'vertical'
             });
 
@@ -47,7 +45,9 @@
         $(function() {
             $( ".library_music" ).draggable({
                 revert: 'invalid',
-                helper: 'clone'
+                helper: 'clone',
+                scroll: false,
+                zIndex: 100
             });
             $( ".playlist_slot" ).droppable({
                 drop: function( event, ui ) {
@@ -118,21 +118,25 @@
             width: auto;
             text-align: justify;
             display: inline-block;
-            overflow-y: auto;
-            overflow-x: hidden;
+            overflow-y: scroll;
+            overflow-x: auto;
             z-index: 3;
-        }
-
-        .album_viewer {
-            width: inherit;
-            height: 300px;
-            overflow: visible;
-            display: inline-block;
         }
 
         .music_set_col {
             width: 400px;
             z-index: 2;
+            overflow-y: scroll;
+            overflow-x: auto;
+        }
+
+        .albums_list {
+            height: auto;
+            overflow: visible;
+        }
+
+        .album_viewer {
+            width: 100%;
         }
 
         .album_title, .album_artwork, .album_musics {
@@ -141,12 +145,24 @@
         }
 
         .album_artwork {
-            width: 150px;
+            width: 200px;
+            height: 200px;
         }
 
         .album_musics {
+            width: 100%;
+            max-width: 100%;
             height: auto;
         }
+
+        .album_title {
+            width: 100%;
+        }
+
+        .library_col {
+            overflow: auto;
+        }
+
 
     </style>
 
@@ -157,7 +173,7 @@
 
 
 
-<div data-layout='{"type": "border", "hgap": 3, "vgap": 3}' class="page_layout layout">
+<div data-layout='{"type": "border", "hgap": 3, "vgap": 3}' class="page_layout">
 
     <div class="artists_col west">
         Artists<br/>Artists<br/>Artists<br/>Artists<br/>Artists<br/>Artists<br/>Artists<br/>Artists<br/>Artists<br/>Artists<br/>Artists<br/>Artists<br/>Artists<br/>Artists<br/>Artists<br/>Artists<br/>Artists<br/>
@@ -167,7 +183,7 @@
 
     <div class="center library_col">
 
-        <div data-layout='{"type": "grid", "columns": 1 }' class="albums_list grid">
+        <div data-layout='{"type": "flexGrid", "columns": 1 }' class="albums_list">
             {% include "playlist_manager/album_viewer.html" %}
             {% include "playlist_manager/album_viewer.html" %}
         </div>
