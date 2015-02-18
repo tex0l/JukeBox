@@ -13,6 +13,7 @@
     <script type="text/javascript" src='{% static "js/jlayout/jlayout.flexgrid.js" %}'></script>
     <script type="text/javascript" src='{% static "js/jlayout/jlayout.flow.js" %}'></script>
     <script type="text/javascript" src='{% static "js/jlayout/jquery.jlayout.js" %}'></script>
+    <script type="text/javascript" src='{% static "js/jukebox/music.js" %}'></script>
 
     <script type="text/javascript">
         jQuery(function($)
@@ -31,7 +32,7 @@
                 albums_list.layout({resize: false});
             }
             relayout();
-            relayout();
+            relayout(); //Volontaire !
 
             $(window).resize(relayout);
 
@@ -42,9 +43,7 @@
             $( ".library_music" ).draggable({
                 revert: 'invalid',
                 helper: function() {
-                    var h = $('<div class="dragged_music"></div>');
-                    h.append($(this).find('.name, .artist, .album').clone());
-                    return h;
+                    return $(this).clone().removeClass("library_music").addClass("dragged_music");
                 },
                 appendTo: $('.page_layout'),
                 scroll: false,
@@ -59,6 +58,21 @@
                             .html( music );
                 },
                 hoverClass: "music_slot_hoovered"
+            });
+
+            $('#music1').music({
+                title: 'Music 1',
+                number: 1
+            });
+
+            $('#music2').music({
+                title: 'Music 1',
+                number: 1
+            });
+
+            $('#music3').music({
+                title: 'Music 1',
+                number: 1
             });
 
         });
@@ -83,7 +97,7 @@
             border: 1px solid rgb(200,200,200);
             display: inline-block;
         }
-        
+
         .playlist_slot {
             background-color: rgb(220,220,220);
             border: 1px solid rgb(200,200,200);
@@ -103,7 +117,7 @@
             z-index: 100;
         }
 
-        .library_music > .hide_in_lib{
+        .library_music .hide_in_lib{
             display: none;
         }
 
@@ -169,6 +183,51 @@
             overflow: auto;
         }
 
+        .dragged_music{
+            background: rgba(35, 35, 35, 0.95);
+            height: 80px;
+            width: 200px;
+            overflow: hidden;
+            -moz-box-shadow: 0px 0px 40px 2px #000000;
+            -webkit-box-shadow: 0px 0px 40px 2px #000000;
+            -o-box-shadow: 0px 0px 40px 2px #000000;
+            box-shadow: 0px 0px 40px 2px #000000;
+            filter:progid:DXImageTransform.Microsoft.Shadow(color=#000000, Direction=NaN, Strength=40);
+            -moz-border-radius: 10px;
+            -webkit-border-radius: 10px;
+            border-radius: 10px;
+        }
+
+        .dragged_music > .music_artwork {
+            float: left;
+            width: 80px;
+        }
+
+        .dragged_music > .music_infos {
+            color: #cccccc;
+            padding: 7px 10px 10px 85px;
+            width: 100%;
+        }
+
+        .dragged_music > .music_infos > .music_title {
+            font-weight: bold;
+        }
+
+        .dragged_music > .music_infos > .music_artist {
+            font-style: italic;
+        }
+
+        .dragged_music > .music_infos > .music_album::before {
+            content: '(';
+        }
+
+        .dragged_music > .music_infos > .music_album::after {
+            content: ')';
+        }
+
+        .dragged_music .hide_in_drag{
+            display: none;
+        }
 
     </style>
 
@@ -190,7 +249,6 @@
     <div class="center library_col">
 
         <div data-layout='{"type": "flexGrid", "columns": 1 }' class="albums_list">
-            {% include "playlist_manager/album_viewer.html" %}
             {% include "playlist_manager/album_viewer.html" %}
         </div>
 
