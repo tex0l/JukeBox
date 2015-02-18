@@ -39,15 +39,12 @@
                 fill: 'vertical'
             });
 
-
-        });
-
-        $(function() {
             $( ".library_music" ).draggable({
                 revert: 'invalid',
                 helper: function() {
-                    //debugger;
-                    return $("<div></div>").append($(this).find('.name').clone());
+                    var h = $('<div class="dragged_music"></div>');
+                    h.append($(this).find('.name, .artist, .album').clone());
+                    return h;
                 },
                 appendTo: $('.page_layout'),
                 scroll: false,
@@ -55,13 +52,15 @@
             });
             $( ".playlist_slot" ).droppable({
                 drop: function( event, ui ) {
+                    var music = ui.draggable.find(".name").text()
                     $( this )
                             .addClass( "ui-state-highlight" )
                             .find( "p" )
-                            .html( "Dropped!" );
+                            .html( music );
                 },
                 hoverClass: "music_slot_hoovered"
             });
+
         });
 
     </script>
@@ -102,6 +101,10 @@
             height: 120px;
             display: inline-block;
             z-index: 100;
+        }
+
+        .library_music > .hide_in_lib{
+            display: none;
         }
 
         .music_slot_hoovered {
