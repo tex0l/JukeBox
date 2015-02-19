@@ -30,6 +30,13 @@
                 album_artwork.height('auto');
                 album_viewer.layout({resize: true});
                 albums_list.layout({resize: false});
+                var width_library_col = $('.library_col').width();
+                if(width_library_col > 750){
+                    $('.library_music').width((width_library_col - 235)/2);
+                }
+                else{
+                    $('.library_music').width(width_library_col - 220);
+                }
             }
             relayout();
             relayout(); //Volontaire !
@@ -43,7 +50,7 @@
             $( ".library_music" ).draggable({
                 revert: 'invalid',
                 helper: function() {
-                    return $(this).clone().removeClass("library_music").addClass("dragged_music");
+                    return $('<div>').music($(this).music("option")).addClass("dragged_music");
                 },
                 appendTo: $('.page_layout'),
                 scroll: false,
@@ -61,8 +68,9 @@
             });
 
             $('#music1').music({
-                title: 'Music 1',
-                number: 1
+                title: 'Musicc music music music music music 1',
+                number: 1,
+                length: '00:00'
             });
 
             $('#music2').music({
@@ -72,7 +80,7 @@
 
             $('#music3').music({
                 title: 'Music 3',
-                number: 3
+                number: 30
             });
 
         });
@@ -86,6 +94,7 @@
             padding: 0;
             margin: 0;
             overflow: hidden;
+            font-size: 90%;
         }
 
         .page_layout {
@@ -105,25 +114,6 @@
             width: 200px;
             height: 60px;
             display: inline-block;
-        }
-
-        .library_music {
-            background-color: rgb(35,35,35);
-            border: 1px solid rgb(80,80,80);
-            width: 200px;
-            height: 20px;
-            display: inline-block;
-            z-index: 100;
-            -moz-border-radius: 5px;
-            -webkit-border-radius: 5px;
-            border-radius: 5px;
-            color: #cccccc;
-            padding: 5px 5px 5px 5px;
-            overflow: hidden;
-        }
-
-        .library_music .hide_in_lib{
-            display: none;
         }
 
         .music_slot_hoovered {
@@ -190,8 +180,8 @@
 
         .dragged_music{
             background: rgba(35, 35, 35, 0.95);
-            height: 80px;
-            width: 200px;
+            height: 70px;
+            width: 250px;
             overflow: hidden;
             -moz-box-shadow: 0px 0px 40px 2px #000000;
             -webkit-box-shadow: 0px 0px 40px 2px #000000;
@@ -205,22 +195,36 @@
 
         .dragged_music > .music_artwork {
             float: left;
-            width: 80px;
+            width: 70px;
             border-right: 1px solid rgb(80,80,80);
         }
 
         .dragged_music > .music_infos {
             color: #cccccc;
-            padding: 7px 10px 10px 85px;
-            width: 100%;
+            padding: 7px 10px 10px 75px;
+            width: calc(100% - 73px);
         }
 
         .dragged_music > .music_infos > .music_title {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
             font-weight: bold;
+            padding-top: 2px;
         }
 
         .dragged_music > .music_infos > .music_artist {
             font-style: italic;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            padding-top: 3px;
+
+        }
+
+        .dragged_music > .music_infos > .music_album {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            padding-top: 3px;
         }
 
         .dragged_music > .music_infos > .music_album::before {
@@ -235,25 +239,56 @@
             display: none;
         }
 
-        .library_music > .music_infos > .music_number{
-            color: rgb(100,100,100);
+        .library_music {
+            background-color: rgb(35,35,35);
+            border: 1px solid rgb(80,80,80);
+            width: calc(50% - 15px);
+            height: 20px;
             display: inline-block;
+            z-index: 100;
+            -moz-border-radius: 5px;
+            -webkit-border-radius: 5px;
+            border-radius: 5px;
+            color: #cccccc;
+            padding: 5px 5px 5px 5px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .library_music .hide_in_lib{
+            display: none;
         }
 
         .library_music > .music_infos{
             overflow: hidden;
+            width: 100%;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            padding-top: 3px;
+        }
+
+        .library_music > .music_infos > .music_number{
+            width: 15px;
+            color: rgb(100,100,100);
+            float: left;
+            text-align: center;
+            padding-right: 4px;
         }
 
         .library_music > .music_infos > .music_title{
             display: inline-block;
-            padding-left: 10px;
             background: rgb(35, 35, 35);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            width: calc(100% - 54px);
         }
 
         .library_music > .music_infos > .music_length{
+            text-align: right;
             color: rgb(100,100,100);
             float: right;
-            padding-left: 10px;
+            width: 37px;
         }
 
     </style>

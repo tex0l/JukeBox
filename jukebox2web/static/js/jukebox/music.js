@@ -20,22 +20,22 @@ $(function() {
 
             this.music_artwork = $('<aside>')
                 .addClass("music_artwork hide_in_lib")
-                .append($('<img src="' + this.options.artwork + '" alt="Album Artwork" height="80" width="80">'))
+                .append($('<img src="' + this.options.artwork + '" alt="Album Artwork" height="70" width="70">'))
                 .appendTo( this.element );
 
             this.music_infos = $('<div>')
                 .addClass("music_infos");
 
-            $('<div>').addClass("music_number hide_in_drag")
+            $('<aside>').addClass("music_number hide_in_drag")
                 .html(this.options.number)
+                .appendTo( this.music_infos );
+
+            $('<aside>').addClass("music_length hide_in_drag")
+                .html(this.options.length)
                 .appendTo( this.music_infos );
 
             $('<div>').addClass("music_title")
                 .html(this.options.title)
-                .appendTo( this.music_infos );
-
-            $('<div>').addClass("music_length hide_in_drag")
-                .html(this.options.length)
                 .appendTo( this.music_infos );
 
             $('<div>').addClass("music_artist hide_in_lib")
