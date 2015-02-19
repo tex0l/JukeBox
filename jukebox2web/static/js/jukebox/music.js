@@ -8,6 +8,7 @@ $(function() {
             artist: 'Artist',
             album: 'Album',
             artwork: '/media/Library/Im_Shipping_Up_to_Boston.jpg',
+            length: '0:00',
 
             // callbacks
             change: null,
@@ -31,6 +32,10 @@ $(function() {
 
             $('<div>').addClass("music_title")
                 .html(this.options.title)
+                .appendTo( this.music_infos );
+
+            $('<div>').addClass("music_length hide_in_drag")
+                .html(this.options.length)
                 .appendTo( this.music_infos );
 
             $('<div>').addClass("music_artist hide_in_lib")

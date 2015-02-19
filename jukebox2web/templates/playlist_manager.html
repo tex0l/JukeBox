@@ -51,7 +51,7 @@
             });
             $( ".playlist_slot" ).droppable({
                 drop: function( event, ui ) {
-                    var music = ui.draggable.find(".name").text()
+                    var music = ui.draggable.music('option','title');
                     $( this )
                             .addClass( "ui-state-highlight" )
                             .find( "p" )
@@ -66,13 +66,13 @@
             });
 
             $('#music2').music({
-                title: 'Music 1',
-                number: 1
+                title: 'Music 2',
+                number: 2
             });
 
             $('#music3').music({
-                title: 'Music 1',
-                number: 1
+                title: 'Music 3',
+                number: 3
             });
 
         });
@@ -108,13 +108,18 @@
         }
 
         .library_music {
-            background-color: rgb(220,220,220);
-            border: 1px solid rgb(200,200,200);
-            text-align: center;
+            background-color: rgb(35,35,35);
+            border: 1px solid rgb(80,80,80);
             width: 200px;
-            height: 120px;
+            height: 20px;
             display: inline-block;
             z-index: 100;
+            -moz-border-radius: 5px;
+            -webkit-border-radius: 5px;
+            border-radius: 5px;
+            color: #cccccc;
+            padding: 5px 5px 5px 5px;
+            overflow: hidden;
         }
 
         .library_music .hide_in_lib{
@@ -201,6 +206,7 @@
         .dragged_music > .music_artwork {
             float: left;
             width: 80px;
+            border-right: 1px solid rgb(80,80,80);
         }
 
         .dragged_music > .music_infos {
@@ -227,6 +233,27 @@
 
         .dragged_music .hide_in_drag{
             display: none;
+        }
+
+        .library_music > .music_infos > .music_number{
+            color: rgb(100,100,100);
+            display: inline-block;
+        }
+
+        .library_music > .music_infos{
+            overflow: hidden;
+        }
+
+        .library_music > .music_infos > .music_title{
+            display: inline-block;
+            padding-left: 10px;
+            background: rgb(35, 35, 35);
+        }
+
+        .library_music > .music_infos > .music_length{
+            color: rgb(100,100,100);
+            float: right;
+            padding-left: 10px;
         }
 
     </style>
