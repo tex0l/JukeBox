@@ -15,78 +15,6 @@
     <script type="text/javascript" src='{% static "js/jlayout/jquery.jlayout.js" %}'></script>
     <script type="text/javascript" src='{% static "js/jukebox/music.js" %}'></script>
 
-    <script type="text/javascript">
-        jQuery(function($)
-        {
-            var container = $('.page_layout');
-            var album_viewer = $('.album_viewer')
-            var albums_list = $('.albums_list');
-            var album_musics = $('.album_musics');
-            var album_artwork = $('.album_artwork');
-
-            function relayout() {
-                container.layout({resize: false});
-                album_musics.height('auto');
-                album_artwork.height('auto');
-                album_viewer.layout({resize: true});
-                albums_list.layout({resize: false});
-                var width_library_col = $('.library_col').width();
-                if(width_library_col > 750){
-                    $('.library_music').width((width_library_col - 235)/2);
-                }
-                else{
-                    $('.library_music').width(width_library_col - 220);
-                }
-            }
-            relayout();
-            relayout(); //Volontaire !
-
-            $(window).resize(relayout);
-
-            $('.music_set_editor').layout({
-                fill: 'vertical'
-            });
-
-            $( ".library_music" ).draggable({
-                revert: 'invalid',
-                helper: function() {
-                    return $('<div>').music($(this).music("option")).addClass("dragged_music");
-                },
-                appendTo: $('.page_layout'),
-                scroll: false,
-                zIndex: 100
-            });
-            $( ".playlist_slot" ).droppable({
-                drop: function( event, ui ) {
-                    var music = ui.draggable.music('option','title');
-                    $( this )
-                            .addClass( "ui-state-highlight" )
-                            .find( "p" )
-                            .html( music );
-                },
-                hoverClass: "music_slot_hoovered"
-            });
-
-            $('#music1').music({
-                title: 'Musicc music music music music music 1',
-                number: 1,
-                length: '00:00'
-            });
-
-            $('#music2').music({
-                title: 'Music 2',
-                number: 2
-            });
-
-            $('#music3').music({
-                title: 'Music 3',
-                number: 30
-            });
-
-        });
-
-    </script>
-
     <style>
         html, body {
             width: 100%;
@@ -293,7 +221,81 @@
 
     </style>
 
+    <script type="text/javascript">
+        jQuery(function($)
+        {
+            var container = $('.page_layout');
+            var album_viewer = $('.album_viewer')
+            var albums_list = $('.albums_list');
+            var album_musics = $('.album_musics');
+            var album_artwork = $('.album_artwork');
 
+            function relayout() {
+                container.layout({resize: false});
+                album_musics.height('auto');
+                album_artwork.height('auto');
+                album_viewer.layout({resize: true});
+                albums_list.layout({resize: false});
+                var width_library_col = $('.library_col').width();
+                if(width_library_col > 750){
+                    $('.library_music').width((width_library_col - 235)/2);
+                    $('.library_music').height(20);
+                    album_musics.layout({resize: true, columns: 2});
+                }
+                else{
+                    $('.library_music').width(width_library_col - 220);
+                    $('.library_music').height(20);
+                    album_musics.layout({resize: true, columns: 1});
+                }
+            }
+            relayout();
+            relayout(); //Volontaire !
+
+            $(window).resize(relayout);
+
+            $('.music_set_editor').layout({
+                fill: 'vertical'
+            });
+
+            $( ".library_music" ).draggable({
+                revert: 'invalid',
+                helper: function() {
+                    return $('<div>').music($(this).music("option")).addClass("dragged_music");
+                },
+                appendTo: $('.page_layout'),
+                scroll: false,
+                zIndex: 100
+            });
+            $( ".playlist_slot" ).droppable({
+                drop: function( event, ui ) {
+                    var music = ui.draggable.music('option','title');
+                    $( this )
+                            .addClass( "ui-state-highlight" )
+                            .find( "p" )
+                            .html( music );
+                },
+                hoverClass: "music_slot_hoovered"
+            });
+
+            $('#music1').music({
+                title: 'Musicc music music music music music 1',
+                number: 1,
+                length: '00:00'
+            });
+
+            $('#music2').music({
+                title: 'Music 2',
+                number: 2
+            });
+
+            $('#music3').music({
+                title: 'Music 3',
+                number: 30
+            });
+
+        });
+
+    </script>
 
 </head>
 <body>
