@@ -12,7 +12,7 @@ html, body {
 }
 
 .library_col, .artists_col, .music_set_col {
-    background-color: rgb(220,220,220);
+    background-color: rgb(35,35,35);
     border: 1px solid rgb(200,200,200);
     display: inline-block;
 }
@@ -31,7 +31,7 @@ html, body {
 }
 
 .artists_col {
-    width: 150px;
+    width: 220px;
     text-align: justify;
     display: inline-block;
     overflow: auto;
@@ -83,10 +83,18 @@ html, body {
 
 .album_title {
     width: 100%;
+    -webkit-user-select: text;
+    -moz-user-select: text;
+    -ms-user-select: text;
+    user-select: text;
 }
 
 .library_col {
     overflow: auto;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 .dragged_music{
@@ -117,25 +125,26 @@ html, body {
 }
 
 .dragged_music > .music_infos > .music_title {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
     font-weight: bold;
     padding-top: 2px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 
 .dragged_music > .music_infos > .music_artist {
     font-style: italic;
-    overflow: hidden;
-    text-overflow: ellipsis;
     padding-top: 3px;
-
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 
 .dragged_music > .music_infos > .music_album {
-    overflow: hidden;
-    text-overflow: ellipsis;
     padding-top: 3px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 
 .dragged_music > .music_infos > .music_album::before {
@@ -148,6 +157,61 @@ html, body {
 
 .dragged_music .hide_in_drag{
     display: none;
+}
+
+.artist{
+    background: rgb(35, 35, 35);
+    height: 70px;
+    width: calc(100% - 10px);
+    overflow: hidden;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+    margin: 0px 0px 5px 5px;
+    position: relative;
+    border: 1px solid rgb(80,80,80);
+}
+
+.artist_selected{
+    color: #505050;
+    background: rgb(200, 200, 200);
+    -moz-box-shadow: inset 0px 0px 10px 2px #000000;
+    -webkit-box-shadow: inset 0px 0px 10px 2px #000000;
+    -o-box-shadow: inset 0px 0px 10px 2px #000000;
+    box-shadow: inset 0px 0px 10px 2px #000000;
+}
+
+.artist_selected > .artist_infos > .artist_name {
+    color: #505050;
+}
+
+.artist > .artist_artwork {
+    float: left;
+    width: 70px;
+    border-right: 1px solid rgb(80,80,80);
+}
+
+.artist > .artist_infos {
+    color: #cccccc;
+    padding: 7px 0px 10px 75px;
+    width: calc(100% - 75px);
+}
+
+.artist > .artist_infos > .artist_name {
+    font-size: 120%;
+    padding-top: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.artist > .artist_infos > .artist_numbers {
+    font-style: italic;
+    color: rgb(100,100,100);
+    padding-top: 3px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .library_music {

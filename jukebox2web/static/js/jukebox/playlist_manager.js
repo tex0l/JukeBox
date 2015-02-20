@@ -75,4 +75,21 @@ jQuery(function($)
         number: 30
     });
 
+    $('.artist1').artist({
+        name: 'Artist 1',
+        nb_albums: 1,
+        nb_musics: 1
+    });
+
+    $('.artist2').artist({
+        name: 'Artist 2',
+        nb_albums: 2,
+        nb_musics: 10
+    });
+
+    $('.artists_col').resizable({
+        handles: 'e',
+        stop: relayout
+    });
+
 });
