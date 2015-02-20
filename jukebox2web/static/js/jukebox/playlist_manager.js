@@ -44,7 +44,8 @@ jQuery(function($)
         },
         appendTo: container,
         scroll: false,
-        zIndex: 100
+        zIndex: 100,
+        cursorAt: { top:40, left: 130 }
     });
 
     $( ".playlist_slot" ).droppable({
