@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html>
+<head>
+    <title>Playlist Manager</title>
+    <meta charset="utf-8">
+    <link href='{% static 'css/jquery-ui.min.css' %}' rel="stylesheet">
+
+    <link rel="stylesheet" type="text/css" href="{% static "css/jukebox/playlist_manager.css" %}">
+
+    <script type="text/javascript" src='{% static "js/jquery.js" %}'></script>
+    <script type="text/javascript" src='{% static "js/jquery-ui.js" %}'></script>
+    <script type="text/javascript" src='{% static "js/jlayout/jquery.sizes.js" %}'></script>
+    <script type="text/javascript" src='{% static "js/jlayout/jlayout.border.js" %}'></script>
+    <script type="text/javascript" src='{% static "js/jlayout/jlayout.grid.js" %}'></script>
+    <script type="text/javascript" src='{% static "js/jlayout/jlayout.flexgrid.js" %}'></script>
+    <script type="text/javascript" src='{% static "js/jlayout/jlayout.flow.js" %}'></script>
+    <script type="text/javascript" src='{% static "js/jlayout/jquery.jlayout.js" %}'></script>
+    <script type="text/javascript" src='{% static "js/jukebox/music.js" %}'></script>
+    <script type="text/javascript" src='{% static "js/jukebox/playlist_manager.js" %}'></script>
+
+</head>
+<body>
+
+
+
+<div data-layout='{"type": "border", "hgap": 3, "vgap": 3}' class="page_layout">
+
+    <div class="artists_col west">
+        Artists<br/>Artists<br/>Artists<br/>Artists<br/>Artists<br/>Artists<br/>Artists<br/>Artists<br/>Artists<br/>Artists<br/>Artists<br/>Artists<br/>Artists<br/>Artists<br/>Artists<br/>Artists<br/>Artists<br/>
+        Artists<br/>Artists<br/>Artists<br/>Artists<br/>Artists<br/>Artists<br/>Artists<br/>Artists<br/>Artists<br/>Artists<br/>Artists<br/>Artists<br/>Artists<br/>Artists<br/>Artists<br/>Artists<br/>Artists<br/>Artists<br/>Artists<br/>
+        Artists<br/>Artists<br/>Artists<br/>Artists<br/>Artists<br/>Artists<br/>Artists<br/>Artists<br/>
+    </div>
+
+    <div class="center library_col">
+
+        <div data-layout='{"type": "flexGrid", "columns": 1 }' class="albums_list">
+            {% include "playlist_manager/album_viewer.html" %}
+            {% include "playlist_manager/album_viewer.html" %}
+            {% include "playlist_manager/album_viewer.html" %}
+            {% include "playlist_manager/album_viewer.html" %}
+            {% include "playlist_manager/album_viewer.html" %}
+        </div>
+
+    </div>
+
+    <div class="east music_set_col">
+
+        {% include "playlist_manager/music_set_editor.html" %}
+
+    </div>
+
+</div>
+</body>
+</html>
