@@ -19,6 +19,13 @@ $(function() {
 
         // the constructor
         _create: function() {
+            this._refresh();
+        },
+
+        // called when created, and later when changing options
+        _refresh: function() {
+
+            this.element.html('');
 
             this.artist_artwork = $('<aside>')
                 .addClass("music_artwork hide_in_lib hide_in_slot")
@@ -53,12 +60,6 @@ $(function() {
                 .appendTo( this.artist_infos );
 
             this.artist_infos.appendTo(this.element)
-
-            this._refresh();
-        },
-
-        // called when created, and later when changing options
-        _refresh: function() {
 
         },
 
@@ -178,8 +179,8 @@ $(function() {
         // default options
         options: {
             pk: 0,
-            code1: 'A0',
-            code2: 'A0',
+            slot1_nb: 'A0',
+            slot2_nb: 'A0',
             music1: {},
             music2: {},
             artwork: '/media/Library/Im_Shipping_Up_to_Boston.jpg',
@@ -194,10 +195,11 @@ $(function() {
 
             var slot_pair = this.element.addClass("slot_pair");
 
-            this.options.music1.slot_number = this.options.code1;
-            this.slot1 = $('<aside>')
+            this.options.music1.slot = this.options.slot1_nb;
+            this.music_slot1 = $('<div class="music_slot">').music(this.options.music1);
+            $('<aside>')
                 .addClass("slot slot_left")
-                .append($('<div class="music_slot">').music(this.options.music1))
+                .append(this.music_slot1)
                 .appendTo( slot_pair );
 
             this.slot_artwork = $('<div>')
@@ -205,18 +207,21 @@ $(function() {
                 .append($('<img src="' + this.options.artwork + '" height="70" width="70">'))
                 .appendTo( slot_pair );
 
-            this.options.music2.slot_number = this.options.code2;
-            this.slot2 = $('<aside>')
+            this.options.music2.slot = this.options.slot2_nb;
+            this.music_slot2 = $('<div class="music_slot">').music(this.options.music2);
+            $('<aside>')
                 .addClass("slot slot_right")
-                .append($('<div class="music_slot">').music(this.options.music2))
+                .append(this.music_slot2)
                 .appendTo( slot_pair );
 
-            this._refresh();
         },
 
-        // called when created, and later when changing options
+        // called when changing options
         _refresh: function() {
-
+            this.options.music1.slot = this.options.slot1_nb;
+            this.options.music2.slot = this.options.slot2_nb;
+            this.music_slot1.music(this.options.music1);
+            this.music_slot2.music(this.options.music2);
         },
 
         // events bound via _on are removed automatically
@@ -241,7 +246,6 @@ $(function() {
 
         // _setOption is called for each individual option that is changing
         _setOption: function( key, value ) {
-            // prevent invalid color values
             this._super( key, value );
         }
     });

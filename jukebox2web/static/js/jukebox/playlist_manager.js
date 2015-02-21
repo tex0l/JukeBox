@@ -84,18 +84,31 @@ jQuery(function($)
         nb_musics: 10
     });
 
-    $('.slot1').music_slot_pair({});
+    $('.slot1').music_slot_pair({
+        slot1_nb: 'A1',
+        slot2_nb: 'A2'
+    });
 
-    $('.slot2').music_slot_pair({});
+    $('.slot2').music_slot_pair({
+        slot1_nb: 'A3',
+        slot2_nb: 'A4'
+    });
 
-    $('.slot3').music_slot_pair({});
+    $('.slot3').music_slot_pair({
+        slot1_nb: 'A5',
+        slot2_nb: 'A6'
+    });
 
-    $( ".slot" ).droppable({
+    $( ".slot_left" ).droppable({
         drop: function( event, ui ) {
-            var music = ui.draggable.music('option');
-            music.slot = $(this).find('.music_slot').html('').music('option', 'slot');
-            $( this )
-                .music(music);
+            $(this).parent().music_slot_pair('option', 'music1', ui.draggable.music('option'));
+        },
+        hoverClass: "music_slot_hoovered"
+    });
+
+    $( ".slot_right" ).droppable({
+        drop: function( event, ui ) {
+            $(this).parent().music_slot_pair('option', 'music2', ui.draggable.music('option'));
         },
         hoverClass: "music_slot_hoovered"
     });
