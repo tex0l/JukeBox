@@ -48,30 +48,27 @@ jQuery(function($)
         cursorAt: { top:40, left: 130 }
     });
 
-    $( ".playlist_slot" ).droppable({
-        drop: function( event, ui ) {
-            var music = ui.draggable.music('option','title');
-            $( this )
-                .addClass( "ui-state-highlight" )
-                .find( "p" )
-                .html( music );
-        },
-        hoverClass: "music_slot_hoovered"
+    $('.artists_col').resizable({
+        handles: 'e',
+        stop: relayout
     });
 
     $('.music1').music({
         title: 'Musicc music music music music music 1',
+        artist: 'Artist 1',
         number: 1,
         length: '00:00'
     });
 
     $('.music2').music({
         title: 'Music 2',
+        artist: 'Artist 2',
         number: 2
     });
 
     $('.music3').music({
         title: 'Music 3',
+        artist: 'Artist 3',
         number: 30
     });
 
@@ -87,9 +84,20 @@ jQuery(function($)
         nb_musics: 10
     });
 
-    $('.artists_col').resizable({
-        handles: 'e',
-        stop: relayout
+    $('.slot1').music_slot_pair({});
+
+    $('.slot2').music_slot_pair({});
+
+    $('.slot3').music_slot_pair({});
+
+    $( ".slot" ).droppable({
+        drop: function( event, ui ) {
+            var music = ui.draggable.music('option');
+            music.slot = $(this).find('.music_slot').html('').music('option', 'slot');
+            $( this )
+                .music(music);
+        },
+        hoverClass: "music_slot_hoovered"
     });
 
 });

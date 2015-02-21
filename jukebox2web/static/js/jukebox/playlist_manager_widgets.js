@@ -10,6 +10,7 @@ $(function() {
             album: 'Album',
             artwork: '/media/Library/Im_Shipping_Up_to_Boston.jpg',
             length: '0:00',
+            slot: 'A00',
 
             // callbacks
             change: null,
@@ -20,19 +21,23 @@ $(function() {
         _create: function() {
 
             this.artist_artwork = $('<aside>')
-                .addClass("music_artwork hide_in_lib")
+                .addClass("music_artwork hide_in_lib hide_in_slot")
                 .append($('<img src="' + this.options.artwork + '" alt="' + this.options.title + '" height="70" width="70">'))
                 .appendTo( this.element );
 
             this.artist_infos = $('<div>')
                 .addClass("music_infos");
 
-            $('<aside>').addClass("music_number hide_in_drag")
+            $('<aside>').addClass("music_number hide_in_drag hide_in_slot")
                 .html(this.options.number)
                 .appendTo( this.artist_infos );
 
-            $('<aside>').addClass("music_length hide_in_drag")
+            $('<aside>').addClass("music_length hide_in_drag hide_in_slot")
                 .html(this.options.length)
+                .appendTo( this.artist_infos );
+
+            $('<div>').addClass("music_slot_nb hide_in_drag hide_in_lib")
+                .html(this.options.slot)
                 .appendTo( this.artist_infos );
 
             $('<div>').addClass("music_title")
@@ -43,7 +48,7 @@ $(function() {
                 .html(this.options.artist)
                 .appendTo( this.artist_infos );
 
-            $('<div>').addClass("music_album hide_in_lib")
+            $('<div>').addClass("music_album hide_in_lib hide_in_slot")
                 .html(this.options.album)
                 .appendTo( this.artist_infos );
 
@@ -168,5 +173,78 @@ $(function() {
             this._super( key, value );
         }
     });
+
+    $.widget( "juke.music_slot_pair", {
+        // default options
+        options: {
+            pk: 0,
+            code1: 'A0',
+            code2: 'A0',
+            music1: {},
+            music2: {},
+            artwork: '/media/Library/Im_Shipping_Up_to_Boston.jpg',
+
+            // callbacks
+            change: null,
+            random: null
+        },
+
+        // the constructor
+        _create: function() {
+
+            var slot_pair = this.element.addClass("slot_pair");
+
+            this.options.music1.slot_number = this.options.code1;
+            this.slot1 = $('<aside>')
+                .addClass("slot slot_left")
+                .append($('<div class="music_slot">').music(this.options.music1))
+                .appendTo( slot_pair );
+
+            this.slot_artwork = $('<div>')
+                .addClass("slot_artwork")
+                .append($('<img src="' + this.options.artwork + '" height="70" width="70">'))
+                .appendTo( slot_pair );
+
+            this.options.music2.slot_number = this.options.code2;
+            this.slot2 = $('<aside>')
+                .addClass("slot slot_right")
+                .append($('<div class="music_slot">').music(this.options.music2))
+                .appendTo( slot_pair );
+
+            this._refresh();
+        },
+
+        // called when created, and later when changing options
+        _refresh: function() {
+
+        },
+
+        // events bound via _on are removed automatically
+        // revert other modifications here
+        _destroy: function() {
+            // remove generated elements
+            this.artist_artwork.remove();
+            this.artist_infos.remove();
+
+            this.element
+                .removeClass( "artist" )
+                .css( "background-color", "transparent" );
+        },
+
+        // _setOptions is called with a hash of all options that are changing
+        // always refresh when changing options
+        _setOptions: function() {
+            // _super and _superApply handle keeping the right this-context
+            this._superApply( arguments );
+            this._refresh();
+        },
+
+        // _setOption is called for each individual option that is changing
+        _setOption: function( key, value ) {
+            // prevent invalid color values
+            this._super( key, value );
+        }
+    });
+
 
 });

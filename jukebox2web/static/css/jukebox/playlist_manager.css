@@ -18,16 +18,11 @@ html, body {
 }
 
 .playlist_slot {
-    background-color: rgb(220,220,220);
     border: 1px solid rgb(200,200,200);
     text-align: center;
     width: 200px;
     height: 60px;
     display: inline-block;
-}
-
-.music_slot_hoovered {
-    background-color: rgb(200,200,200);
 }
 
 .artists_col {
@@ -265,3 +260,78 @@ html, body {
     float: right;
     width: 37px;
 }
+
+.slot_pair{
+    background: rgb(35, 35, 35);
+    height: 70px;
+    width: calc(100% - 10px);
+    overflow: hidden;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+    margin: 0px 5px 5px 5px;
+    position: relative;
+    border: 1px solid rgb(80,80,80);
+    color: #cccccc;
+    text-align: center;
+}
+
+.slot_pair > .slot_artwork{
+    width: 70px;
+    position: absolute;
+    left: calc(50% - 35px);
+}
+
+.slot_pair .music_slot_nb{
+    border-bottom: 1px solid rgb(80,80,80);
+}
+
+.slot_pair .music_slot{
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.slot_pair .music_title {
+    font-weight: bold;
+    padding-top: 2px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.slot_pair .music_artist {
+    font-style: italic;
+    padding-top: 3px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.slot_pair .hide_in_slot{
+    display: none;
+}
+
+.slot_pair > .slot_left{
+    float: left;
+    width: calc(50% - 36px);
+    height: 100%;
+    border-right: 1px solid rgb(80,80,80);
+}
+
+.slot_pair > .slot_right{
+    float: right;
+    width: calc(50% - 36px);
+    height: 100%;
+    border-left: 1px solid rgb(80,80,80);
+}
+
+.music_slot_hoovered {
+    color: #505050;
+    background: rgb(200, 200, 200);
+    -moz-box-shadow: inset 0px 0px 10px 2px #000000;
+    -webkit-box-shadow: inset 0px 0px 10px 2px #000000;
+    -o-box-shadow: inset 0px 0px 10px 2px #000000;
+    box-shadow: inset 0px 0px 10px 2px #000000;
+}
+
