@@ -27,10 +27,9 @@ html, body {
 
 .artists_col {
     width: 220px;
-    text-align: justify;
-    display: inline-block;
-    overflow: auto;
-    z-index: 1;
+    z-index: 2;
+    overflow-y: scroll;
+    overflow-x: hidden;
 }
 
 .musics_col {
@@ -44,7 +43,7 @@ html, body {
 }
 
 .music_set_col {
-    width: 400px;
+    width: 350px;
     z-index: 2;
     overflow-y: scroll;
     overflow-x: auto;

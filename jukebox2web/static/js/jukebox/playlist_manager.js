@@ -33,10 +33,6 @@ jQuery(function($)
 
     $(window).resize(relayout);
 
-    $('.music_set_editor').layout({
-        fill: 'vertical'
-    });
-
     $( ".library_music" ).draggable({
         revert: 'invalid',
         helper: function() {
