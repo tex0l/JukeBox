@@ -13,12 +13,12 @@ jQuery(function($)
         var width_library_col = $('.library_col').width();
         var library_musics = $('.library_music');
         if(width_library_col > 750){
-            library_musics.width((width_library_col - 234)/2);
+            library_musics.width((width_library_col - 238)/2);
             library_musics.height(20);
             album_musics.layout({resize: true, columns: 2});
         }
         else{
-            library_musics.width(width_library_col - 218);
+            library_musics.width(width_library_col - 222);
             library_musics.height(20);
             album_musics.layout({resize: true, columns: 1});
         }
@@ -50,6 +50,11 @@ jQuery(function($)
 
     $('.artists_col').resizable({
         handles: 'e',
+        stop: relayout
+    });
+
+    $('.music_set_col').resizable({
+        handles: 'w',
         stop: relayout
     });
 

@@ -5,6 +5,8 @@ html, body {
     margin: 0;
     overflow: hidden;
     font-size: 90%;
+    color: #cccccc;
+    background-color: rgb(80,80,80);
 }
 
 .page_layout {
@@ -12,13 +14,11 @@ html, body {
 }
 
 .library_col, .artists_col, .music_set_col {
-    background-color: rgb(35,35,35);
-    border: 1px solid rgb(200,200,200);
     display: inline-block;
+    background-color: rgb(35,35,35);
 }
 
 .playlist_slot {
-    border: 1px solid rgb(200,200,200);
     text-align: center;
     width: 200px;
     height: 60px;
@@ -60,8 +60,6 @@ html, body {
 }
 
 .album_title, .album_artwork, .album_musics {
-    background-color: rgb(220,220,220);
-    border: 1px solid rgb(200,200,200);
 }
 
 .album_artwork {
@@ -77,11 +75,18 @@ html, body {
 }
 
 .album_title {
+    font-size: 120%;
     width: 100%;
     -webkit-user-select: text;
     -moz-user-select: text;
     -ms-user-select: text;
     user-select: text;
+    padding-left: 5px;
+    padding-bottom: 5px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+
 }
 
 .library_col {
@@ -90,6 +95,7 @@ html, body {
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+    padding-right: 2px;
 }
 
 .dragged_music{
@@ -114,7 +120,6 @@ html, body {
 }
 
 .dragged_music > .music_infos {
-    color: #cccccc;
     padding: 7px 10px 10px 75px;
     width: calc(100% - 73px);
 }
@@ -187,7 +192,6 @@ html, body {
 }
 
 .artist > .artist_infos {
-    color: #cccccc;
     padding: 7px 0px 10px 75px;
     width: calc(100% - 75px);
 }
@@ -210,7 +214,6 @@ html, body {
 }
 
 .library_music {
-    background-color: rgb(35,35,35);
     border: 1px solid rgb(80,80,80);
     width: calc(50% - 15px);
     height: 20px;
@@ -219,9 +222,7 @@ html, body {
     -moz-border-radius: 5px;
     -webkit-border-radius: 5px;
     border-radius: 5px;
-    color: #cccccc;
     padding: 5px 5px 5px 5px;
-    overflow: hidden;
     position: relative;
 }
 
@@ -272,7 +273,6 @@ html, body {
     margin: 0px 5px 5px 5px;
     position: relative;
     border: 1px solid rgb(80,80,80);
-    color: #cccccc;
     text-align: center;
 }
 
