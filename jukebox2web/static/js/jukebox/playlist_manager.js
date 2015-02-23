@@ -96,6 +96,12 @@ jQuery(function($)
         helper: function() {
             return $('<div>').music($(this).music("option")).addClass("dragged_music");
         },
+        start: function() {
+            $(this).addClass("music_highlight");
+        },
+        stop: function() {
+            $(this).removeClass("music_highlight");
+        },
         appendTo: container,
         scroll: false,
         zIndex: 100,
@@ -106,14 +112,14 @@ jQuery(function($)
         drop: function( event, ui ) {
             $(this).parent().music_slot_pair('option', 'music1', ui.draggable.music('option'));
         },
-        hoverClass: "music_slot_hoovered"
+        hoverClass: "music_highlight"
     });
 
     $(".slot_right" ).droppable({
         drop: function( event, ui ) {
             $(this).parent().music_slot_pair('option', 'music2', ui.draggable.music('option'));
         },
-        hoverClass: "music_slot_hoovered"
+        hoverClass: "music_highlight"
     });
 
     $("#set_select").change(function(){

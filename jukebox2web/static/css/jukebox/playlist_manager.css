@@ -25,13 +25,6 @@ html, body {
     background-color: rgb(35,35,35);
 }
 
-.playlist_slot {
-    text-align: center;
-    width: 200px;
-    height: 60px;
-    display: inline-block;
-}
-
 .artists_col {
     width: 220px;
     z-index: 2;
@@ -314,6 +307,7 @@ html, body {
 
 .slot_pair .music_slot{
     width: 100%;
+    height: 100%;
     overflow: hidden;
     text-overflow: ellipsis;
 }
@@ -352,7 +346,7 @@ html, body {
     border-left: 1px solid rgb(80,80,80);
 }
 
-.music_slot_hoovered {
+.music_highlight {
     color: rgb(35, 35, 35);
     background: rgba(200, 200, 200, 0.6);
     -moz-box-shadow: inset 0px 0px 10px 2px #000000;
