@@ -141,6 +141,8 @@ jQuery(function($)
         $(this).parent().removeClass("searchform_enabled");
     });
 
+    $(".styled-select").attr('select_button', "\uf078");
+
     $(".styled-select").focusin(function(){
         $(this).addClass("styled-select_active");
     });
@@ -150,17 +152,56 @@ jQuery(function($)
     });
 
     $("#btn_edit").click(function(){
-        var select = $('#set_select').hide();
-        var select_input = $('<input class="set_select">').appendTo(select.parent());
+        var select = $('#set_select');
+        if(select.is(":visible")) {
+            select.hide();
+            var old_button = select.parent().attr('select_button');
+            select.parent().attr('select_button', '');
 
-        select_input.keypress(function(e){
-            if(e.keyCode == 13) {
-                $(this).blur();
-                select.find(':selected').html($(this).val());
-                $(this).remove();
+            var select_input = $('<input class="set_select set_input">')
+                .val(select.find(':selected').text())
+                .appendTo(select.parent());
+
+            var btn_revert = $('<a href="#" class="btn" id="btn_revert" title="Discard changes">')
+                .html('<i class="fa fa-reply"></i>')
+                .appendTo(select.parent())
+                .click(function () {
+                    select_input.val(select.find(':selected').text());
+                    end_input();
+                });
+
+            var btn_remove = $('<a href="#" class="btn" id="btn_remove" title="Delete Music Set">')
+                .html('<i class="fa fa-remove"></i>')
+                .appendTo(select.parent())
+                .click(function () {
+                    select.find(':selected').remove();
+                    end_input();
+                });
+
+            var end_input = function () {
+                select_input.blur();
+                select_input.remove();
+                btn_revert.remove();
+                btn_remove.remove();
+                select.parent().attr('select_button', old_button);
                 select.show().change();
-            }
-        })
-            .focus();
+            };
+
+            select_input.keypress(function (e) {
+                if (e.keyCode == 13) {
+                    select.find(':selected').html($(this).val());
+                    end_input();
+                }
+            }).focus();
+        }
+        else{
+            $('.set_input').focus();
+        }
+    });
+
+    $("#btn_add").click(function(){
+        var select = $('#set_select');
+        var o = $('<option selected="selected">').appendTo(select);
+        $("#btn_edit").click();
     });
 });
