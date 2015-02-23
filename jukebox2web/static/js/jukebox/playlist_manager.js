@@ -122,7 +122,7 @@ jQuery(function($)
         hoverClass: "music_highlight"
     });
 
-    $("#set_select").change(function(){
+    $(".set_select").change(function(){
         $("#selected_set").find('a').html($(this).find(':selected').text());
     });
 
@@ -147,5 +147,20 @@ jQuery(function($)
 
     $(".styled-select").focusout(function(){
         $(this).removeClass("styled-select_active");
+    });
+
+    $("#btn_edit").click(function(){
+        var select = $('#set_select').hide();
+        var select_input = $('<input class="set_select">').appendTo(select.parent());
+
+        select_input.keypress(function(e){
+            if(e.keyCode == 13) {
+                $(this).blur();
+                select.find(':selected').html($(this).val());
+                $(this).remove();
+                select.show().change();
+            }
+        })
+            .focus();
     });
 });

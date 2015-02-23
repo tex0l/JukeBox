@@ -540,29 +540,29 @@ html, body {
     padding: 10px 10px 10px 10px;
 }
 
-.styled-select select {
+.styled-select .set_select {
     color: rgb(200,200,200);
     background: transparent;
     width: 100%;
-    padding: 5px;
-    font-size: 16px;
+    height: 30px;
+    padding: 0 0 0 5px;
+    font-size: 14px;
     line-height: 1;
     border: 0;
     border-radius: 0;
-    height: 30px;
     -webkit-appearance: none;
     outline: none;
 }
 
 @media screen and (-webkit-min-device-pixel-ratio:0) {
-    select {padding-right:18px}
+    .set_select {padding-right:18px}
 }
 
-.styled-select select::-ms-expand {
+.styled-select .set_select::-ms-expand {
     display: none;
 }
 
-.styled-select select::-ms-value {
+.styled-select .set_select::-ms-value {
     background: none;
 }
 
@@ -597,11 +597,11 @@ html, body {
     box-shadow: inset 0px 0px 10px 2px #000000;
 }
 
-.styled-select_active select {
+.styled-select_active .set_select {
     color: rgb(35,35,35);
 }
 
-.styled-select_active select::-ms-value {
+.styled-select_active .set_select::-ms-value {
     color: rgb(35,35,35);
     background: none;
 }

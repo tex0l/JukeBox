@@ -28,7 +28,7 @@
     <div data-layout='{"type": "border", "hgap": 3, "vgap": 3}' class="library_layout center">
 
         <div class="navigation">
-            <img src="{% static "jukebox.png" %}" height="70" width="70">
+            <img src="{% static "jukebox.png" %}" height="70" width="70" style="opacity: 0.8">
             <div id="lib_nav_container">
                 <a class="nav_link" href="#">Playlist Manager</a>
                 <a class="nav_link" href="#">Upload Manager</a>
@@ -85,7 +85,7 @@
                 <div id="slots_nav_container">
                     <a class="nav_link">Playlist Manager</a>
                     <div class="styled-select">
-                        <select id="set_select">
+                        <select class="set_select" id="set_select">
                             <option>1</option>
                             <option selected="selected">2</option>
                             <option>3</option>
