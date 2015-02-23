@@ -599,6 +599,11 @@ html, body {
     color: rgb(35,35,35);
 }
 
+.styled-select_active select::-ms-value {
+    color: rgb(35,35,35);
+    background: none;
+}
+
 .styled-select_active:after {
     color: rgb(35,35,35);
     font-family: FontAwesome;
