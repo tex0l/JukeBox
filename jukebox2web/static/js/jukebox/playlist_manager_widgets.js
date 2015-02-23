@@ -8,7 +8,7 @@ $(function() {
             title: 'Title',
             artist: 'Artist',
             album: 'Album',
-            artwork: '/media/Library/Im_Shipping_Up_to_Boston.jpg',
+            artwork: 'http://www.vgmpf.com/Wiki/images/3/37/Tetris_-_NES_-_Album_Art.jpg',
             length: '0:00',
             slot: 'A00',
 
@@ -97,7 +97,7 @@ $(function() {
             name: 'Artist',
             nb_albums: 0,
             nb_musics: 0,
-            artwork: '/media/Library/Im_Shipping_Up_to_Boston.jpg',
+            artwork: 'http://www.vgmpf.com/Wiki/images/3/37/Tetris_-_NES_-_Album_Art.jpg',
 
             // callbacks
             change: null,
@@ -188,7 +188,7 @@ $(function() {
             slot2_nb: 'A0',
             music1: {},
             music2: {},
-            artwork: '/media/Library/Im_Shipping_Up_to_Boston.jpg',
+            artwork: 'http://www.vgmpf.com/Wiki/images/3/37/Tetris_-_NES_-_Album_Art.jpg',
 
             // callbacks
             change: null,
