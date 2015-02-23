@@ -1,6 +1,7 @@
 jQuery(function($)
 {
     var container = $('.page_layout');
+    var library_layout = $('.library_layout');
     var album_viewer = $('.album_viewer')
     var albums_list = $('.albums_list');
     var album_musics = $('.album_musics');
@@ -8,6 +9,7 @@ jQuery(function($)
 
     function relayout() {
         container.layout({resize: false});
+        library_layout.layout({resize: false});
         album_musics.height('auto');
         album_artwork.height('auto');
         var width_library_col = $('.library_col').width();
@@ -33,7 +35,7 @@ jQuery(function($)
 
     $(window).resize(relayout);
 
-    $( ".library_music" ).draggable({
+    $( ".library_music, .music_slot" ).draggable({
         revert: 'invalid',
         helper: function() {
             return $('<div>').music($(this).music("option")).addClass("dragged_music");
@@ -100,18 +102,22 @@ jQuery(function($)
         slot2_nb: 'A6'
     });
 
-    $( ".slot_left" ).droppable({
+    $(".slot_left" ).droppable({
         drop: function( event, ui ) {
             $(this).parent().music_slot_pair('option', 'music1', ui.draggable.music('option'));
         },
         hoverClass: "music_slot_hoovered"
     });
 
-    $( ".slot_right" ).droppable({
+    $(".slot_right" ).droppable({
         drop: function( event, ui ) {
             $(this).parent().music_slot_pair('option', 'music2', ui.draggable.music('option'));
         },
         hoverClass: "music_slot_hoovered"
+    });
+
+    $("#set_select").change(function(){
+        $("#selected_set").find('a').html($(this).find(':selected').text());
     });
 
 });
