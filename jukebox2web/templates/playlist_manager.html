@@ -30,15 +30,16 @@
         <div class="navigation">
             <img src="{% static "jukebox.png" %}" height="70" width="70">
             <div id="lib_nav_container">
-                <a href="#">Playlist Manager</a>
-                <a href="#">Upload Manager</a>
+                <a class="nav_link" href="#">Playlist Manager</a>
+                <a class="nav_link" href="#">Upload Manager</a>
                 <br>
-                <form class="searchform">
-                    <button type="submit" class="icon-search"></button>
+                <div class="searchform">
+                    <button class="icon-search"></button>
                     <label>
-                        <input type="text" name="s" value="" placeholder="Search">
+                        <input id="search_input" type="text" name="s" value="" placeholder="Search">
                     </label>
-                </form>
+                </div>
+                <div id="search_string"> Search : <span></span></div>
             </div>
         </div>
 
@@ -82,8 +83,8 @@
 
             <div class="navigation">
                 <div id="slots_nav_container">
-                    <a href="#">Playlist Manager</a>
-                    <a href="#">Upload Manager</a>
+                    <a class="nav_link" href="#">Playlist Manager</a>
+                    <a class="nav_link" href="#">Upload Manager</a>
                     <div class="styled-select">
                         <select id="set_select">
                             <option>1</option>
@@ -107,8 +108,10 @@
                             <option>19</option>
                         </select>
                     </div>
-                    <a href="#" class="btn"><i class="fa fa-plus-square"></i></a>
-                    <a href="#" class="btn"><i class="fa fa-floppy-o"></i></a>
+                    <a href="#" class="btn" id="btn_edit"><i class="fa fa-pencil-square-o"></i></a>
+                    <a href="#" class="btn" id="btn_add"><i class="fa fa-plus-square-o"></i></a>
+                    <a href="#" class="btn" id="btn_save"><i class="fa fa-floppy-o"></i></a>
+                    <a href="#" class="btn" id="btn_playlist_editor"><i class="fa fa-table"></i></a>
                 </div>
             </div>
 

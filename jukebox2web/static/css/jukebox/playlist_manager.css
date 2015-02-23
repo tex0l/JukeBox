@@ -366,9 +366,10 @@ html, body {
     color: rgba(1, 1, 1, 0.8);
     overflow: visible;
     z-index: 100;
+    font-size: 0;
 }
 
-.navigation a {
+.navigation .nav_link {
     font-size: 14px;
     padding: 5px 10px 5px 10px;
     color: white;
@@ -377,7 +378,7 @@ html, body {
     border: 1px solid transparent;
 }
 
-.navigation a:hover {
+.navigation .nav_link:hover {
     background: none;
     box-shadow: inset 0 0 5px rgba(255,255,255, 0.4), rgba(0,0,0,0.1) 0 1px 0;
     border-radius: 4px;
@@ -385,7 +386,33 @@ html, body {
     color: #fff;
 }
 
-.navigation a:active {
+.navigation .nav_link:active {
+    color: black;
+    background: rgb(200, 200, 200);
+    -moz-box-shadow: inset 0px 0px 10px 2px #000000;
+    -webkit-box-shadow: inset 0px 0px 10px 2px #000000;
+    -o-box-shadow: inset 0px 0px 10px 2px #000000;
+    box-shadow: inset 0px 0px 10px 2px #000000;
+}
+
+.navigation .btn {
+    font-size: 14px;
+    padding: 5px 5px 5px 5px;
+    color: white;
+    text-decoration: none;
+    display: inline-block;
+    border: 1px solid transparent;
+}
+
+.navigation .btn:hover {
+    background: none;
+    box-shadow: inset 0 0 5px rgba(255,255,255, 0.4), rgba(0,0,0,0.1) 0 1px 0;
+    border-radius: 4px;
+    border: 1px solid rgb(80,80,80);
+    color: #fff;
+}
+
+.navigation .btn:active {
     color: black;
     background: rgb(200, 200, 200);
     -moz-box-shadow: inset 0px 0px 10px 2px #000000;
@@ -395,6 +422,7 @@ html, body {
 }
 
 .navigation .searchform {
+    font-size: 12px;
     width: 300px;
     margin-top: 4px;
     padding: 0;
@@ -498,7 +526,7 @@ html, body {
 
 .styled-select {
     margin-top: 3px;
-    width: calc(100% - 90px);
+    width: calc(100% - 105px);
     position:relative;
     border: 1px solid rgb(80,80,80);
     border-radius: 5px;
@@ -514,4 +542,10 @@ html, body {
     padding:0 0 2px;
     position:absolute;
     pointer-events:none;
+}
+
+#search_string {
+    color: #ffffff;
+    display: inline-block;
+    font-size: 14px;
 }

@@ -35,17 +35,6 @@ jQuery(function($)
 
     $(window).resize(relayout);
 
-    $( ".library_music, .music_slot" ).draggable({
-        revert: 'invalid',
-        helper: function() {
-            return $('<div>').music($(this).music("option")).addClass("dragged_music");
-        },
-        appendTo: container,
-        scroll: false,
-        zIndex: 100,
-        cursorAt: { top:40, left: 130 }
-    });
-
     $('.artists_col').resizable({
         handles: 'e',
         stop: relayout
@@ -102,6 +91,17 @@ jQuery(function($)
         slot2_nb: 'A6'
     });
 
+    $( ".library_music, .music_slot" ).draggable({
+        revert: 'invalid',
+        helper: function() {
+            return $('<div>').music($(this).music("option")).addClass("dragged_music");
+        },
+        appendTo: container,
+        scroll: false,
+        zIndex: 100,
+        cursorAt: { top:40, left: 130 }
+    });
+
     $(".slot_left" ).droppable({
         drop: function( event, ui ) {
             $(this).parent().music_slot_pair('option', 'music1', ui.draggable.music('option'));
@@ -118,6 +118,10 @@ jQuery(function($)
 
     $("#set_select").change(function(){
         $("#selected_set").find('a').html($(this).find(':selected').text());
+    });
+
+    $("#search_input").keyup(function(){
+        $("#search_string").find('span').html($("#search_input").val());
     });
 
 });
