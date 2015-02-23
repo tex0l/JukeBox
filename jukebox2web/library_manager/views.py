@@ -3,10 +3,11 @@ from django.shortcuts import render_to_response
 from django.views.generic import View
 from django.http import HttpResponseRedirect
 from django.template import RequestContext
-from forms import MusicForm
-import logging
 
+from forms import MusicForm
 from models import Music
+
+import logging
 
 
 class Upload(View):
