@@ -120,8 +120,19 @@ jQuery(function($)
         $("#selected_set").find('a').html($(this).find(':selected').text());
     });
 
-    $("#search_input").keyup(function(){
+    $("#search_input").keyup(function(e){
         $("#search_string").find('span').html($("#search_input").val());
+        if(e.keyCode == 13) {
+            $("#search_input").blur();
+        }
+    });
+
+    $("#search_label").focusin(function(){
+        $(this).parent().addClass("searchform_enabled");
+    });
+
+    $("#search_label").focusout(function(){
+        $(this).parent().removeClass("searchform_enabled");
     });
 
 });
