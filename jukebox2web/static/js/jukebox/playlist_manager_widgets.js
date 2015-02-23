@@ -137,7 +137,12 @@ $(function() {
             this.artist_infos.appendTo(artist)
 
             artist.addClass('artist').click(function(){
-                artist.addClass('artist_selected');
+                if(artist.hasClass('artist_selected')){
+                    artist.removeClass('artist_selected');
+                }
+                else {
+                    artist.addClass('artist_selected');
+                }
             });
 
             this._refresh();

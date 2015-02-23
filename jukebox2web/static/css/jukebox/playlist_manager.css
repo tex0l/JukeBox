@@ -73,14 +73,22 @@ html, body {
     width: 100%;
 }
 
-.album_title, .album_artwork, .album_musics {
+.album_title, .album_artwork_col, .album_musics {
+}
+
+.album_artwork_col {
+    width: 180px;
+    min-height: 180px;
+    max-height: 180px;
+    padding: 0px 10px 10px 10px;
+    text-align: center;
 }
 
 .album_artwork {
-    width: 180px;
-    height: 200px;
-    padding: 10px 10px 10px 10px;
-    text-align: center;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+    border: 1px solid rgb(80,80,80);
 }
 
 .album_musics {
