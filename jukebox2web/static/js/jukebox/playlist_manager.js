@@ -135,4 +135,11 @@ jQuery(function($)
         $(this).parent().removeClass("searchform_enabled");
     });
 
+    $(".styled-select").focusin(function(){
+        $(this).addClass("styled-select_active");
+    });
+
+    $(".styled-select").focusout(function(){
+        $(this).removeClass("styled-select_active");
+    });
 });
