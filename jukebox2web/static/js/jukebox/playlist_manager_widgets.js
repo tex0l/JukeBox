@@ -181,9 +181,13 @@ $(function() {
             artist.addClass('artist').click(function(){
                 if(artist.hasClass('artist_selected')){
                     artist.removeClass('artist_selected');
+                    $('.library_artist').show();
                 }
                 else {
+                    $('.artist').removeClass('artist_selected');
+                    $('.library_artist').hide();
                     artist.addClass('artist_selected');
+                    $('.lib_artist_' + $(this).artist('option', 'pk')).show();
                 }
             });
 
@@ -192,7 +196,6 @@ $(function() {
 
         // called when created, and later when changing options
         _refresh: function() {
-
         },
 
         // events bound via _on are removed automatically
@@ -361,7 +364,7 @@ $(function() {
 
             $('<aside class="album_artwork_col">')
                 .html('<img class="album_artwork" src="' + this.options.artwork
-                    + '" alt="'+ this.options.title + '" height="170" width="170">')
+                + '" alt="'+ this.options.title + '" height="170" width="170">')
                 .appendTo(this.element);
 
             var album_musics = $('<div data-layout=\'{"type": "grid", "hgap": 3, "vgap": 3, "fill":"vertical"}\'>')
@@ -415,7 +418,8 @@ $(function() {
         _refresh: function() {
             this.element.html('');
 
-            this.element.addClass('library_artist');
+            this.element.addClass('library_artist')
+                .addClass('lib_artist_' + this.options.pk);
 
             $('<div class="library_artist_name">')
                 .html(this.options.name)
@@ -517,6 +521,8 @@ $(function() {
             for (var i in this.options.artists){
                 $('<div>').library_artist(this.options.artists[i]).appendTo(albums_list);
             }
+
+            $(window).resize();
         },
         // events bound via _on are removed automatically
         // revert other modifications here
