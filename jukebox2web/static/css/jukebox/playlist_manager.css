@@ -98,7 +98,7 @@ html, body {
     -moz-user-select: text;
     -ms-user-select: text;
     user-select: text;
-    padding-left: 10px;
+    padding-left: 15px;
     padding-bottom: 5px;
     overflow: hidden;
     white-space: nowrap;
@@ -107,22 +107,23 @@ html, body {
 
 .library_artist {
     font-size: 140%;
-    width: 100%;
-    min-height: 20px;
+    width: calc(100% - 5px);
     -webkit-user-select: text;
     -moz-user-select: text;
     -ms-user-select: text;
     user-select: text;
+    padding-top: 15px;
     padding-left: 5px;
-    padding-bottom: 5px;
+    padding-bottom: 10px;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
 }
 
 .library_col {
-    padding-top: 90px;
-    overflow: auto;
+    padding-top: 75px;
+    overflow-y: auto;
+    overflow-x: hidden;
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
