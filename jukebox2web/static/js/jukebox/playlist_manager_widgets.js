@@ -5,12 +5,13 @@ $(function() {
         options: {
             pk: 0,
             number: 0,
-            title: 'Title',
-            artist: 'Artist',
-            album: 'Album',
+            title: 'Empty',
+            artist: '',
+            album: '',
             artwork: 'http://www.vgmpf.com/Wiki/images/3/37/Tetris_-_NES_-_Album_Art.jpg',
             length: '0:00',
             slot: 'A00',
+            modified: false,
 
             // callbacks
             change: null,
@@ -24,6 +25,17 @@ $(function() {
 
         // called when created, and later when changing options
         _refresh: function() {
+
+            if(this.options.pk == 0) {
+                this.element.addClass('music_empty');
+            } else {
+                this.element.removeClass('music_empty');
+            }
+
+            this.element.removeClass('music_modified');
+            if(this.options.modified){
+                this.element.addClass('music_modified');
+            }
 
             this.element.html('');
 
@@ -59,8 +71,29 @@ $(function() {
                 .html(this.options.album)
                 .appendTo( this.artist_infos );
 
-            this.artist_infos.appendTo(this.element)
+            this.artist_infos.appendTo(this.element);
 
+            this.element.draggable({
+                revert: 'invalid',
+                helper: function() {
+                    return $('<div>').music($(this).music("option")).addClass("dragged_music");
+                },
+                start: function() {
+                    $(this).addClass("music_highlight");
+                },
+                stop: function() {
+                    $(this).removeClass("music_highlight");
+                },
+                appendTo: $('.page_layout'),
+                scroll: false,
+                zIndex: 100,
+                cursorAt: { top:40, left: 130 },
+                disabled: false
+            });
+
+            if(this.options.pk == 0) {
+                this.element.draggable('option','disabled',true);
+            }
         },
 
         // events bound via _on are removed automatically
@@ -95,6 +128,7 @@ $(function() {
         options: {
             pk: 0,
             name: 'Artist',
+            albums: [],
             nb_albums: 0,
             nb_musics: 0,
             artwork: 'http://www.vgmpf.com/Wiki/images/3/37/Tetris_-_NES_-_Album_Art.jpg',
@@ -108,6 +142,14 @@ $(function() {
         _create: function() {
 
             var artist = this.element;
+
+            this.options.nb_albums = 0;
+            this.options.nb_musics = 0;
+
+            for (var i in this.options.albums){
+                this.options.nb_albums++;
+                this.options.nb_musics+= this.options.albums[i].musics.length;
+            }
 
             this.artist_artwork = $('<aside>')
                 .addClass("artist_artwork")
@@ -137,12 +179,20 @@ $(function() {
             this.artist_infos.appendTo(artist)
 
             artist.addClass('artist').click(function(){
-                if(artist.hasClass('artist_selected')){
+                /*if(artist.hasClass('artist_selected')){
                     artist.removeClass('artist_selected');
+                    $('.library_artist').show();
                 }
                 else {
+                    $('.artist').removeClass('artist_selected');
+                    $('.library_artist').hide();
                     artist.addClass('artist_selected');
-                }
+                    $('.lib_artist_' + $(this).artist('option', 'pk')).show();
+                }*/
+                var goal = '.lib_artist_' + $(this).artist('option', 'pk');
+			    var speed = 750;
+			    $('.library_col').animate( { scrollTop: $(goal).offset().top }, speed );
+			    return false;
             });
 
             this._refresh();
@@ -150,7 +200,6 @@ $(function() {
 
         // called when created, and later when changing options
         _refresh: function() {
-
         },
 
         // events bound via _on are removed automatically
@@ -233,12 +282,6 @@ $(function() {
         // revert other modifications here
         _destroy: function() {
             // remove generated elements
-            this.artist_artwork.remove();
-            this.artist_infos.remove();
-
-            this.element
-                .removeClass( "artist" )
-                .css( "background-color", "transparent" );
         },
 
         // _setOptions is called with a hash of all options that are changing
@@ -255,5 +298,254 @@ $(function() {
         }
     });
 
+    $.widget( "juke.music_set", {
+        // default options
+        options: {
+            pk: 0,
+            name: '',
+            slot_pairs: [],
+
+            // callbacks
+            change: null,
+            random: null
+        },
+
+        // the constructor
+        _create: function() {
+            this._refresh();
+        },
+
+        // called when created, and later when changing options
+        _refresh: function() {
+            this.element.find('.slot_pair').remove();
+
+            for (var i in this.options.slot_pairs){
+                $('<div>').music_slot_pair(this.options.slot_pairs[i]).appendTo(this.element);
+            }
+        },
+
+        // events bound via _on are removed automatically
+        // revert other modifications here
+        _destroy: function() {
+            // remove generated elements
+        },
+
+        // _setOptions is called with a hash of all options that are changing
+        // always refresh when changing options
+        _setOptions: function() {
+            // _super and _superApply handle keeping the right this-context
+            this._superApply( arguments );
+            this._refresh();
+        },
+
+        // _setOption is called for each individual option that is changing
+        _setOption: function( key, value ) {
+            this._super( key, value );
+        }
+    });
+
+    $.widget( "juke.album", {
+        // default options
+        options: {
+            pk: 0,
+            title: '',
+            artist: '',
+            artwork: 'http://www.vgmpf.com/Wiki/images/3/37/Tetris_-_NES_-_Album_Art.jpg',
+            musics: [],
+
+            // callbacks
+            change: null,
+            random: null
+        },
+
+        // the constructor
+        _create: function() {
+            this.element.addClass('album_viewer');
+
+            $('<header class="album_title">')
+                .html(this.options.title)
+                .appendTo(this.element);
+
+            $('<aside class="album_artwork_col">')
+                .html('<img class="album_artwork" src="' + this.options.artwork
+                + '" alt="'+ this.options.title + '" height="170" width="170">')
+                .appendTo(this.element);
+
+            var album_musics = $('<div data-layout=\'{"type": "grid", "hgap": 3, "vgap": 3, "fill":"vertical"}\'>')
+                .addClass('album_musics');
+
+            for (var i in this.options.musics){
+                $('<div class="library_music">').music(this.options.musics[i]).appendTo(album_musics);
+            }
+
+            this.element.append(album_musics);
+            $(window).resize();
+        },
+
+        // events bound via _on are removed automatically
+        // revert other modifications here
+        _destroy: function() {
+            // remove generated elements
+        },
+
+        // _setOptions is called with a hash of all options that are changing
+        // always refresh when changing options
+        _setOptions: function() {
+            // _super and _superApply handle keeping the right this-context
+            this._superApply( arguments );
+            this._refresh();
+        },
+
+        // _setOption is called for each individual option that is changing
+        _setOption: function( key, value ) {
+            this._super( key, value );
+        }
+    });
+
+    $.widget( "juke.library_artist", {
+        // default options
+        options: {
+            pk: 0,
+            name: '',
+            albums: [],
+
+            // callbacks
+            change: null,
+            random: null
+        },
+
+        // the constructor
+        _create: function() {
+            this._refresh();
+        },
+
+        _refresh: function() {
+            this.element.html('');
+
+            this.element.addClass('library_artist')
+                .addClass('lib_artist_' + this.options.pk);
+
+            $('<div class="library_artist_name">')
+                .html(this.options.name)
+                .appendTo(this.element);
+
+            for (var i in this.options.albums){
+                $('<div">').album(this.options.albums[i]).appendTo(this.element);
+            }
+        },
+        // events bound via _on are removed automatically
+        // revert other modifications here
+        _destroy: function() {
+            // remove generated elements
+        },
+
+        // _setOptions is called with a hash of all options that are changing
+        // always refresh when changing options
+        _setOptions: function() {
+            // _super and _superApply handle keeping the right this-context
+            this._superApply( arguments );
+            this._refresh();
+        },
+
+        // _setOption is called for each individual option that is changing
+        _setOption: function( key, value ) {
+            this._super( key, value );
+        }
+    });
+
+    $.widget( "juke.artists_list", {
+        // default options
+        options: {
+            artists: [],
+
+            // callbacks
+            change: null,
+            random: null
+        },
+
+        // the constructor
+        _create: function() {
+            this._refresh();
+        },
+
+        _refresh: function() {
+            this.element.html('');
+
+            //TODO: Add "All Artists" button
+
+            for (var i in this.options.artists){
+                $('<a href="#">').artist(this.options.artists[i]).appendTo(this.element);
+            }
+        },
+        // events bound via _on are removed automatically
+        // revert other modifications here
+        _destroy: function() {
+            // remove generated elements
+        },
+
+        // _setOptions is called with a hash of all options that are changing
+        // always refresh when changing options
+        _setOptions: function() {
+            // _super and _superApply handle keeping the right this-context
+            this._superApply( arguments );
+            this._refresh();
+        },
+
+        // _setOption is called for each individual option that is changing
+        _setOption: function( key, value ) {
+            this._super( key, value );
+        }
+    });
+
+    $.widget( "juke.library", {
+        // default options
+        options: {
+            artists: [],
+
+            // callbacks
+            change: null,
+            random: null
+        },
+
+        // the constructor
+        _create: function() {
+            this._refresh();
+        },
+
+        _refresh: function() {
+            var artists_col = this.element.find('.artists_col');
+            artists_col.find('.artists_list').remove();
+            var artists_container = $('<div class="artists_list">').appendTo(artists_col);
+            artists_container.artists_list({artists: this.options.artists});
+
+            var library_col = this.element.find('.library_col');
+            library_col.find('.albums_list').remove();
+            var albums_list = $('<div class="albums_list">').appendTo(library_col);
+
+            for (var i in this.options.artists){
+                $('<div>').library_artist(this.options.artists[i]).appendTo(albums_list);
+            }
+
+            $(window).resize();
+        },
+        // events bound via _on are removed automatically
+        // revert other modifications here
+        _destroy: function() {
+            // remove generated elements
+        },
+
+        // _setOptions is called with a hash of all options that are changing
+        // always refresh when changing options
+        _setOptions: function() {
+            // _super and _superApply handle keeping the right this-context
+            this._superApply( arguments );
+            this._refresh();
+        },
+
+        // _setOption is called for each individual option that is changing
+        _setOption: function( key, value ) {
+            this._super( key, value );
+        }
+    });
 
 });

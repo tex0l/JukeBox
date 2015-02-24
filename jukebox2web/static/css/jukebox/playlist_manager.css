@@ -36,7 +36,8 @@ html, body {
 
 .artists_list {
     margin-top: 80px;
-    height: calc(100% - 80px);
+    padding-top: 5px;
+    height: calc(100% - 85px);
     overflow-y: auto;
     overflow-x: hidden;
 }
@@ -60,16 +61,15 @@ html, body {
 .albums_list {
     height: auto;
     overflow: visible;
+    position: relative;
 }
 
 .album_viewer {
     width: 100%;
 }
 
-.album_title, .album_artwork_col, .album_musics {
-}
-
 .album_artwork_col {
+    float: left;
     width: 180px;
     min-height: 180px;
     max-height: 180px;
@@ -85,7 +85,9 @@ html, body {
 }
 
 .album_musics {
-    width: 100%;
+    margin-bottom: 10px;
+    padding-left: 200px;
+    width: calc(100% - 200px);
     height: auto;
 }
 
@@ -96,17 +98,35 @@ html, body {
     -moz-user-select: text;
     -ms-user-select: text;
     user-select: text;
+    padding-left: 15px;
+    padding-bottom: 5px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.library_artist {
+    padding-bottom: 15px;
+}
+
+.library_artist_name {
+    font-size: 140%;
+    width: calc(100% - 5px);
+    -webkit-user-select: text;
+    -moz-user-select: text;
+    -ms-user-select: text;
+    user-select: text;
     padding-left: 5px;
     padding-bottom: 5px;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
-
 }
 
 .library_col {
-    padding-top: 90px;
-    overflow: auto;
+    padding-top: 85px;
+    overflow-y: auto;
+    overflow-x: hidden;
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
@@ -187,6 +207,9 @@ html, body {
     margin: 0px 0px 5px 5px;
     position: relative;
     border: 1px solid rgb(80,80,80);
+    display: block;
+    text-decoration: none;
+    color: rgb(200,200,200);
 }
 
 .artist > .artist_artwork {
@@ -217,7 +240,7 @@ html, body {
     text-overflow: ellipsis;
 }
 
-.artist_selected{
+.artist:active{
     color: rgb(35, 35, 35);
     background: rgba(200, 200, 200, 0.6);
     -moz-box-shadow: inset 0px 0px 10px 2px #000000;
@@ -226,11 +249,11 @@ html, body {
     box-shadow: inset 0px 0px 10px 2px #000000;
 }
 
-.artist_selected > .artist_infos > .artist_name {
+.artist:active > .artist_infos > .artist_name {
     color: rgb(35, 35, 35);
 }
 
-.artist_selected > .artist_infos > .artist_numbers {
+.artist:active > .artist_infos > .artist_numbers {
     color: rgb(80, 80, 80);
 }
 
@@ -310,6 +333,14 @@ html, body {
     height: 100%;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+.slot_pair .music_empty{
+    background: rgba(255, 0, 0, 0.2);
+}
+
+.slot_pair .music_modified{
+    background: rgba(0, 0, 255, 0.15);
 }
 
 .slot_pair .music_title {
@@ -419,6 +450,32 @@ html, body {
 }
 
 .navigation .btn:active {
+    color: black;
+    background: rgba(200, 200, 200, 0.6);
+    -moz-box-shadow: inset 0px 0px 10px 2px #000000;
+    -webkit-box-shadow: inset 0px 0px 10px 2px #000000;
+    -o-box-shadow: inset 0px 0px 10px 2px #000000;
+    box-shadow: inset 0px 0px 5px 2px #000000;
+}
+
+.navigation .btn_input {
+    font-size: 14px;
+    padding: 5px 5px 5px 5px;
+    color: rgb(200,200,200);
+    text-decoration: none;
+    display: inline-block;
+    border: 1px solid transparent;
+}
+
+.navigation .btn_input:hover {
+    background: none;
+    box-shadow: inset 0 0 5px rgba(255,255,255, 0.4), rgba(0,0,0,0.1) 0 1px 0;
+    border-radius: 4px;
+    border: 1px solid rgb(80,80,80);
+    color: rgb(200,200,200);
+}
+
+.navigation .btn_input:active {
     color: black;
     background: rgba(200, 200, 200, 0.6);
     -moz-box-shadow: inset 0px 0px 10px 2px #000000;
@@ -540,29 +597,33 @@ html, body {
     padding: 10px 10px 10px 10px;
 }
 
-.styled-select select {
+.styled-select .set_select {
     color: rgb(200,200,200);
     background: transparent;
     width: 100%;
-    padding: 5px;
-    font-size: 16px;
+    height: 30px;
+    padding: 0 0 0 5px;
+    font-size: 14px;
     line-height: 1;
     border: 0;
     border-radius: 0;
-    height: 30px;
     -webkit-appearance: none;
     outline: none;
 }
 
-@media screen and (-webkit-min-device-pixel-ratio:0) {
-    select {padding-right:18px}
+.styled-select .set_input {
+    width: calc(100% - 60px);
 }
 
-.styled-select select::-ms-expand {
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+    .set_select {padding-right:18px}
+}
+
+.styled-select .set_select::-ms-expand {
     display: none;
 }
 
-.styled-select select::-ms-value {
+.styled-select .set_select::-ms-value {
     background: none;
 }
 
@@ -581,7 +642,7 @@ html, body {
     color: rgb(100,100,100);
     font-family: FontAwesome;
     font-size: 120%;
-    content: "\f078";
+    content: attr(select_button);
     right:6px; top:8px;
     padding:0 0 2px;
     position:absolute;
@@ -597,11 +658,11 @@ html, body {
     box-shadow: inset 0px 0px 10px 2px #000000;
 }
 
-.styled-select_active select {
+.styled-select_active .set_select {
     color: rgb(35,35,35);
 }
 
-.styled-select_active select::-ms-value {
+.styled-select_active .set_select::-ms-value {
     color: rgb(35,35,35);
     background: none;
 }
@@ -610,7 +671,7 @@ html, body {
     color: rgb(35,35,35);
     font-family: FontAwesome;
     font-size: 120%;
-    content: "\f078";
+    content: attr(select_button);
     right:6px; top:8px;
     padding:0 0 2px;
     position:absolute;

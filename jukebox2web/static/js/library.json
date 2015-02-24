@@ -1,0 +1,69 @@
+{
+  "artists": [
+    {
+      "name": "God of Tetris",
+      "pk": 1,
+      "albums": [
+        {
+          "title": "Album 1T",
+          "artist": "God of Tetris",
+          "musics": [
+            {"pk": 1, "title": "Music 1", "artist": "Artist 1", "number": 1},
+            {"pk": 2, "title": "Music 2", "artist": "Artist 2", "number": 2},
+            {"pk": 2, "title": "Music 2", "artist": "Artist 2", "number": 2},
+            {"pk": 2, "title": "Music 2", "artist": "Artist 2", "number": 2},
+            {"pk": 2, "title": "Music 2", "artist": "Artist 2", "number": 2},
+            {"pk": 2, "title": "Music 2", "artist": "Artist 2", "number": 2},
+            {"pk": 2, "title": "Music 2", "artist": "Artist 2", "number": 2},
+            {"pk": 2, "title": "Music 2", "artist": "Artist 2", "number": 2},
+            {"pk": 3, "title": "Music 3", "artist": "Artist 3", "number": 3}
+          ]
+        },
+        {
+          "title": "Album 2T",
+          "artist": "God of Tetris",
+          "musics": [
+            {"pk": 1, "title": "Music 1", "artist": "Artist 1", "number": 1},
+            {"pk": 2, "title": "Music 2", "artist": "Artist 2", "number": 2},
+            {"pk": 2, "title": "Music 2", "artist": "Artist 2", "number": 2},
+            {"pk": 2, "title": "Music 2", "artist": "Artist 2", "number": 2},
+            {"pk": 2, "title": "Music 2", "artist": "Artist 2", "number": 2},
+            {"pk": 2, "title": "Music 2", "artist": "Artist 2", "number": 2},
+            {"pk": 2, "title": "Music 2", "artist": "Artist 2", "number": 2},
+            {"pk": 3, "title": "Music 3", "artist": "Artist 3", "number": 3}
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Mario",
+      "pk": 2,
+      "albums": [
+        {
+          "title": "Album 1M",
+          "artist": "Mario",
+          "musics": [
+            {"pk": 1, "title": "Music 1", "artist": "Artist 1", "number": 1},
+            {"pk": 2, "title": "Music 2", "artist": "Artist 2", "number": 2},
+            {"pk": 2, "title": "Music 2", "artist": "Artist 2", "number": 2},
+            {"pk": 2, "title": "Music 2", "artist": "Artist 2", "number": 2},
+            {"pk": 2, "title": "Music 2", "artist": "Artist 2", "number": 2},
+            {"pk": 3, "title": "Music 3", "artist": "Artist 3", "number": 3}
+          ]
+        },
+        {
+          "title": "Album 2M",
+          "artist": "Mario",
+          "musics": [
+            {"pk": 1, "title": "Music 1", "artist": "Artist 1", "number": 1},
+            {"pk": 2, "title": "Music 2", "artist": "Artist 2", "number": 2},
+            {"pk": 2, "title": "Music 2", "artist": "Artist 2", "number": 2},
+            {"pk": 2, "title": "Music 2", "artist": "Artist 2", "number": 2},
+            {"pk": 2, "title": "Music 2", "artist": "Artist 2", "number": 2},
+            {"pk": 3, "title": "Music 3", "artist": "Artist 3", "number": 3}
+          ]
+        }
+      ]
+    }
+  ]
+}
