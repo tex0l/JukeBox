@@ -32,6 +32,10 @@ jQuery(function($)
 
     $(window).resize(relayout);
 
+    var lib_json = $.getJSON('static/js/library.json', function(data){
+        $('.library_layout').library(data);
+    });
+
     $('.artists_col').resizable({
         handles: 'e',
         stop: relayout
@@ -42,65 +46,33 @@ jQuery(function($)
         stop: relayout
     });
 
-    $('.library_artist1').library_artist({
-        name: 'God of Tetris',
-        albums: [{
-            title: 'Album',
-            artist: 'Artist',
-            musics: [{pk: 1, title: 'Music 1', artist: 'Artist 1', number: 1},
-                {pk: 2, title: 'Music 2', artist: 'Artist 2', number: 2},
-                {pk: 2, title: 'Music 2', artist: 'Artist 2', number: 2},
-                {pk: 2, title: 'Music 2', artist: 'Artist 2', number: 2},
-                {pk: 2, title: 'Music 2', artist: 'Artist 2', number: 2},
-                {pk: 2, title: 'Music 2', artist: 'Artist 2', number: 2},
-                {pk: 2, title: 'Music 2', artist: 'Artist 2', number: 2},
-                {pk: 2, title: 'Music 2', artist: 'Artist 2', number: 2},
-                {pk: 3, title: 'Music 3', artist: 'Artist 3', number: 3}]
-        },{
-            title: 'Album',
-            artist: 'Artist',
-            musics: [{pk: 1, title: 'Music 1', artist: 'Artist 1', number: 1},
-                {pk: 2, title: 'Music 2', artist: 'Artist 2', number: 2},
-                {pk: 2, title: 'Music 2', artist: 'Artist 2', number: 2},
-                {pk: 2, title: 'Music 2', artist: 'Artist 2', number: 2},
-                {pk: 2, title: 'Music 2', artist: 'Artist 2', number: 2},
-                {pk: 2, title: 'Music 2', artist: 'Artist 2', number: 2},
-                {pk: 2, title: 'Music 2', artist: 'Artist 2', number: 2},
-                {pk: 2, title: 'Music 2', artist: 'Artist 2', number: 2},
-                {pk: 3, title: 'Music 3', artist: 'Artist 3', number: 3}]
-        }]
-    });
-
-    $('.artist1').artist({
-        name: 'Artist 1',
-        nb_albums: 1,
-        nb_musics: 1
-    });
-
-    $('.artist2').artist({
-        name: 'Artist 2',
-        nb_albums: 2,
-        nb_musics: 10
-    });
-
     $('.slots_list').music_set({
-        slot_pairs: [{slot1_nb: 'A1', slot2_nb: 'A2', music1: $('.music1').music('option')},
-            {slot1_nb: 'A3', slot2_nb: 'A4', music1: $('.music2').music('option')},
-            {slot1_nb: 'A5', slot2_nb: 'A6', music2: $('.music3').music('option')}]
+        slot_pairs: [{slot1_nb: 'A1', slot2_nb: 'A2'},
+            {slot1_nb: 'A3', slot2_nb: 'A4'},
+            {slot1_nb: 'A5', slot2_nb: 'A6'},
+            {slot1_nb: 'A7', slot2_nb: 'A8'},
+            {slot1_nb: 'A9', slot2_nb: 'A10'},
+            {slot1_nb: 'A11', slot2_nb: 'A12'},
+            {slot1_nb: 'A13', slot2_nb: 'A14'},
+            {slot1_nb: 'A15', slot2_nb: 'A16'},
+            {slot1_nb: 'A17', slot2_nb: 'A18'},
+            {slot1_nb: 'A19', slot2_nb: 'A20'}]
     });
 
     $(".slot_left" ).droppable({
         drop: function( event, ui ) {
-            $(this).parent().music_slot_pair('option', 'music1', ui.draggable.music('option'));
-            $(this).find('.music_slot').addClass('music_modified');
+            var m = ui.draggable.music('option');
+            m.modified = true;
+            $(this).parent().music_slot_pair('option', 'music1', m);
         },
         hoverClass: "music_highlight"
     });
 
     $(".slot_right" ).droppable({
         drop: function( event, ui ) {
-            $(this).parent().music_slot_pair('option', 'music2', ui.draggable.music('option'));
-            $(this).find('.music_slot').addClass('music_modified');
+            var m = ui.draggable.music('option');
+            m.modified = true;
+            $(this).parent().music_slot_pair('option', 'music2', m);
         },
         hoverClass: "music_highlight"
     });

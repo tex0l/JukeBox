@@ -11,6 +11,7 @@ $(function() {
             artwork: 'http://www.vgmpf.com/Wiki/images/3/37/Tetris_-_NES_-_Album_Art.jpg',
             length: '0:00',
             slot: 'A00',
+            modified: false,
 
             // callbacks
             change: null,
@@ -30,7 +31,11 @@ $(function() {
             } else {
                 this.element.removeClass('music_empty');
             }
+
             this.element.removeClass('music_modified');
+            if(this.options.modified){
+                this.element.addClass('music_modified');
+            }
 
             this.element.html('');
 
@@ -123,6 +128,7 @@ $(function() {
         options: {
             pk: 0,
             name: 'Artist',
+            albums: [],
             nb_albums: 0,
             nb_musics: 0,
             artwork: 'http://www.vgmpf.com/Wiki/images/3/37/Tetris_-_NES_-_Album_Art.jpg',
@@ -136,6 +142,14 @@ $(function() {
         _create: function() {
 
             var artist = this.element;
+
+            this.options.nb_albums = 0;
+            this.options.nb_musics = 0;
+
+            for (var i in this.options.albums){
+                this.options.nb_albums++;
+                this.options.nb_musics+= this.options.albums[i].musics.length;
+            }
 
             this.artist_artwork = $('<aside>')
                 .addClass("artist_artwork")
@@ -430,4 +444,98 @@ $(function() {
             this._super( key, value );
         }
     });
+
+    $.widget( "juke.artists_list", {
+        // default options
+        options: {
+            artists: [],
+
+            // callbacks
+            change: null,
+            random: null
+        },
+
+        // the constructor
+        _create: function() {
+            this._refresh();
+        },
+
+        _refresh: function() {
+            this.element.html('');
+
+            //TODO: Add "All Artists" button
+
+            for (var i in this.options.artists){
+                $('<div>').artist(this.options.artists[i]).appendTo(this.element);
+            }
+        },
+        // events bound via _on are removed automatically
+        // revert other modifications here
+        _destroy: function() {
+            // remove generated elements
+        },
+
+        // _setOptions is called with a hash of all options that are changing
+        // always refresh when changing options
+        _setOptions: function() {
+            // _super and _superApply handle keeping the right this-context
+            this._superApply( arguments );
+            this._refresh();
+        },
+
+        // _setOption is called for each individual option that is changing
+        _setOption: function( key, value ) {
+            this._super( key, value );
+        }
+    });
+
+    $.widget( "juke.library", {
+        // default options
+        options: {
+            artists: [],
+
+            // callbacks
+            change: null,
+            random: null
+        },
+
+        // the constructor
+        _create: function() {
+            this._refresh();
+        },
+
+        _refresh: function() {
+            var artists_col = this.element.find('.artists_col');
+            artists_col.find('.artists_list').remove();
+            var artists_container = $('<div class="artists_list">').appendTo(artists_col);
+            artists_container.artists_list({artists: this.options.artists});
+
+            var library_col = this.element.find('.library_col');
+            library_col.find('.albums_list').remove();
+            var albums_list = $('<div class="albums_list">').appendTo(library_col);
+
+            for (var i in this.options.artists){
+                $('<div>').library_artist(this.options.artists[i]).appendTo(albums_list);
+            }
+        },
+        // events bound via _on are removed automatically
+        // revert other modifications here
+        _destroy: function() {
+            // remove generated elements
+        },
+
+        // _setOptions is called with a hash of all options that are changing
+        // always refresh when changing options
+        _setOptions: function() {
+            // _super and _superApply handle keeping the right this-context
+            this._superApply( arguments );
+            this._refresh();
+        },
+
+        // _setOption is called for each individual option that is changing
+        _setOption: function( key, value ) {
+            this._super( key, value );
+        }
+    });
+
 });
