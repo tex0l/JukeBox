@@ -339,19 +339,19 @@ $(function() {
 
         // the constructor
         _create: function() {
-            this.element.addClass('album_viewer').attr('data-layout', '{"type": "border"}');
+            this.element.addClass('album_viewer');
 
-            $('<div class="north album_title">')
+            $('<header class="album_title">')
                 .html(this.options.title)
                 .appendTo(this.element);
 
-            $('<div class="west album_artwork_col">')
+            $('<aside class="album_artwork_col">')
                 .html('<img class="album_artwork" src="' + this.options.artwork
                     + '" alt="'+ this.options.title + '" height="170" width="170">')
                 .appendTo(this.element);
 
             var album_musics = $('<div data-layout=\'{"type": "grid", "hgap": 3, "vgap": 3, "fill":"vertical"}\'>')
-                .addClass('center album_musics');
+                .addClass('album_musics');
 
             for (var i in this.options.musics){
                 $('<div class="library_music">').music(this.options.musics[i]).appendTo(album_musics);

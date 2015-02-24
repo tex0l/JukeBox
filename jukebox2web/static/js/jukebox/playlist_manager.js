@@ -13,29 +13,20 @@ jQuery(function($)
         album_artwork = $('.album_artwork');
         container.layout({resize: false});
         library_layout.layout({resize: false});
-        album_musics.height('auto');
-        album_artwork.height('auto');
         var width_library_col = $('.library_col').width();
         var library_musics = $('.library_music');
         if(width_library_col > 750){
             library_musics.height(20);
             album_musics.layout({resize: true, columns: 2});
+            album_musics.width('calc(100% - 200px)');
+            album_musics.layout({resize: false, columns: 2});
         }
         else{
             library_musics.height(20);
             album_musics.layout({resize: true, columns: 1});
+            album_musics.width('calc(100% - 200px)');
+            album_musics.layout({resize: false, columns: 1});
         }
-        album_viewer.layout({resize: true});
-        albums_list.layout({resize: false});
-        if(width_library_col > 750){
-            library_musics.height(20);
-            album_musics.layout({resize: true, columns: 2});
-        }
-        else{
-            library_musics.height(20);
-            album_musics.layout({resize: true, columns: 1});
-        }
-
     }
     relayout();
 
@@ -55,6 +46,9 @@ jQuery(function($)
         title: 'Album',
         artist: 'Artist',
         musics: [{pk: 1, title: 'Music 1', artist: 'Artist 1', number: 1},
+            {pk: 2, title: 'Music 2', artist: 'Artist 2', number: 2},
+            {pk: 2, title: 'Music 2', artist: 'Artist 2', number: 2},
+            {pk: 2, title: 'Music 2', artist: 'Artist 2', number: 2},
             {pk: 2, title: 'Music 2', artist: 'Artist 2', number: 2},
             {pk: 2, title: 'Music 2', artist: 'Artist 2', number: 2},
             {pk: 2, title: 'Music 2', artist: 'Artist 2', number: 2},
