@@ -2,12 +2,15 @@ jQuery(function($)
 {
     var container = $('.page_layout');
     var library_layout = $('.library_layout');
-    var album_viewer = $('.album_viewer')
+    var album_viewer = $('.album_viewer');
     var albums_list = $('.albums_list');
     var album_musics = $('.album_musics');
     var album_artwork = $('.album_artwork');
 
     function relayout() {
+        album_viewer = $('.album_viewer');
+        album_musics = $('.album_musics');
+        album_artwork = $('.album_artwork');
         container.layout({resize: false});
         library_layout.layout({resize: false});
         album_musics.height('auto');
@@ -15,12 +18,10 @@ jQuery(function($)
         var width_library_col = $('.library_col').width();
         var library_musics = $('.library_music');
         if(width_library_col > 750){
-            library_musics.width((width_library_col - 238)/2);
             library_musics.height(20);
             album_musics.layout({resize: true, columns: 2});
         }
         else{
-            library_musics.width(width_library_col - 222);
             library_musics.height(20);
             album_musics.layout({resize: true, columns: 1});
         }
@@ -30,6 +31,11 @@ jQuery(function($)
             library_musics.height(20);
             album_musics.layout({resize: true, columns: 2});
         }
+        else{
+            library_musics.height(20);
+            album_musics.layout({resize: true, columns: 1});
+        }
+
     }
     relayout();
 
@@ -45,26 +51,15 @@ jQuery(function($)
         stop: relayout
     });
 
-    $('.music1').music({
-        pk: 1,
-        title: 'Musicc music music music music music 1',
-        artist: 'Artist 1',
-        number: 1,
-        length: '00:00'
-    });
-
-    $('.music2').music({
-        pk: 2,
-        title: 'Music 2',
-        artist: 'Artist 2',
-        number: 2
-    });
-
-    $('.music3').music({
-        pk: 3,
-        title: 'Music 3',
-        artist: 'Artist 3',
-        number: 30
+    $('.album1').album({
+        title: 'Album',
+        artist: 'Artist',
+        musics: [{pk: 1, title: 'Music 1', artist: 'Artist 1', number: 1},
+            {pk: 2, title: 'Music 2', artist: 'Artist 2', number: 2},
+            {pk: 2, title: 'Music 2', artist: 'Artist 2', number: 2},
+            {pk: 2, title: 'Music 2', artist: 'Artist 2', number: 2},
+            {pk: 2, title: 'Music 2', artist: 'Artist 2', number: 2},
+            {pk: 3, title: 'Music 3', artist: 'Artist 3', number: 3}]
     });
 
     $('.artist1').artist({
@@ -79,38 +74,11 @@ jQuery(function($)
         nb_musics: 10
     });
 
-    $('.slot1').music_slot_pair({
-        slot1_nb: 'A1',
-        slot2_nb: 'A2',
-        music1: $('.music1').music('option')
+    $('.slots_list').music_set({
+        slot_pairs: [{slot1_nb: 'A1', slot2_nb: 'A2', music1: $('.music1').music('option')},
+            {slot1_nb: 'A3', slot2_nb: 'A4', music1: $('.music2').music('option')},
+            {slot1_nb: 'A5', slot2_nb: 'A6', music2: $('.music3').music('option')}]
     });
-
-    $('.slot2').music_slot_pair({
-        slot1_nb: 'A3',
-        slot2_nb: 'A4'
-    });
-
-    $('.slot3').music_slot_pair({
-        slot1_nb: 'A5',
-        slot2_nb: 'A6'
-    });
-
-    /*$( ".library_music, .music_slot" ).draggable({
-        revert: 'invalid',
-        helper: function() {
-            return $('<div>').music($(this).music("option")).addClass("dragged_music");
-        },
-        start: function() {
-            $(this).addClass("music_highlight");
-        },
-        stop: function() {
-            $(this).removeClass("music_highlight");
-        },
-        appendTo: container,
-        scroll: false,
-        zIndex: 100,
-        cursorAt: { top:40, left: 130 }
-    });*/
 
     $(".slot_left" ).droppable({
         drop: function( event, ui ) {

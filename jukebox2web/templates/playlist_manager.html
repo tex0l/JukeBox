@@ -66,11 +66,8 @@
         <div class="center library_col">
 
             <div data-layout='{"type": "flexGrid", "columns": 1, "vgap": 15 }' class="albums_list">
-                {% include "playlist_manager/album_viewer.html" %}
-                {% include "playlist_manager/album_viewer.html" %}
-                {% include "playlist_manager/album_viewer.html" %}
-                {% include "playlist_manager/album_viewer.html" %}
-                {% include "playlist_manager/album_viewer.html" %}
+                <div class="album1"></div>
+                <div class="album1"></div>
             </div>
 
         </div>
@@ -79,59 +76,50 @@
 
     <div class="east music_set_col">
 
+        <div class="navigation">
+            <div id="slots_nav_container">
+                <a class="nav_link">Playlist Manager</a>
+                <div class="styled-select">
+                    <select class="set_select" id="set_select">
+                        <option>1</option>
+                        <option selected="selected">2</option>
+                        <option>3</option>
+                        <option>4</option>
+                        <option>5</option>
+                        <option>6</option>
+                        <option>7</option>
+                        <option>8</option>
+                        <option>9</option>
+                        <option>10</option>
+                        <option>11</option>
+                        <option>12</option>
+                        <option>13</option>
+                        <option>14</option>
+                        <option>15</option>
+                        <option>16</option>
+                        <option>17</option>
+                        <option>18</option>
+                        <option>19</option>
+                    </select>
+                </div>
+                <a href="#" class="btn_input" id="btn_edit" title="Edit current Music Set">
+                    <i class="fa fa-pencil-square-o"></i>
+                </a>
+                <a href="#" class="btn" id="btn_add" title="Add new Music Set">
+                    <i class="fa fa-plus-square-o"></i>
+                </a>
+                <a href="#" class="btn" id="btn_save" title="Save edited Music Set">
+                    <i class="fa fa-floppy-o"></i>
+                </a>
+                <a href="#" class="btn" id="btn_playlist_editor" title="Go to the Edit Playlist page">
+                    <i class="fa fa-table"></i>
+                </a>
+            </div>
+        </div>
+
         <div class="slots_list">
 
-            <div class="navigation">
-                <div id="slots_nav_container">
-                    <a class="nav_link">Playlist Manager</a>
-                    <div class="styled-select">
-                        <select class="set_select" id="set_select">
-                            <option>1</option>
-                            <option selected="selected">2</option>
-                            <option>3</option>
-                            <option>4</option>
-                            <option>5</option>
-                            <option>6</option>
-                            <option>7</option>
-                            <option>8</option>
-                            <option>9</option>
-                            <option>10</option>
-                            <option>11</option>
-                            <option>12</option>
-                            <option>13</option>
-                            <option>14</option>
-                            <option>15</option>
-                            <option>16</option>
-                            <option>17</option>
-                            <option>18</option>
-                            <option>19</option>
-                        </select>
-                    </div>
-                    <a href="#" class="btn_input" id="btn_edit" title="Edit current Music Set">
-                        <i class="fa fa-pencil-square-o"></i>
-                    </a>
-                    <a href="#" class="btn" id="btn_add" title="Add new Music Set">
-                        <i class="fa fa-plus-square-o"></i>
-                    </a>
-                    <a href="#" class="btn" id="btn_save" title="Save edited Music Set">
-                        <i class="fa fa-floppy-o"></i>
-                    </a>
-                    <a href="#" class="btn" id="btn_playlist_editor" title="Go to the Edit Playlist page">
-                        <i class="fa fa-table"></i>
-                    </a>
-                </div>
-            </div>
-
             <div id="selected_set"> Music Set Selected : <a>2</a></div>
-            <div class="slot1"></div>
-            <div class="slot2"></div>
-            <div class="slot3"></div>
-            <div class="slot1"></div>
-            <div class="slot2"></div>
-            <div class="slot3"></div>
-            <div class="slot1"></div>
-            <div class="slot2"></div>
-            <div class="slot3"></div>
 
         </div>
 
