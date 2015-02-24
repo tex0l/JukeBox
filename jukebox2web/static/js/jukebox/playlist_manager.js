@@ -42,18 +42,33 @@ jQuery(function($)
         stop: relayout
     });
 
-    $('.album1').album({
-        title: 'Album',
-        artist: 'Artist',
-        musics: [{pk: 1, title: 'Music 1', artist: 'Artist 1', number: 1},
-            {pk: 2, title: 'Music 2', artist: 'Artist 2', number: 2},
-            {pk: 2, title: 'Music 2', artist: 'Artist 2', number: 2},
-            {pk: 2, title: 'Music 2', artist: 'Artist 2', number: 2},
-            {pk: 2, title: 'Music 2', artist: 'Artist 2', number: 2},
-            {pk: 2, title: 'Music 2', artist: 'Artist 2', number: 2},
-            {pk: 2, title: 'Music 2', artist: 'Artist 2', number: 2},
-            {pk: 2, title: 'Music 2', artist: 'Artist 2', number: 2},
-            {pk: 3, title: 'Music 3', artist: 'Artist 3', number: 3}]
+    $('.library_artist1').library_artist({
+        name: 'God of Tetris',
+        albums: [{
+            title: 'Album',
+            artist: 'Artist',
+            musics: [{pk: 1, title: 'Music 1', artist: 'Artist 1', number: 1},
+                {pk: 2, title: 'Music 2', artist: 'Artist 2', number: 2},
+                {pk: 2, title: 'Music 2', artist: 'Artist 2', number: 2},
+                {pk: 2, title: 'Music 2', artist: 'Artist 2', number: 2},
+                {pk: 2, title: 'Music 2', artist: 'Artist 2', number: 2},
+                {pk: 2, title: 'Music 2', artist: 'Artist 2', number: 2},
+                {pk: 2, title: 'Music 2', artist: 'Artist 2', number: 2},
+                {pk: 2, title: 'Music 2', artist: 'Artist 2', number: 2},
+                {pk: 3, title: 'Music 3', artist: 'Artist 3', number: 3}]
+        },{
+            title: 'Album',
+            artist: 'Artist',
+            musics: [{pk: 1, title: 'Music 1', artist: 'Artist 1', number: 1},
+                {pk: 2, title: 'Music 2', artist: 'Artist 2', number: 2},
+                {pk: 2, title: 'Music 2', artist: 'Artist 2', number: 2},
+                {pk: 2, title: 'Music 2', artist: 'Artist 2', number: 2},
+                {pk: 2, title: 'Music 2', artist: 'Artist 2', number: 2},
+                {pk: 2, title: 'Music 2', artist: 'Artist 2', number: 2},
+                {pk: 2, title: 'Music 2', artist: 'Artist 2', number: 2},
+                {pk: 2, title: 'Music 2', artist: 'Artist 2', number: 2},
+                {pk: 3, title: 'Music 3', artist: 'Artist 3', number: 3}]
+        }]
     });
 
     $('.artist1').artist({

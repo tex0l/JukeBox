@@ -381,4 +381,53 @@ $(function() {
         }
     });
 
+    $.widget( "juke.library_artist", {
+        // default options
+        options: {
+            pk: 0,
+            name: '',
+            albums: [],
+
+            // callbacks
+            change: null,
+            random: null
+        },
+
+        // the constructor
+        _create: function() {
+            this._refresh();
+        },
+
+        _refresh: function() {
+            this.element.html('');
+
+            this.element.addClass('library_artist');
+
+            $('<div class="library_artist_name">')
+                .html(this.options.name)
+                .appendTo(this.element);
+
+            for (var i in this.options.albums){
+                $('<div">').album(this.options.albums[i]).appendTo(this.element);
+            }
+        },
+        // events bound via _on are removed automatically
+        // revert other modifications here
+        _destroy: function() {
+            // remove generated elements
+        },
+
+        // _setOptions is called with a hash of all options that are changing
+        // always refresh when changing options
+        _setOptions: function() {
+            // _super and _superApply handle keeping the right this-context
+            this._superApply( arguments );
+            this._refresh();
+        },
+
+        // _setOption is called for each individual option that is changing
+        _setOption: function( key, value ) {
+            this._super( key, value );
+        }
+    });
 });
