@@ -207,6 +207,9 @@ html, body {
     margin: 0px 0px 5px 5px;
     position: relative;
     border: 1px solid rgb(80,80,80);
+    display: block;
+    text-decoration: none;
+    color: rgb(200,200,200);
 }
 
 .artist > .artist_artwork {
@@ -237,7 +240,7 @@ html, body {
     text-overflow: ellipsis;
 }
 
-.artist_selected{
+.artist:active{
     color: rgb(35, 35, 35);
     background: rgba(200, 200, 200, 0.6);
     -moz-box-shadow: inset 0px 0px 10px 2px #000000;
@@ -246,11 +249,11 @@ html, body {
     box-shadow: inset 0px 0px 10px 2px #000000;
 }
 
-.artist_selected > .artist_infos > .artist_name {
+.artist:active > .artist_infos > .artist_name {
     color: rgb(35, 35, 35);
 }
 
-.artist_selected > .artist_infos > .artist_numbers {
+.artist:active > .artist_infos > .artist_numbers {
     color: rgb(80, 80, 80);
 }
 

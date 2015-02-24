@@ -179,7 +179,7 @@ $(function() {
             this.artist_infos.appendTo(artist)
 
             artist.addClass('artist').click(function(){
-                if(artist.hasClass('artist_selected')){
+                /*if(artist.hasClass('artist_selected')){
                     artist.removeClass('artist_selected');
                     $('.library_artist').show();
                 }
@@ -188,7 +188,11 @@ $(function() {
                     $('.library_artist').hide();
                     artist.addClass('artist_selected');
                     $('.lib_artist_' + $(this).artist('option', 'pk')).show();
-                }
+                }*/
+                var goal = '.lib_artist_' + $(this).artist('option', 'pk');
+			    var speed = 750;
+			    $('.library_col').animate( { scrollTop: $(goal).offset().top }, speed );
+			    return false;
             });
 
             this._refresh();
@@ -470,7 +474,7 @@ $(function() {
             //TODO: Add "All Artists" button
 
             for (var i in this.options.artists){
-                $('<div>').artist(this.options.artists[i]).appendTo(this.element);
+                $('<a href="#">').artist(this.options.artists[i]).appendTo(this.element);
             }
         },
         // events bound via _on are removed automatically
