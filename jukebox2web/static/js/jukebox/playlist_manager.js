@@ -46,6 +46,7 @@ jQuery(function($)
     });
 
     $('.music1').music({
+        pk: 1,
         title: 'Musicc music music music music music 1',
         artist: 'Artist 1',
         number: 1,
@@ -53,12 +54,14 @@ jQuery(function($)
     });
 
     $('.music2').music({
+        pk: 2,
         title: 'Music 2',
         artist: 'Artist 2',
         number: 2
     });
 
     $('.music3').music({
+        pk: 3,
         title: 'Music 3',
         artist: 'Artist 3',
         number: 30
@@ -78,7 +81,8 @@ jQuery(function($)
 
     $('.slot1').music_slot_pair({
         slot1_nb: 'A1',
-        slot2_nb: 'A2'
+        slot2_nb: 'A2',
+        music1: $('.music1').music('option')
     });
 
     $('.slot2').music_slot_pair({
@@ -91,7 +95,7 @@ jQuery(function($)
         slot2_nb: 'A6'
     });
 
-    $( ".library_music, .music_slot" ).draggable({
+    /*$( ".library_music, .music_slot" ).draggable({
         revert: 'invalid',
         helper: function() {
             return $('<div>').music($(this).music("option")).addClass("dragged_music");
@@ -106,11 +110,12 @@ jQuery(function($)
         scroll: false,
         zIndex: 100,
         cursorAt: { top:40, left: 130 }
-    });
+    });*/
 
     $(".slot_left" ).droppable({
         drop: function( event, ui ) {
             $(this).parent().music_slot_pair('option', 'music1', ui.draggable.music('option'));
+            $(this).find('.music_slot').addClass('music_modified');
         },
         hoverClass: "music_highlight"
     });
@@ -118,6 +123,7 @@ jQuery(function($)
     $(".slot_right" ).droppable({
         drop: function( event, ui ) {
             $(this).parent().music_slot_pair('option', 'music2', ui.draggable.music('option'));
+            $(this).find('.music_slot').addClass('music_modified');
         },
         hoverClass: "music_highlight"
     });
@@ -127,7 +133,7 @@ jQuery(function($)
     });
 
     $("#search_input").keyup(function(e){
-        $("#search_string").find('span').html($("#search_input").val());
+        $("#search_string").find('span').html($(this).val());
         if(e.keyCode == 13) {
             $("#search_input").blur();
         }

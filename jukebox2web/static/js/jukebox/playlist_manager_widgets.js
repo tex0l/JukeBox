@@ -5,9 +5,9 @@ $(function() {
         options: {
             pk: 0,
             number: 0,
-            title: 'Title',
-            artist: 'Artist',
-            album: 'Album',
+            title: 'Empty',
+            artist: '',
+            album: '',
             artwork: 'http://www.vgmpf.com/Wiki/images/3/37/Tetris_-_NES_-_Album_Art.jpg',
             length: '0:00',
             slot: 'A00',
@@ -24,6 +24,13 @@ $(function() {
 
         // called when created, and later when changing options
         _refresh: function() {
+
+            if(this.options.pk == 0) {
+                this.element.addClass('music_empty');
+            } else {
+                this.element.removeClass('music_empty');
+            }
+            this.element.removeClass('music_modified');
 
             this.element.html('');
 
@@ -59,8 +66,29 @@ $(function() {
                 .html(this.options.album)
                 .appendTo( this.artist_infos );
 
-            this.artist_infos.appendTo(this.element)
+            this.artist_infos.appendTo(this.element);
 
+            this.element.draggable({
+                revert: 'invalid',
+                helper: function() {
+                    return $('<div>').music($(this).music("option")).addClass("dragged_music");
+                },
+                start: function() {
+                    $(this).addClass("music_highlight");
+                },
+                stop: function() {
+                    $(this).removeClass("music_highlight");
+                },
+                appendTo: $('.page_layout'),
+                scroll: false,
+                zIndex: 100,
+                cursorAt: { top:40, left: 130 },
+                disabled: false
+            });
+
+            if(this.options.pk == 0) {
+                this.element.draggable('option','disabled',true);
+            }
         },
 
         // events bound via _on are removed automatically

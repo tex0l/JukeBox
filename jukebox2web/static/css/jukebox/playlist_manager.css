@@ -37,7 +37,7 @@ html, body {
 .artists_list {
     margin-top: 80px;
     padding-top: 5px;
-    height: calc(100% - 80px);
+    height: calc(100% - 85px);
     overflow-y: auto;
     overflow-x: hidden;
 }
@@ -311,6 +311,14 @@ html, body {
     height: 100%;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+.slot_pair .music_empty{
+    background: rgba(255, 0, 0, 0.2);
+}
+
+.slot_pair .music_modified{
+    background: rgba(0, 0, 255, 0.15);
 }
 
 .slot_pair .music_title {
