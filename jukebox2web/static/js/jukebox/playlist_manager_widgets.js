@@ -73,16 +73,16 @@ $(function() {
 
             this.artist_infos.appendTo(this.element);
 
-            this.element.draggable({
+            this.element.addClass('music_' + this.options.pk).draggable({
                 revert: 'invalid',
                 helper: function() {
                     return $('<div>').music($(this).music("option")).addClass("dragged_music");
                 },
                 start: function() {
-                    $(this).addClass("music_highlight");
+                    $(this).addClass("music_selected");
                 },
                 stop: function() {
-                    $(this).removeClass("music_highlight");
+                    $(this).removeClass("music_selected");
                 },
                 appendTo: $('.page_layout'),
                 scroll: false,
@@ -178,7 +178,7 @@ $(function() {
 
             this.artist_infos.appendTo(artist)
 
-            artist.addClass('artist').click(function(){
+            artist.addClass('artist').addClass('artist_' + this.options.pk).click(function(){
                 /*if(artist.hasClass('artist_selected')){
                     artist.removeClass('artist_selected');
                     $('.library_artist').show();
@@ -360,7 +360,7 @@ $(function() {
 
         // the constructor
         _create: function() {
-            this.element.addClass('album_viewer');
+            this.element.addClass('album_viewer').addClass('album_' + this.options.pk);
 
             $('<header class="album_title">')
                 .html(this.options.title)
