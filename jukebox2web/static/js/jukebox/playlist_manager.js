@@ -32,7 +32,7 @@ jQuery(function($)
 
     $(window).resize(relayout);
 
-    var lib_json = $.getJSON('static/js/library.json', function(data){
+    var lib_json = $.getJSON('ajax/library', function(data){
         $('.library_layout').library(data);
     });
 
