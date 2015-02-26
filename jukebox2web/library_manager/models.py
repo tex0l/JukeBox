@@ -37,7 +37,10 @@ class Music(models.Model):
         if created:
             artist.save()
         self.artist = artist
-        album_artist, created = Artist.objects.get_or_create(name=tags.find('albumartist','unknown'))
+        album_artist_name = tags.find('albumartist')
+        if not album_artist_name:
+            album_artist_name = name
+        album_artist, created = Artist.objects.get_or_create(name=album_artist_name)
         if created:
             album_artist.save()
         album, created = Album.objects.get_or_create(name=tags.find('album','unknown'),
