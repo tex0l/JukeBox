@@ -191,4 +191,15 @@ jQuery(function($)
         var o = $('<option selected="selected">').appendTo(select);
         $("#btn_edit").click();
     });
+
+    $.contextMenu({
+        selector: '.library_music',
+        callback: function(key, options) {
+            var m = "clicked: " + key + " on " + $(this).music('option', 'title');
+            window.console && console.log(m) || alert(m);
+        },
+        items: {
+            "edit": {name: "Edit", icon: "edit"},
+        }
+    });
 });

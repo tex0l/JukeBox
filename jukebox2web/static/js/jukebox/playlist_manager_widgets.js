@@ -73,23 +73,24 @@ $(function() {
 
             this.artist_infos.appendTo(this.element);
 
-            this.element.addClass('music_' + this.options.pk).draggable({
-                revert: 'invalid',
-                helper: function() {
-                    return $('<div>').music($(this).music("option")).addClass("dragged_music");
-                },
-                start: function() {
-                    $(this).addClass("music_selected");
-                },
-                stop: function() {
-                    $(this).removeClass("music_selected");
-                },
-                appendTo: $('.page_layout'),
-                scroll: false,
-                zIndex: 100,
-                cursorAt: { top:40, left: 130 },
-                disabled: false
-            });
+            this.element.addClass('music_' + this.options.pk)
+                .draggable({
+                    revert: 'invalid',
+                    helper: function() {
+                        return $('<div>').music($(this).music("option")).addClass("dragged_music");
+                    },
+                    start: function() {
+                        $(this).addClass("music_selected");
+                    },
+                    stop: function() {
+                        $(this).removeClass("music_selected");
+                    },
+                    appendTo: $('.page_layout'),
+                    scroll: false,
+                    zIndex: 100,
+                    cursorAt: { top:40, left: 130 },
+                    disabled: false
+                });
 
             if(this.options.pk == 0) {
                 this.element.draggable('option','disabled',true);
@@ -180,19 +181,19 @@ $(function() {
 
             artist.addClass('artist').addClass('artist_' + this.options.pk).click(function(){
                 /*if(artist.hasClass('artist_selected')){
-                    artist.removeClass('artist_selected');
-                    $('.library_artist').show();
-                }
-                else {
-                    $('.artist').removeClass('artist_selected');
-                    $('.library_artist').hide();
-                    artist.addClass('artist_selected');
-                    $('.lib_artist_' + $(this).artist('option', 'pk')).show();
-                }*/
+                 artist.removeClass('artist_selected');
+                 $('.library_artist').show();
+                 }
+                 else {
+                 $('.artist').removeClass('artist_selected');
+                 $('.library_artist').hide();
+                 artist.addClass('artist_selected');
+                 $('.lib_artist_' + $(this).artist('option', 'pk')).show();
+                 }*/
                 var goal = '.lib_artist_' + $(this).artist('option', 'pk');
-			    var speed = 750;
-			    $('.library_col').animate( { scrollTop: $(goal).offset().top }, speed );
-			    return false;
+                var speed = 750;
+                $('.library_col').animate( { scrollTop: $(goal).offset().top }, speed );
+                return false;
             });
 
             this._refresh();
