@@ -48,7 +48,7 @@ $(function() {
                 .addClass("music_infos");
 
             $('<aside>').addClass("music_number hide_in_drag hide_in_slot")
-                .html(this.options.number)
+                .html((this.options.number) ? this.options.number : '&nbsp;' )
                 .appendTo( this.artist_infos );
 
             $('<aside>').addClass("music_length hide_in_drag hide_in_slot")
