@@ -82,7 +82,39 @@ jQuery(function($)
     });
 
     $("#search_input").keyup(function(e){
-        $("#search_string").find('span').html($(this).val());
+        var search = $(this).val().toLowerCase();
+        $("#search_string").find('span').html(search);
+        var lib = $('.library_layout');
+        lib.find('.library_artist').hide();
+        lib.find('.album_viewer').hide();
+        lib.find('.library_music').css({opacity : 0.15}).draggable('disable');
+        var artists = lib.library('option', 'artists');
+        for (var i in artists){
+            var albums = artists[i].albums;
+            for (var j in albums){
+                var musics = albums[j].musics;
+                for (var k in musics){
+                    if (musics[k].title.toLowerCase().indexOf(search) > -1 ||
+                        musics[k].album.toLowerCase().indexOf(search) > -1 ||
+                        musics[k].artist.toLowerCase().indexOf(search) > -1 ){
+                        lib.find('.music_' + musics[k].pk).css({opacity : 1}).draggable('enable');
+                        lib.find('.album_' + albums[j].pk).show();
+                        lib.find('.lib_artist_' + artists[i].pk).show();
+                    }
+                }
+                if (albums[j].title.toLowerCase().indexOf(search) > -1){
+                    lib.find('.album_' + albums[j].pk).show()
+                        .find('.library_music').css({opacity : 1}).draggable('enable');
+                    lib.find('.lib_artist_' + artists[i].pk).show();
+                }
+            }
+            if (artists[i].name.toLowerCase().indexOf(search) > -1){
+                lib.find('.lib_artist_' + artists[i].pk).show()
+                    .find('.album_viewer').show()
+                    .find('.library_music').css({opacity : 1}).draggable('enable');
+            }
+        }
+        $(window).resize();
         if(e.keyCode == 13) {
             $("#search_input").blur();
         }
@@ -158,5 +190,36 @@ jQuery(function($)
         var select = $('#set_select');
         var o = $('<option selected="selected">').appendTo(select);
         $("#btn_edit").click();
+    });
+
+    $.contextMenu({
+        selector: '.library_music',
+        callback: function(key, options) {
+            var m = "clicked: " + key + " on " + $(this).music('option', 'title');
+            window.console && console.log(m);
+            $('#edit_music_dialog').music_edit($(this).music('option')).dialog('open');
+        },
+        items: {
+            "edit": {name: "Edit", icon: "edit"}
+        }
+    });
+
+    $('#edit_music_dialog').dialog({
+        autoOpen: false,
+        show: {
+            effect: "blind",
+            duration: 300
+        },
+        hide: {
+            effect: "blind",
+            duration: 300
+        },
+        modal: true,
+        buttons: {
+            "Save Changes": function() {
+            },
+            Cancel: function() {
+            }
+        }
     });
 });
