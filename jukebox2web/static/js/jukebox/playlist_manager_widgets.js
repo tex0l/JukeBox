@@ -5,8 +5,10 @@ $(function() {
         options: {
             pk: 0,
             number: 0,
+            disc_nb: 0,
             title: 'Empty',
             artist: '',
+            album_artist: '',
             album: '',
             artwork: 'http://www.vgmpf.com/Wiki/images/3/37/Tetris_-_NES_-_Album_Art.jpg',
             length: '0:00',
@@ -545,6 +547,117 @@ $(function() {
 
         // _setOption is called for each individual option that is changing
         _setOption: function( key, value ) {
+            this._super( key, value );
+        }
+    });
+
+    $.widget( "juke.music_edit", {
+        // default options
+        options: {
+            pk: 0,
+            number: 0,
+            disc_nb: 0,
+            title: 'Empty',
+            artist: '',
+            album_artist : '',
+            album: '',
+            artwork: 'http://www.vgmpf.com/Wiki/images/3/37/Tetris_-_NES_-_Album_Art.jpg',
+            length: '0:00',
+
+            // callbacks
+            change: null,
+            random: null
+        },
+
+        // the constructor
+        _create: function() {
+            this._refresh();
+        },
+
+        // called when created, and later when changing options
+        _refresh: function() {
+
+            this.element.html('');
+
+            this.header = $('<div class="edit_header">').appendTo(this.element);
+
+            this.artwork = $('<aside>')
+                .addClass("music_artwork")
+                .append($('<img src="' + this.options.artwork
+                + '" alt="' + this.options.title + '" height="70" width="70">')
+                    .addClass("music_artwork_img"))
+                .appendTo( this.header );
+
+            this.music_infos = $('<div>')
+                .addClass("edit_music_infos")
+                .appendTo( this.header );
+
+            $('<div>').addClass("music_title")
+                .html(this.options.title)
+                .appendTo( this.music_infos );
+
+            $('<div>').addClass("music_artist")
+                .html(this.options.artist)
+                .appendTo( this.music_infos );
+
+            $('<div>').addClass("music_album")
+                .html(this.options.album)
+                .appendTo( this.music_infos );
+
+            this.form = $('<form action="#" class="edit_music_form">')
+                .appendTo(this.element);
+
+            this.fields = $('<fieldset class="edit_music_fieldset">').appendTo(this.form);
+
+            $('<p>').append($('<label for="title">').html('Title'))
+                .append($('<input type="text" name="title" id="title" value="' + this.options.title + '">')
+                    .addClass("text ui-widget-content ui-corner-all"))
+                .appendTo(this.fields);
+
+            $('<p>').append($('<label for="album">').html('Album'))
+                .append($('<input type="text" name="album" id="album" value="' + this.options.album + '">')
+                    .addClass("text ui-widget-content ui-corner-all"))
+                .appendTo(this.fields);
+
+            $('<p>').append($('<label for="artist">').html('Artist'))
+                .append($('<input type="text" name="artist" id="artist" value="' + this.options.artist + '">')
+                    .addClass("text ui-widget-content ui-corner-all"))
+                .appendTo(this.fields);
+
+            $('<p>').append($('<label for="album_artist">').html('Album Artist'))
+                .append($('<input type="text" name="album_artist" id="album_artist" value="' + this.options.album_artist + '">')
+                    .addClass("text ui-widget-content ui-corner-all"))
+                .appendTo(this.fields);
+
+            $('<p>').append($('<label for="track_nb">').html('Track Number'))
+                .append($('<input type="number" name="track_nb" id="track_nb" value=' + this.options.number + '>')
+                    .addClass("spinner ui-widget-content ui-corner-all"))
+                .append($('<label for="disc_nb">').html('Disc Number'))
+                .append($('<input type="number" name="disc_nb" id="disc_nb" value=' + this.options.disc_nb + '>')
+                    .addClass("spinner ui-widget-content ui-corner-all"))
+                .appendTo(this.fields);
+
+            $('<input type="submit" tabindex="-1" style="position:absolute; top:-1000px">')
+                .appendTo(this.fields);
+        },
+
+        // events bound via _on are removed automatically
+        // revert other modifications here
+        _destroy: function() {
+            // remove generated elements
+        },
+
+        // _setOptions is called with a hash of all options that are changing
+        // always refresh when changing options
+        _setOptions: function() {
+            // _super and _superApply handle keeping the right this-context
+            this._superApply( arguments );
+            this._refresh();
+        },
+
+        // _setOption is called for each individual option that is changing
+        _setOption: function( key, value ) {
+            // prevent invalid color values
             this._super( key, value );
         }
     });

@@ -197,7 +197,7 @@ jQuery(function($)
         callback: function(key, options) {
             var m = "clicked: " + key + " on " + $(this).music('option', 'title');
             window.console && console.log(m);
-            $('#edit_music_dialog').dialog('open');
+            $('#edit_music_dialog').music_edit($(this).music('option')).dialog('open');
         },
         items: {
             "edit": {name: "Edit", icon: "edit"}
@@ -216,7 +216,7 @@ jQuery(function($)
         },
         modal: true,
         buttons: {
-            "Create an account": function() {
+            "Save Changes": function() {
             },
             Cancel: function() {
             }

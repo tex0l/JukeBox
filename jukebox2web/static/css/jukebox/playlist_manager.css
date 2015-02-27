@@ -690,3 +690,76 @@ html, body {
     display: inline-block;
     font-size: 14px;
 }
+
+#edit_music_dialog .edit_header {
+    position: relative;
+    height: 80px;
+}
+
+.edit_header .music_artwork {
+    float: left;
+    margin-right: 5px;
+}
+
+.edit_header .music_artwork_img {
+    border: 1px solid rgb(80,80,80);
+    border-radius: 5px;
+}
+
+.edit_header .music_title {
+    font-weight: bold;
+    padding-top: 2px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.edit_header .music_artist {
+    font-style: italic;
+    padding-top: 3px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.edit_header .music_album {
+    padding-top: 3px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.edit_header .music_album::before {
+    content: '(';
+}
+
+.edit_header .music_album::after {
+    content: ')';
+}
+
+#edit_music_dialog .edit_music_fieldset {
+    border: 1px solid rgb(80,80,80);
+}
+
+#edit_music_dialog p {
+    display: table;
+    width: 100%;
+}
+
+#edit_music_dialog label{
+    text-align: right;
+    width: 60px;
+    display: table-cell;
+    padding: 0 5px 0 0;
+    color: rgb(100,100,100);
+    font-size: 90%;
+    vertical-align: middle;
+}
+
+#edit_music_dialog input{
+    display: table-cell;
+    height: 1.3em;
+    padding: 3px 3px 3px 5px;
+    width: calc(100% - 5px);
+    margin-bottom: 3px;
+}
