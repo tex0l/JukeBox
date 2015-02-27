@@ -196,10 +196,30 @@ jQuery(function($)
         selector: '.library_music',
         callback: function(key, options) {
             var m = "clicked: " + key + " on " + $(this).music('option', 'title');
-            window.console && console.log(m) || alert(m);
+            window.console && console.log(m);
+            $('#edit_music_dialog').dialog('open');
         },
         items: {
-            "edit": {name: "Edit", icon: "edit"},
+            "edit": {name: "Edit", icon: "edit"}
+        }
+    });
+
+    $('#edit_music_dialog').dialog({
+        autoOpen: false,
+        show: {
+            effect: "blind",
+            duration: 300
+        },
+        hide: {
+            effect: "blind",
+            duration: 300
+        },
+        modal: true,
+        buttons: {
+            "Create an account": function() {
+            },
+            Cancel: function() {
+            }
         }
     });
 });
