@@ -221,5 +221,5 @@ jQuery(function($)
             Cancel: function() {
             }
         }
-    });
+    }).css({overflow: 'visible'});
 });

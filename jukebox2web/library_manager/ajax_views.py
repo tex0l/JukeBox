@@ -38,4 +38,5 @@ class Library(View):
                                 "artwork": artist_albums[0]['artwork']})
 
         artists.sort(key=lambda a: a["name"])
-        return HttpResponse(json.dumps({'artists': artists}), content_type='application/json')
+        return HttpResponse(json.dumps({'artists': artists, 'autocomplete_artists': autocomplete_artists,
+                                        'autocomplete_albums': autocomplete_albums}), content_type='application/json')
