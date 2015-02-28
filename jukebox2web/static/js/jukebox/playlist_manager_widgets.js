@@ -184,19 +184,9 @@ $(function() {
             this.artist_infos.appendTo(artist)
 
             artist.addClass('artist').addClass('artist_' + this.options.pk).click(function(){
-                /*if(artist.hasClass('artist_selected')){
-                 artist.removeClass('artist_selected');
-                 $('.library_artist').show();
-                 }
-                 else {
-                 $('.artist').removeClass('artist_selected');
-                 $('.library_artist').hide();
-                 artist.addClass('artist_selected');
-                 $('.lib_artist_' + $(this).artist('option', 'pk')).show();
-                 }*/
                 var goal = '.lib_artist_' + $(this).artist('option', 'pk');
                 var speed = 750;
-                $('.library_col').animate( { scrollTop: $(goal).offset().top }, speed );
+                $('.library_col').animate( { scrollTop: $(goal).position().top}, speed );
                 return false;
             });
 
@@ -520,11 +510,6 @@ $(function() {
         },
 
         _refresh: function() {
-            var artists_col = this.element.find('.artists_col');
-            artists_col.find('.artists_list').remove();
-            var artists_container = $('<div class="artists_list">').appendTo(artists_col);
-            artists_container.artists_list({artists: this.options.artists});
-
             var library_col = this.element.find('.library_col');
             library_col.find('.albums_list').remove();
             var albums_list = $('<div class="albums_list">').appendTo(library_col);
@@ -533,7 +518,11 @@ $(function() {
                 $('<div>').library_artist(this.options.artists[i]).appendTo(albums_list);
             }
 
+            var artists_col = this.element.find('.artists_col');
+            artists_col.find('.artists_list').remove();
+            var artists_container = $('<div class="artists_list">').appendTo(artists_col);
             $(window).resize();
+            artists_container.artists_list({artists: this.options.artists});
         },
         // events bound via _on are removed automatically
         // revert other modifications here
