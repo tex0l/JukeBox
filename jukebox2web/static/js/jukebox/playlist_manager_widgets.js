@@ -75,23 +75,25 @@ $(function() {
 
             this.artist_infos.appendTo(this.element);
 
-            this.element.addClass('music_' + this.options.pk)
+            this.element.addClass('music music_' + this.options.pk)
                 .draggable({
                     revert: 'invalid',
                     helper: function() {
                         return $('<div>').music($(this).music("option")).addClass("dragged_music");
                     },
                     start: function() {
+                        $('.music').removeClass('music_selected');
                         $(this).addClass("music_selected");
-                    },
-                    stop: function() {
-                        $(this).removeClass("music_selected");
                     },
                     appendTo: $('.page_layout'),
                     scroll: false,
                     zIndex: 100,
                     cursorAt: { top:40, left: 130 },
                     disabled: false
+                })
+                .click(function(){
+                    $('.music').removeClass('music_selected');
+                    $(this).addClass("music_selected");
                 });
 
             if(this.options.pk == 0) {
