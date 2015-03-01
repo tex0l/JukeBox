@@ -107,6 +107,8 @@ html, body {
 
 .library_artist {
     padding-bottom: 15px;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 .library_artist_name {

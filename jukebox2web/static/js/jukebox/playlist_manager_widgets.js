@@ -665,7 +665,7 @@ $(function() {
                             lib.library(response);
                             var goal = $('.music_' + pk)
                             $('.library_col').scrollTo( goal, 0, {offset: -scroll, axis: 'y'} );
-                            $('.music').removeClass('music_selected')
+                            $('.music').removeClass('music_selected');
                             goal.addClass('music_selected');
                             $('#edit_music_dialog').dialog('close');
                         }

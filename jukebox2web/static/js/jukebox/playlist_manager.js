@@ -226,6 +226,12 @@ jQuery(function($)
         },
         items: {
             "edit": {name: "Edit", icon: "edit"}
+        },
+        events: {
+            show: function(){
+                $('.music').removeClass('music_selected');
+                $(this).addClass('music_selected');
+            }
         }
     });
 
