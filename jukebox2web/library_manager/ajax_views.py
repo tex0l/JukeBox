@@ -2,13 +2,20 @@
 from django.views.generic import View
 import json
 from django.http import HttpResponse
+from urllib import unquote
+# from django.views.decorators.csrf import ensure_csrf_cookie
 
 from models import *
 
 
 class Library(View):
 
-    def get(self, request):
+    @staticmethod
+    def get(request):
+        return Library.return_json()
+
+    @staticmethod
+    def return_json():
         artists_request = Artist.objects.all()
         artists = []
         autocomplete_artists = []
@@ -40,3 +47,26 @@ class Library(View):
         artists.sort(key=lambda a: a["name"])
         return HttpResponse(json.dumps({'artists': artists, 'autocomplete_artists': autocomplete_artists,
                                         'autocomplete_albums': autocomplete_albums}), content_type='application/json')
+
+    @staticmethod
+    def post(request):
+        edit = request.POST
+        if edit.get('type') == 'music':
+            pk = int(edit.get('pk')) if edit.get('pk') else None
+            title = unquote(edit.get('title')) if edit.get('title') else 'unknown'
+            artist = unquote(edit.get('artist')) if edit.get('artist') else 'unknown'
+            album_artist = unquote(edit.get('album_artist')) if edit.get('album_artist') else artist
+            album = unquote(edit.get('album')) if edit.get('album') else 'unknown'
+            track_nb = int(unquote(edit.get('track_nb'))) if edit.get('track_nb') else None
+            disc_nb = int(unquote(edit.get('disc_nb'))) if edit.get('disc_nb') else None
+
+            music = Music.objects.get(pk=pk)
+            music.title = title
+            music.artist, created = Artist.objects.get_or_create(name=artist)
+            album_artist_model, created = Artist.objects.get_or_create(name=album_artist)
+            music.album, created = Album.objects.get_or_create(name=album, album_artist=album_artist_model)
+            music.track_number = track_nb
+            music.disc_number = disc_nb
+            music.save()
+
+        return Library.return_json()

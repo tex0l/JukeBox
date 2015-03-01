@@ -184,9 +184,9 @@ $(function() {
             this.artist_infos.appendTo(artist)
 
             artist.addClass('artist').addClass('artist_' + this.options.pk).click(function(){
-                var goal = '.lib_artist_' + $(this).artist('option', 'pk');
+                var goal = '.lib_artist_' + $(this).artist('option', 'pk') + ' > .library_artist_name';
                 var speed = 750;
-                $('.library_col').animate( { scrollTop: $(goal).position().top}, speed );
+                $('.library_col').scrollTo( $(goal), speed, {offset: -85, axis: 'y'} );
                 return false;
             });
 
@@ -571,6 +571,7 @@ $(function() {
         _refresh: function() {
 
             var lib = $('.library_layout');
+            var pk = this.options.pk;
 
             this.element.html('');
 
@@ -599,7 +600,7 @@ $(function() {
                 .html(this.options.album)
                 .appendTo( this.music_infos );
 
-            this.form = $('<form action="#" class="edit_music_form">')
+            this.form = $('<form action="" class="edit_music_form">')
                 .appendTo(this.element);
 
             this.fields = $('<fieldset class="edit_music_fieldset">').appendTo(this.form);
@@ -610,22 +611,22 @@ $(function() {
                 .appendTo(this.fields);
 
             this.album_input = $('<input type="text" name="album" id="album" value="' + this.options.album + '">')
-                    .addClass("text ui-widget-content ui-corner-all")
+                .addClass("text ui-widget-content ui-corner-all")
             $('<p>').append($('<label for="album">').html('Album'))
                 .append(this.album_input)
                 .appendTo(this.fields);
             this.album_input.autocomplete({source: lib.library('option', 'autocomplete_albums')});
 
             this.artist_input = $('<input type="text" name="artist" id="artist" value="' + this.options.artist + '">')
-                    .addClass("text ui-widget-content ui-corner-all")
+                .addClass("text ui-widget-content ui-corner-all")
             $('<p>').append($('<label for="artist">').html('Artist'))
                 .append(this.artist_input)
                 .appendTo(this.fields);
             this.artist_input.autocomplete({source: lib.library('option', 'autocomplete_artists')});
 
             this.album_artist_input = $('<input type="text" name="album_artist" id="album_artist" value="' + this.options.album_artist + '">')
-                    .addClass("text ui-widget-content ui-corner-all")
-                    .autocomplete({source: lib.library('option', 'autocomplete_artists')});
+                .addClass("text ui-widget-content ui-corner-all")
+                .autocomplete({source: lib.library('option', 'autocomplete_artists')});
             $('<p>').append($('<label for="album_artist">').html('Album Artist'))
                 .append(this.album_artist_input)
                 .appendTo(this.fields);
@@ -640,6 +641,37 @@ $(function() {
                 .appendTo(this.fields);
 
             $('<input type="submit" tabindex="-1" style="position:absolute; top:-1000px">')
+                .click(function () {
+                    var title = encodeURIComponent($('input#title').val());
+                    var album = encodeURIComponent($('input#album').val());
+                    var artist = encodeURIComponent($('input#artist').val());
+                    var album_artist = encodeURIComponent($('input#album_artist').val());
+                    var track_nb = encodeURIComponent($('input#track_nb').val());
+                    var disc_nb = encodeURIComponent($('input#disc_nb').val());
+                    //var dataString = 'type=music' + '&title=' + title + '&album=' + album + '&artist=' + artist +
+                    //    '&album_artist=' + album_artist + '&track_nb=' + track_nb + '&disc_nb=' + disc_nb;
+                    //alert(dataString);
+                    //return false;
+                    var data = {'type': 'music', 'pk': pk, 'title': title, 'album': album, 'artist': artist,
+                        'album_artist': album_artist, 'track_nb': track_nb, 'disc_nb': disc_nb};
+                    $.ajax({
+                        type: "POST",
+                        url: "ajax/library",
+                        data: data,
+                        dataType: 'json',
+                        success: function(response) {
+                            var lib = $('.library_layout')
+                            var scroll = $('.music_' + pk).offset().top;
+                            lib.library(response);
+                            var goal = $('.music_' + pk)
+                            $('.library_col').scrollTo( goal, 0, {offset: -scroll, axis: 'y'} );
+                            $('.music').removeClass('music_selected')
+                            goal.addClass('music_selected');
+                            $('#edit_music_dialog').dialog('close');
+                        }
+                    });
+                    return false;
+                })
                 .appendTo(this.fields);
         },
 
