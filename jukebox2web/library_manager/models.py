@@ -45,10 +45,9 @@ class Music(models.Model):
         album_artist, created = Artist.objects.get_or_create(name=album_artist_name)
         if created:
             album_artist.save()
-        album, created = Album.objects.get_or_create(name=tags.find('album','unknown'),
-                                                 year=tags.find('year','unknown'),
-                                                 album_artist=album_artist,
-                                                 )
+        album, created = Album.objects.get_or_create(name=tags.find('album', 'unknown'),
+                                                     album_artist=album_artist,
+                                                     )
         if created:
             album.number_of_tracks = tags.find('tracktotal')
             album.number_of_discs = tags.find('disctotal')

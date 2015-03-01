@@ -659,10 +659,10 @@ $(function() {
                         data: data,
                         dataType: 'json',
                         success: function(response) {
-                            var lib = $('.library_layout')
+                            var lib = $('.library_layout');
                             var scroll = $('.music_' + pk).offset().top;
                             lib.library(response);
-                            var goal = $('.music_' + pk)
+                            var goal = $('.music_' + pk);
                             $('.library_col').scrollTo( goal, 0, {offset: -scroll, axis: 'y'} );
                             $('.music').removeClass('music_selected');
                             goal.addClass('music_selected');

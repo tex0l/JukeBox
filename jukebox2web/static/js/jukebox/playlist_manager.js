@@ -254,4 +254,23 @@ jQuery(function($)
         },
         width: 400
     }).css({overflow: 'visible'});
+
+    $('#uploader').find('#id_file_field').fileupload({
+        url: 'ajax/upload',
+        dataType: 'json',
+        done: function (e, data) {
+            console.log(data)
+            var lib = $('.library_layout');
+            lib.library(data.result);
+        },
+        progressall: function (e, data) {
+            var progress = parseInt(data.loaded / data.total * 100, 10);
+            //$('#progress .progress-bar').css(
+            //    'width',
+            //    progress + '%'
+            //);
+            console.log(progress);
+        }
+    }).prop('disabled', !$.support.fileInput)
+        .parent().addClass($.support.fileInput ? undefined : 'disabled');
 });
