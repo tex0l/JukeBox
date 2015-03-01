@@ -27,7 +27,7 @@ def lib_dict():
                 album_musics.append({"pk": music.pk, "title": music.title, "artist": music.artist.name,
                                      "album": music.album.name, "album_artist": album.album_artist.name,
                                      "number": music.track_number, "disc_nb": music.disc_number,
-                                     "artwork": music.artwork.url})
+                                     "artwork": (music.artwork.url if music.artwork else 'static/default_artwork.png')})
             if album_musics:
                 album_musics.sort(key=lambda m: (m['disc_nb'] if m['disc_nb'] else 0)*1000 +
                                                 (m['number'] if m['number'] else 0))

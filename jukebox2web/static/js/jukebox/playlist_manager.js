@@ -259,7 +259,6 @@ jQuery(function($)
         url: 'ajax/upload',
         dataType: 'json',
         done: function (e, data) {
-            console.log(data)
             var lib = $('.library_layout');
             lib.library(data.result);
         },
