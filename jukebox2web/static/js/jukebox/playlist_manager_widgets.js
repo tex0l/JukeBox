@@ -611,22 +611,21 @@ $(function() {
                 .appendTo(this.fields);
 
             this.album_input = $('<input type="text" name="album" id="album" value="' + this.options.album + '">')
-                .addClass("text ui-widget-content ui-corner-all")
+                .addClass("text ui-widget-content ui-corner-all");
             $('<p>').append($('<label for="album">').html('Album'))
                 .append(this.album_input)
                 .appendTo(this.fields);
             this.album_input.autocomplete({source: lib.library('option', 'autocomplete_albums')});
 
             this.artist_input = $('<input type="text" name="artist" id="artist" value="' + this.options.artist + '">')
-                .addClass("text ui-widget-content ui-corner-all")
+                .addClass("text ui-widget-content ui-corner-all");
             $('<p>').append($('<label for="artist">').html('Artist'))
                 .append(this.artist_input)
                 .appendTo(this.fields);
             this.artist_input.autocomplete({source: lib.library('option', 'autocomplete_artists')});
 
             this.album_artist_input = $('<input type="text" name="album_artist" id="album_artist" value="' + this.options.album_artist + '">')
-                .addClass("text ui-widget-content ui-corner-all")
-                .autocomplete({source: lib.library('option', 'autocomplete_artists')});
+                .addClass("text ui-widget-content ui-corner-all");
             $('<p>').append($('<label for="album_artist">').html('Album Artist'))
                 .append(this.album_artist_input)
                 .appendTo(this.fields);

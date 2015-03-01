@@ -251,6 +251,7 @@ jQuery(function($)
             },
             Cancel: function() {
             }
-        }
+        },
+        width: 400
     }).css({overflow: 'visible'});
 });
