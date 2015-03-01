@@ -259,8 +259,9 @@ jQuery(function($)
         url: 'ajax/upload',
         dataType: 'json',
         done: function (e, data) {
-            var lib = $('.library_layout');
-            lib.library(data.result);
+            var scroll = $('.library_col').scrollTop();
+            $('.library_layout').library(data.result);
+            $('.library_col').scrollTop(scroll);
         },
         progressall: function (e, data) {
             var progress = parseInt(data.loaded / data.total * 100, 10);
