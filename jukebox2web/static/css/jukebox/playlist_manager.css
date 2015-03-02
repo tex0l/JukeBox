@@ -32,14 +32,15 @@ html, body {
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 .artists_list {
     margin-top: 80px;
     padding-top: 5px;
     height: calc(100% - 85px);
-    overflow-y: auto;
-    overflow-x: hidden;
+    overflow: visible;
 }
 
 .music_set_col {
@@ -764,4 +765,39 @@ html, body {
     padding: 3px 3px 3px 5px;
     width: calc(100% - 5px);
     margin-bottom: 3px;
+}
+
+::-webkit-scrollbar {									/* Scrollbars */
+	width: .875em;
+	height: .875em;
+	background: transparent;
+}
+::-webkit-scrollbar-track-piece {						/* Fond */
+	background: transparent none;
+	border: solid .25em transparent;
+	border-right-width: .5em;
+	margin: .25em;
+    margin-top: 85px;
+}
+::-webkit-scrollbar-track-piece:horizontal {			/* Fond pour la barre du bas */
+	border-right-width: .25em;
+	border-bottom-width: .5em;
+}
+::-webkit-scrollbar-thumb {								/* Barre */
+	border: solid 0 transparent;
+	border-right-width: .25em;
+	-webkit-border-radius: .3125em;
+	-webkit-border-top-right-radius: .5625em .3125em;
+	-webkit-border-bottom-right-radius: .5625em .3125em;
+	-webkit-box-shadow: inset 0 0 0 .0625em rgba(40,40,40,0.7), inset 0 0 0 .375em rgba(80,80,80,0.7);
+}
+::-webkit-scrollbar-thumb:hover {						/* Barre */
+	-webkit-box-shadow: inset 0 0 0 .0625em rgba(90,90,90,0.9), inset 0 0 0 .375em rgba(110,110,110,0.9);
+}
+::-webkit-scrollbar-thumb:horizontal {					/* Barre du bas */
+	border-right-width: 0;
+	border-bottom-width: .25em;
+	-webkit-border-top-right-radius: .3125em;
+	-webkit-border-bottom-right-radius: .3125em .5625em;
+	-webkit-border-bottom-left-radius: .3125em .5625em;
 }
