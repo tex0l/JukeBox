@@ -1,12 +1,14 @@
 from django.db import models
 from django.conf import settings
+from library_manager.models import *
+
 # Create your models here.
 
 class SlotPair(models.Model):
     slot1_nb = models.IntegerField(name='slot1_nb', help_text='is the number of the final index. Ex: id 1 for index A1 ')
     slot2_nb = models.IntegerField(name='slot2_nb', help_text='is the number of the final index. Ex: id 2 for index A2 ')
-    music1 = models.ForeignKey('library_manager.Music', related_name='+')
-    music2 = models.ForeignKey('library_manager.Music', related_name='+')
+    music1 = models.ForeignKey('library_manager.Music', null=True, blank=True, related_name='+')
+    music2 = models.ForeignKey('library_manager.Music', null=True, blank=True, related_name='+')
     artwork = models.ImageField(upload_to='Artwork')
 
     def dict(self):
@@ -20,8 +22,8 @@ class SlotPair(models.Model):
             artwork = 'static/default_artwork.png'
 
         return {'slot1_nb': self.slot1_nb, 'slot2_nb': self.slot2_nb,
-                'music1': self.music1.json() if self.music1 else {},
-                'music2': self.music2.json() if self.music2 else {},
+                'music1': self.music1.dict() if self.music1 else {},
+                'music2': self.music2.dict() if self.music2 else {},
                 'artwork': artwork, 'pk': self.pk}
 
 
@@ -51,6 +53,16 @@ class MusicSet(models.Model):
         s7 = SlotPair(slot1_nb=15, slot2_nb=16)
         s8 = SlotPair(slot1_nb=17, slot2_nb=18)
         s9 = SlotPair(slot1_nb=19, slot2_nb=20)
+        s0.save()
+        s1.save()
+        s2.save()
+        s3.save()
+        s4.save()
+        s5.save()
+        s6.save()
+        s7.save()
+        s8.save()
+        s9.save()
         return MusicSet(name=name, s0=s0, s1=s1, s2=s2, s3=s3, s4=s4, s5=s5, s6=s6, s7=s7, s8=s8, s9=s9)
 
     def save(self, *args, **kwargs):
@@ -69,6 +81,6 @@ class MusicSet(models.Model):
     def dict(self):
         return {
             'pk': self.pk, 'name': self.name,
-            'slots': [self.s0.dict(), self.s1.dict(), self.s2.dict(), self.s3.dict(), self.s4.dict(),
-                      self.s5.dict(), self.s6.dict(), self.s7.dict(), self.s8.dict(), self.s9.dict()]
+            'slot_pairs': [self.s0.dict(), self.s1.dict(), self.s2.dict(), self.s3.dict(), self.s4.dict(),
+                           self.s5.dict(), self.s6.dict(), self.s7.dict(), self.s8.dict(), self.s9.dict()]
         }

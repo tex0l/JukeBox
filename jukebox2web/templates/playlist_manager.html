@@ -55,6 +55,8 @@
 
         <div class="center library_col"></div>
 
+        <div id="edit_music_dialog" title="Edit Music"></div>
+
     </div>
 
     <div class="east music_set_col">
@@ -91,6 +93,14 @@
             </div>
         </div>
 
+        <div id="add_music_set_dialog" title="Add Music Set">
+            <p>
+                <label for="title">Title</label>
+                <input type="text" name="Name" id="title" value=""
+                       class="text ui-widget-content ui-corner-all">
+            </p>
+        </div>
+
         <div class="slots_list">
 
             <div id="selected_set"> Music Set Selected : <a>2</a></div>
@@ -100,8 +110,6 @@
     </div>
 
 </div>
-
-<div id="edit_music_dialog" title="Edit Music"></div>
 
 <form action="" id="uploader" enctype="multipart/form-data">
     {% csrf_token %}

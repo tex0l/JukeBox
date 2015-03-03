@@ -249,7 +249,15 @@ $(function() {
             $('<aside>')
                 .addClass("slot slot_left")
                 .append(this.music_slot1)
-                .appendTo( slot_pair );
+                .appendTo( slot_pair )
+                .droppable({
+                    drop: function( event, ui ) {
+                        var m = ui.draggable.music('option');
+                        m.modified = true;
+                        $(this).parent().music_slot_pair('option', 'music1', m);
+                    },
+                    hoverClass: "music_highlight"
+                });
 
             this.slot_artwork = $('<div>')
                 .addClass("slot_artwork")
@@ -261,7 +269,15 @@ $(function() {
             $('<aside>')
                 .addClass("slot slot_right")
                 .append(this.music_slot2)
-                .appendTo( slot_pair );
+                .appendTo( slot_pair )
+                .droppable({
+                    drop: function( event, ui ) {
+                        var m = ui.draggable.music('option');
+                        m.modified = true;
+                        $(this).parent().music_slot_pair('option', 'music2', m);
+                    },
+                    hoverClass: "music_highlight"
+                });
 
         },
 
@@ -312,7 +328,7 @@ $(function() {
 
         // called when created, and later when changing options
         _refresh: function() {
-            this.element.find('.slot_pair').remove();
+            this.element.addClass('music_set').find('.slot_pair').remove();
 
             for (var i in this.options.slot_pairs){
                 $('<div>').music_slot_pair(this.options.slot_pairs[i]).appendTo(this.element);
@@ -336,6 +352,16 @@ $(function() {
         // _setOption is called for each individual option that is changing
         _setOption: function( key, value ) {
             this._super( key, value );
+        },
+
+        get_dict: function(){
+            var r ={'pk': this.options.pk, 'name': this.options.name};
+            this.element.find('.slot_pair').each(function(){
+                r['s'+ $(this).music_slot_pair('option','slot1_nb')] = $(this).music_slot_pair('option','music1').pk;
+                r['s'+ $(this).music_slot_pair('option','slot2_nb')] = $(this).music_slot_pair('option','music2').pk;
+            });
+            console.log(r);
+            return r;
         }
     });
 
@@ -639,7 +665,7 @@ $(function() {
                     .addClass("spinner ui-widget-content ui-corner-all"))
                 .appendTo(this.fields);
 
-            $('<input type="submit" tabindex="-1" style="position:absolute; top:-1000px">')
+            $('<input class="submit_music_edit_btn" type="submit" tabindex="-1" style="position:absolute; top:-1000px">')
                 .click(function () {
                     var title = encodeURIComponent($('input#title').val());
                     var album = encodeURIComponent($('input#album').val());
@@ -694,5 +720,74 @@ $(function() {
             this._super( key, value );
         }
     });
+
+    $.widget( "juke.music_sets_list", {
+        // default options
+        options: {
+            sets: [],
+
+            // callbacks
+            change: null,
+            random: null
+        },
+
+        // the constructor
+        _create: function() {
+            this._refresh();
+        },
+
+        // called when created, and later when changing options
+        _refresh: function() {
+            $('#set_select').find('option').remove();
+            this.element.find('.slot_pair').remove();
+
+            var first = true;
+
+            for (var i in this.options.sets){
+
+                $('<option value="' + this.options.sets[i].pk + '">').html(this.options.sets[i].name)
+                    .appendTo('#set_select');
+
+                if (first){
+                    first=false;
+                    $('<div class="music_set_' + this.options.sets[i].pk + '">')
+                        .music_set(this.options.sets[i]).appendTo(this.element);
+                }
+                else{
+                    $('<div class="music_set_' + this.options.sets[i].pk + '">')
+                        .music_set(this.options.sets[i]).appendTo(this.element).hide();
+                }
+            }
+        },
+
+        // events bound via _on are removed automatically
+        // revert other modifications here
+        _destroy: function() {
+            // remove generated elements
+        },
+
+        // _setOptions is called with a hash of all options that are changing
+        // always refresh when changing options
+        _setOptions: function() {
+            // _super and _superApply handle keeping the right this-context
+            this._superApply( arguments );
+            this._refresh();
+        },
+
+        // _setOption is called for each individual option that is changing
+        _setOption: function( key, value ) {
+            this._super( key, value );
+        },
+
+        get_list: function(){
+            var l =[];
+            this.element.find('.music_set').each(function(){
+                l.push($(this).music_set('get_dict'));
+            });
+            console.log(l);
+            return l;
+        }
+    });
+
 
 });

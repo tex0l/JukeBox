@@ -22,20 +22,22 @@ class MusicSets(View):
 
     @staticmethod
     def get(request):
-        return HttpResponse(json.dumps(sets_list()), content_type='application/json')
+        return HttpResponse(json.dumps({'sets': sets_list()}), content_type='application/json')
 
     @staticmethod
     def post(request):
         edit = request.POST
-        sets = edit.get('sets')
+        print edit
         if edit.get('type') == 'save':
+            sets = json.loads(edit.get('sets'))
             MusicSets.save_sets(sets)
             print "Sets saved"
             return HttpResponse('')
         elif edit.get('type') == 'add':
-            m = MusicSet(name=edit.get('name'))
+            m = MusicSet.create(name=edit.get('name'))
             m.save()
-            return HttpResponse(json.dumps(sets_list()), content_type='application/json')
+            return HttpResponse(json.dumps(m.dict()), content_type='application/json')
+        raise Exception('Unexpected music set request')
 
     @staticmethod
     def save_sets(sets):
@@ -44,34 +46,34 @@ class MusicSets(View):
 
             s.name = music_set.get('name')
 
-            s.s0.music1 = Music.objects.get(pk=music_set.get('s01'))
-            s.s0.music2 = Music.objects.get(pk=music_set.get('s02'))
+            s.s0.music1 = Music.objects.get(pk=music_set.get('s1')) if music_set.get('s1') else None
+            s.s0.music2 = Music.objects.get(pk=music_set.get('s2')) if music_set.get('s2') else None
 
-            s.s1.music1 = Music.objects.get(pk=music_set.get('s03'))
-            s.s1.music2 = Music.objects.get(pk=music_set.get('s04'))
+            s.s1.music1 = Music.objects.get(pk=music_set.get('s3')) if music_set.get('s3') else None
+            s.s1.music2 = Music.objects.get(pk=music_set.get('s4')) if music_set.get('s4') else None
 
-            s.s2.music1 = Music.objects.get(pk=music_set.get('s05'))
-            s.s2.music2 = Music.objects.get(pk=music_set.get('s06'))
+            s.s2.music1 = Music.objects.get(pk=music_set.get('s5')) if music_set.get('s5') else None
+            s.s2.music2 = Music.objects.get(pk=music_set.get('s6')) if music_set.get('s6') else None
 
-            s.s3.music1 = Music.objects.get(pk=music_set.get('s07'))
-            s.s3.music2 = Music.objects.get(pk=music_set.get('s08'))
+            s.s3.music1 = Music.objects.get(pk=music_set.get('s7')) if music_set.get('s7') else None
+            s.s3.music2 = Music.objects.get(pk=music_set.get('s8')) if music_set.get('s8') else None
 
-            s.s4.music1 = Music.objects.get(pk=music_set.get('s09'))
-            s.s4.music2 = Music.objects.get(pk=music_set.get('s10'))
+            s.s4.music1 = Music.objects.get(pk=music_set.get('s9')) if music_set.get('s9') else None
+            s.s4.music2 = Music.objects.get(pk=music_set.get('s10')) if music_set.get('s10') else None
 
-            s.s5.music1 = Music.objects.get(pk=music_set.get('s11'))
-            s.s5.music2 = Music.objects.get(pk=music_set.get('s12'))
+            s.s5.music1 = Music.objects.get(pk=music_set.get('s11')) if music_set.get('s11') else None
+            s.s5.music2 = Music.objects.get(pk=music_set.get('s12')) if music_set.get('s12') else None
 
-            s.s6.music1 = Music.objects.get(pk=music_set.get('s13'))
-            s.s6.music2 = Music.objects.get(pk=music_set.get('s14'))
+            s.s6.music1 = Music.objects.get(pk=music_set.get('s13')) if music_set.get('s13') else None
+            s.s6.music2 = Music.objects.get(pk=music_set.get('s14')) if music_set.get('s14') else None
 
-            s.s7.music1 = Music.objects.get(pk=music_set.get('s15'))
-            s.s7.music2 = Music.objects.get(pk=music_set.get('s16'))
+            s.s7.music1 = Music.objects.get(pk=music_set.get('s15')) if music_set.get('s15') else None
+            s.s7.music2 = Music.objects.get(pk=music_set.get('s16')) if music_set.get('s16') else None
 
-            s.s8.music1 = Music.objects.get(pk=music_set.get('s17'))
-            s.s8.music2 = Music.objects.get(pk=music_set.get('s18'))
+            s.s8.music1 = Music.objects.get(pk=music_set.get('s17')) if music_set.get('s17') else None
+            s.s8.music2 = Music.objects.get(pk=music_set.get('s18')) if music_set.get('s18') else None
 
-            s.s9.music1 = Music.objects.get(pk=music_set.get('s19'))
-            s.s9.music2 = Music.objects.get(pk=music_set.get('s20'))
+            s.s9.music1 = Music.objects.get(pk=music_set.get('s19')) if music_set.get('s19') else None
+            s.s9.music2 = Music.objects.get(pk=music_set.get('s20')) if music_set.get('s20') else None
 
             s.save()

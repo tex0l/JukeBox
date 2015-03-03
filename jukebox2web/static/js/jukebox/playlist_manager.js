@@ -71,17 +71,22 @@ jQuery(function($)
         stop: relayout
     });
 
-    $('.slots_list').music_set({
-        slot_pairs: [{slot1_nb: 'A1', slot2_nb: 'A2'},
-            {slot1_nb: 'A3', slot2_nb: 'A4'},
-            {slot1_nb: 'A5', slot2_nb: 'A6'},
-            {slot1_nb: 'A7', slot2_nb: 'A8'},
-            {slot1_nb: 'A9', slot2_nb: 'A10'},
-            {slot1_nb: 'A11', slot2_nb: 'A12'},
-            {slot1_nb: 'A13', slot2_nb: 'A14'},
-            {slot1_nb: 'A15', slot2_nb: 'A16'},
-            {slot1_nb: 'A17', slot2_nb: 'A18'},
-            {slot1_nb: 'A19', slot2_nb: 'A20'}]
+    /*$('<div>').music_set({
+     slot_pairs: [{slot1_nb: 'A1', slot2_nb: 'A2'},
+     {slot1_nb: 'A3', slot2_nb: 'A4'},
+     {slot1_nb: 'A5', slot2_nb: 'A6'},
+     {slot1_nb: 'A7', slot2_nb: 'A8'},
+     {slot1_nb: 'A9', slot2_nb: 'A10'},
+     {slot1_nb: 'A11', slot2_nb: 'A12'},
+     {slot1_nb: 'A13', slot2_nb: 'A14'},
+     {slot1_nb: 'A15', slot2_nb: 'A16'},
+     {slot1_nb: 'A17', slot2_nb: 'A18'},
+     {slot1_nb: 'A19', slot2_nb: 'A20'}]
+     }).appendTo('.slots_list');*/
+
+    $.getJSON('ajax/sets', function(data){
+        console.log(data)
+        $('.slots_list').music_sets_list(data);
     });
 
     $(".slot_left" ).droppable({
@@ -102,8 +107,10 @@ jQuery(function($)
         hoverClass: "music_highlight"
     });
 
-    $(".set_select").change(function(){
-        $("#selected_set").find('a').html($(this).find(':selected').text());
+    $("#set_select").change(function(){
+        $("#selected_set").find('a').html($(this).find(':selected').attr('value'));
+        $('.music_set').hide();
+        $('.music_set_' + $(this).find(':selected').attr('value')).show();
     });
 
     $("#search_input").keyup(function(e){
@@ -212,9 +219,19 @@ jQuery(function($)
     });
 
     $("#btn_add").click(function(){
-        var select = $('#set_select');
-        var o = $('<option selected="selected">').appendTo(select);
-        $("#btn_edit").click();
+        $('#add_music_set_dialog').dialog('open');
+    });
+
+    $("#btn_save").click(function(){
+        $.ajax({
+            type: "POST",
+            url: "ajax/sets",
+            data: {'type': 'save', 'sets': JSON.stringify($('.slots_list').music_sets_list('get_list'))},
+            dataType: 'json',
+            success: function(response) {
+                console.log("Music Sets saved !!!");
+            }
+        });
     });
 
     $.contextMenu({
@@ -235,6 +252,50 @@ jQuery(function($)
         }
     });
 
+    var add_music_set = function() {
+        var e = '#add_music_set_dialog'
+        $.ajax({
+            type: "POST",
+            url: "ajax/sets",
+            data: {'type': 'add', 'name': $(e).find('input').val()},
+            dataType: 'json',
+            success: function(response) {
+                $('<option value="' + response.pk + '" selected="selected">').html(response.name)
+                    .appendTo('#set_select');
+                $('.music_set').hide();
+                $('<div class="music_set_' + response.pk + '">')
+                    .music_set(response).appendTo('.slots_list');
+
+            }
+        });
+        $(e).find('input').val('');
+        $(e).dialog('close');
+    };
+
+    $('#add_music_set_dialog').dialog({
+        autoOpen: false,
+        show: {
+            effect: "blind",
+            duration: 300
+        },
+        hide: {
+            effect: "blind",
+            duration: 300
+        },
+        modal: true,
+        buttons: {
+            "Add Music Set":add_music_set,
+            Cancel: function() {
+                $(this).dialog('close');
+            }
+        },
+        width: 400
+    }).find('input').keyup(function(e){
+        if(e.keyCode == 13) {
+            add_music_set();
+        }
+    });
+
     $('#edit_music_dialog').dialog({
         autoOpen: false,
         show: {
@@ -248,8 +309,10 @@ jQuery(function($)
         modal: true,
         buttons: {
             "Save Changes": function() {
+                $(this).find('.submit_music_edit_btn').click();
             },
             Cancel: function() {
+                $(this).dialog('close');
             }
         },
         width: 400
