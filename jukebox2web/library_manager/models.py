@@ -1,15 +1,14 @@
 # -*- coding: utf-8 -*-
 from django.db import models
 from django.core.files import File
-
 from tempfile import NamedTemporaryFile
-
 import mutagenwrapper
 
 
 class Artist(models.Model):
     name = models.CharField(name='name', max_length='100', default='unknown')
     date_added = models.DateTimeField(auto_now=True, editable=False)
+
 
 class Album(models.Model):
     name = models.CharField(name='name', max_length='100', default='unknown')
@@ -18,6 +17,7 @@ class Album(models.Model):
     date_added = models.DateTimeField(auto_now=True, editable=False)
     number_of_tracks = models.IntegerField(name='number_of_tracks', null=True, blank=True)
     number_of_discs = models.IntegerField(name='number_of_discs', null=True, blank=True)
+
 
 class Music(models.Model):
     title = models.CharField('title', max_length=100)
@@ -68,4 +68,5 @@ class Music(models.Model):
     def dict(self):
         return {"pk": self.pk, "title": self.title, "artist": self.artist.name, "album": self.album.name,
                 "album_artist": self.album.album_artist.name, "number": self.track_number, "disc_nb": self.disc_number,
-                "artwork": (self.artwork.url if self.artwork else 'static/default_artwork.png')}
+                "artwork": (self.artwork.url if self.artwork else 'static/default_artwork.png'),
+                "url": self.file_field.url}

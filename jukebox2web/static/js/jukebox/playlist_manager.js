@@ -236,13 +236,13 @@ jQuery(function($)
 
     $.contextMenu({
         selector: '.library_music',
-        callback: function(key, options) {
-            var m = "clicked: " + key + " on " + $(this).music('option', 'title');
-            window.console && console.log(m);
-            $('#edit_music_dialog').music_edit($(this).music('option')).dialog('open');
-        },
         items: {
-            "edit": {name: "Edit", icon: "edit"}
+            "edit": {name: "Edit", icon: "edit", callback: function() {
+                $('#edit_music_dialog').music_edit($(this).music('option')).dialog('open');
+            }},
+            "play": {name: "Play", icon: "play", callback: function() {
+                $('#play_music_dialog').dialog('open').find('source').attr('src', $(this).music('option', 'url'));
+            }}
         },
         events: {
             show: function(){
@@ -317,6 +317,22 @@ jQuery(function($)
         },
         width: 400
     }).css({overflow: 'visible'});
+
+    $('#play_music_dialog').dialog({
+        autoOpen: false,
+        show: {
+            effect: "blind",
+            duration: 300
+        },
+        hide: {
+            effect: "blind",
+            duration: 300
+        },
+        modal: true,
+        buttons: {},
+        width: 'auto',
+        height: 100
+    });
 
     $('#uploader').find('#id_file_field').fileupload({
         url: 'ajax/upload',
