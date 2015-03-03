@@ -235,7 +235,7 @@ jQuery(function($)
     });
 
     $.contextMenu({
-        selector: '.library_music',
+        selector: '.music:not(.music_empty)',
         items: {
             "edit": {name: "Edit", icon: "edit", callback: function() {
                 $('#edit_music_dialog').music_edit($(this).music('option')).dialog('open');

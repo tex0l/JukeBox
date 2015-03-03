@@ -632,7 +632,7 @@ $(function() {
             this.fields = $('<fieldset class="edit_music_fieldset">').appendTo(this.form);
 
             $('<p>').append($('<label for="title">').html('Title'))
-                .append($('<input type="text" name="title" id="title" value="' + this.options.title + '">')
+                .append($('<input type="text" name="title" id="title_music" value="' + this.options.title + '">')
                     .addClass("text ui-widget-content ui-corner-all"))
                 .appendTo(this.fields);
 
@@ -667,7 +667,7 @@ $(function() {
 
             $('<input class="submit_music_edit_btn" type="submit" tabindex="-1" style="position:absolute; top:-1000px">')
                 .click(function () {
-                    var title = encodeURIComponent($('input#title').val());
+                    var title = encodeURIComponent($('input#title_music').val());
                     var album = encodeURIComponent($('input#album').val());
                     var artist = encodeURIComponent($('input#artist').val());
                     var album_artist = encodeURIComponent($('input#album_artist').val());
