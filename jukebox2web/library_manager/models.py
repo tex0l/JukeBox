@@ -64,3 +64,8 @@ class Music(models.Model):
                 f.flush()
                 self.artwork.save("%s.jpg" % self.title, File(f), save=True)
         self.save()
+
+    def dict(self):
+        return {"pk": self.pk, "title": self.title, "artist": self.artist.name, "album": self.album.name,
+                "album_artist": self.album.album_artist.name, "number": self.track_number, "disc_nb": self.disc_number,
+                "artwork": (self.artwork.url if self.artwork else 'static/default_artwork.png')}

@@ -3,7 +3,6 @@ from django.views.generic import View
 import json
 from django.http import HttpResponse
 from urllib import unquote
-from django.http import HttpResponseRedirect
 
 from models import *
 from forms import MusicForm
@@ -24,10 +23,7 @@ def lib_dict():
             album_musics = []
             album_musics_request = Music.objects.filter(album=album)
             for music in album_musics_request:
-                album_musics.append({"pk": music.pk, "title": music.title, "artist": music.artist.name,
-                                     "album": music.album.name, "album_artist": album.album_artist.name,
-                                     "number": music.track_number, "disc_nb": music.disc_number,
-                                     "artwork": (music.artwork.url if music.artwork else 'static/default_artwork.png')})
+                album_musics.append(music.dict())
             if album_musics:
                 album_musics.sort(key=lambda m: (m['disc_nb'] if m['disc_nb'] else 0)*1000 +
                                                 (m['number'] if m['number'] else 0))

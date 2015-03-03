@@ -6,5 +6,6 @@ from django.conf.urls.static import static
 
 urlpatterns = patterns('',
     (r'^', include('library_manager.urls')),
+    (r'^', include('jukebox_manager.urls')),
     url(r'^', include('favicon.urls')),
 ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT, show_indexes=True)
