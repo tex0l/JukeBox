@@ -241,7 +241,14 @@ jQuery(function($)
                 $('#edit_music_dialog').music_edit($(this).music('option')).dialog('open');
             }},
             "play": {name: "Play", icon: "play", callback: function() {
-                $('#play_music_dialog').dialog('open').find('source').attr('src', $(this).music('option', 'url'));
+                var d = $('#play_music_dialog');
+                var a = d.find('audio');
+                a.attr('src', $(this).music('option', 'url'));
+                d.dialog('open');
+                setTimeout( function () {
+                    console.log("starting play !");
+                    $('#player')[0].play();
+                }, 500);
             }}
         },
         events: {
