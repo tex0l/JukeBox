@@ -14,10 +14,10 @@ class SlotPair(models.Model):
     def dict(self):
         if self.artwork:
             artwork = self.artwork.url
-        elif self.music1 and self.music1.artwork:
-            artwork = self.music1.artwork.url
-        elif self.music2 and self.music2.artwork:
-            artwork = self.music2.artwork.url
+        elif self.music1 and self.music1.album.artwork:
+            artwork = self.music1.album.artwork.url()
+        elif self.music2 and self.music2.album.artwork:
+            artwork = self.music2.album.artwork.url()
         else:
             artwork = 'static/default_artwork.png'
 
