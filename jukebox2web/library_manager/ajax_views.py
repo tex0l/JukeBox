@@ -5,7 +5,7 @@ from django.http import HttpResponse
 from urllib import unquote
 
 from models import *
-from forms import MusicForm
+from forms import *
 import threading
 
 
@@ -83,8 +83,9 @@ class AjaxUpload(View):
                 new_music = Music(file_field=request.FILES['file_field'])
                 new_music.save()
                 new_music.clean()
-
-            return HttpResponse(json.dumps(lib_dict()), content_type='application/json')
+                return HttpResponse(json.dumps(lib_dict()), content_type='application/json')
+            else:
+                return HttpResponse('error')
 
 
 class Artworks(View):
@@ -98,3 +99,22 @@ class Artworks(View):
         if r.get('type') == 'album':
             a = Album.objects.get(pk=r.get('pk'))
             return HttpResponse(json.dumps(a.get_artwork_dict()), content_type='application/json')
+
+
+class ArtworkUpload(View):
+
+    @staticmethod
+    def post(request):
+        with lock:
+            form = ArtistArtworkForm(request.POST, request.FILES)
+            print "Treating uploaded artwork"
+            if form.is_valid():
+                print "Form is valid !"
+                artist = Artist.objects.get(pk=int(request.POST.get('pk')))
+                f = request.FILES['artist_artwork_file_field']
+                print f.content_type
+                artwork = ArtistArtwork.add_new_artwork(f.read(), artist)
+                artwork.save()
+                print "Adding new uploaded Artwork to " + artist.name
+                return HttpResponse(json.dumps({'pk': artwork.pk, 'url': artwork.url(), 'selected': True}),
+                                    content_type='application/json')

@@ -263,10 +263,11 @@ jQuery(function($)
         selector: '.artist',
         items: {
             "edit_artwork": {name: "Edit Artwork", icon: "edit", callback: function() {
-                $('#artist_artwork_dialog').dialog('open');
                 $.getJSON('ajax/artwork', {'type': 'artist', 'pk': $(this).artist('option', 'pk')}, function(data){
                     console.log(data);
-                    $('#artist_artwork_dialog').artist_artwork_edit(data);
+                    var d = $('#artist_artwork_dialog');
+                    d.artist_artwork_edit(data);
+                    d.dialog('open');
                 });
             }}
         }
@@ -351,7 +352,7 @@ jQuery(function($)
         modal: true,
         buttons: {},
         width: 'auto',
-        height: 100
+        height: 'auto'
     });
 
     $('#artist_artwork_dialog').dialog({

@@ -50,7 +50,7 @@ class ArtistArtwork(Artwork):
     def add_new_artwork(cls, data, artist):
         print "Adding new artwork to " + artist.name
         o = cls.create(data, artist.name)
-        o.album = artist
+        o.artist = artist
         o.save()
         return o
 
@@ -68,7 +68,8 @@ class Artist(models.Model):
         d = []
         artist_artwork_request = ArtistArtwork.objects.filter(artist=self)
         for artist_artwork in artist_artwork_request:
-            d.append({'pk': artist_artwork.pk, 'url': artist_artwork.url()})
+            selected = (artist_artwork == self.artwork)
+            d.append({'pk': artist_artwork.pk, 'url': artist_artwork.url(), 'selected': selected})
 
         artist_albums = []
         artist_albums_request = Album.objects.filter(album_artist=self)
@@ -91,7 +92,8 @@ class Album(models.Model):
         album_artwork_request = AlbumArtwork.objects.filter(album=self)
         d = []
         for album_artwork in album_artwork_request:
-            d.append({'pk': album_artwork.pk, 'url': album_artwork.url()})
+            selected = (album_artwork == self.artwork)
+            d.append({'pk': album_artwork.pk, 'url': album_artwork.url(), 'selected': selected})
         return {'pk': self.pk, 'title': self.name, 'album_artist': self.album_artist.pk, 'artworks': d}
 
 

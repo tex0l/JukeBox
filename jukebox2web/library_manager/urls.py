@@ -14,5 +14,6 @@ urlpatterns = patterns('',
     url(r'^playlist_manager', PlaylistManager.as_view(), name='PlaylistManager'),
     url(r'^ajax/library', Library.as_view(), name='library'),
     url(r'^ajax/upload', AjaxUpload.as_view(), name='library'),
-    url(r'^ajax/artwork', Artworks.as_view(), name='artwork')
+    url(r'^ajax/artwork_upload', ArtworkUpload.as_view(), name='ArtworkUpload'),
+    url(r'^ajax/artwork', Artworks.as_view(), name='artwork'),
 )

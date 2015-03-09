@@ -741,18 +741,24 @@ $(function() {
 
         // called when created, and later when changing options
         _refresh: function() {
-            var s = this.element.find('select').html('');
+            this.element.find('.artist_artwork_chooser').remove();
+
+            var f = $('<form action="" class="artist_artwork_chooser">').appendTo(this.element);
+            var s = $('<select class="image-picker">').appendTo(f);
 
             var artist_artworks = $('<optgroup label="Artist Artwork">').appendTo(s);
             for (var i in this.options.artworks){
                 var artwork = this.options.artworks[i];
-                $('<option data-img-src="' + artwork.url +
+                var a = $('<option data-img-src="' + artwork.url +
                 '" value="artist_artwork_' + artwork.pk +
-                '" data-img-label="' + this.options.name +'">')
+                '" data-img-label="' + this.options.name + '">')
                     .appendTo(artist_artworks);
+                if (artwork.selected){
+                    a.attr('selected', 'selected')
+                }
             }
             $('<option data-img-src="/static/plus.png" value="artist_artwork_add" data-img-label="Add Artwork">')
-                    .appendTo(artist_artworks);
+                .appendTo(artist_artworks);
 
             var artist_albums_artwork = $('<optgroup label="Artist Albums">').appendTo(s);
             for (var i in this.options.albums){
@@ -765,12 +771,29 @@ $(function() {
                 }
             }
 
+            $('<input type="submit" value="Save" style="visibility: hidden">').appendTo(f);
+
             s.imagepicker({
                 hide_select : true,
                 show_label  : true
             });
 
             this.element.find('img, .thumbnail').width(200);
+
+            var temp = this;
+            this.element.find('#artist_artwork_file_field').fileupload({
+                url: 'ajax/artwork_upload',
+                dropZone: this.element,
+                //data: {'pk': this.options.pk},
+                formData: [{name: 'pk', value: this.options.pk}],
+                dataType: 'json',
+                done: function (e, data) {
+                    temp.options.artworks.push(data.result);
+                    temp._refresh();
+                }
+            }).prop('disabled', !$.support.fileInput)
+                .parent().addClass($.support.fileInput ? undefined : 'disabled');
+
         },
 
         // events bound via _on are removed automatically

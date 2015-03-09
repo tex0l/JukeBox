@@ -67,11 +67,11 @@
         </div>
 
         <div id="artist_artwork_dialog" title="Edit Artist Artwork">
-            <select class="image-picker">
-                <option data-img-src="/media/Artwork/Do_Or_Die.jpg" value="1">  Page 1  </option>
-                <option data-img-src="/media/Artwork/Blackout.jpg" value="2">  Page 2  </option>
-                <option data-img-src="/media/Artwork/The_Very_Best_Of_Bob_Marley__The_Wailers.jpg" value="3">  Page 3  </option>
-            </select>
+            <form action="" id="artist_artwork_uploader" enctype="multipart/form-data" style="visibility: hidden">
+                {% csrf_token %}
+                <input id="artist_artwork_file_field" name="artist_artwork_file_field" type="file">
+                <input type="submit" value="Upload">
+            </form>
         </div>
 
 
