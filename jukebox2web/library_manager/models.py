@@ -120,12 +120,17 @@ class Music(models.Model):
         album, album_created = Album.objects.get_or_create(name=tags.find('album', 'unknown'),
                                                            album_artist=album_artist)
 
+        artwork = tags.find('pictures')
+
         if album_created:
             album.number_of_tracks = tags.find('tracktotal')
             album.number_of_discs = tags.find('disctotal')
-            artwork = tags.find('pictures')
             if artwork:
                 album.artwork = AlbumArtwork.add(artwork, album)
+            album.save()
+
+        if (not album.artwork) and artwork:
+            album.artwork = AlbumArtwork.add(artwork, album)
             album.save()
 
         if not artist.artwork:

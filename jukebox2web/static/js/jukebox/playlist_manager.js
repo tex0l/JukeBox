@@ -259,6 +259,19 @@ jQuery(function($)
         }
     });
 
+    $.contextMenu({
+        selector: '.artist',
+        items: {
+            "edit_artwork": {name: "Edit Artwork", icon: "edit", callback: function() {
+                $('#artist_artwork_dialog').dialog('open');
+                $.getJSON('ajax/artwork', {'type': 'artist', 'pk': $(this).artist('option', 'pk')}, function(data){
+                    console.log(data);
+                    $('#artist_artwork_dialog').artist_artwork_edit(data);
+                });
+            }}
+        }
+    });
+
     var add_music_set = function() {
         var e = '#add_music_set_dialog'
         $.ajax({
@@ -339,6 +352,28 @@ jQuery(function($)
         buttons: {},
         width: 'auto',
         height: 100
+    });
+
+    $('#artist_artwork_dialog').dialog({
+        autoOpen: false,
+        show: {
+            effect: "blind",
+            duration: 300
+        },
+        hide: {
+            effect: "blind",
+            duration: 300
+        },
+        modal: true,
+        buttons: {
+            "Save Changes": function() {
+            },
+            Cancel: function() {
+                $(this).dialog('close');
+            }
+        },
+        width: '80%',
+        height: 500
     });
 
     $('#uploader').find('#id_file_field').fileupload({

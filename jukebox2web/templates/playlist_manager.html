@@ -8,6 +8,7 @@
     <link rel="stylesheet" type="text/css" href="{% static 'css/jquery-ui.theme.min.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'font-awesome/css/font-awesome.min.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'css/jquery.contextMenu.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/image-picker.css' %}">
 
     <link rel="stylesheet" type="text/css" href="{% static "css/jukebox/playlist_manager.css" %}">
 
@@ -24,6 +25,7 @@
     <script type="text/javascript" src='{% static "js/jquery.scrollTo.min.js" %}'></script>
     <script type="text/javascript" src='{% static "js/jquery.iframe-transport.js" %}'></script>
     <script type="text/javascript" src='{% static "js/jquery.fileupload.js" %}'></script>
+    <script type="text/javascript" src='{% static "js/image-picker.js" %}'></script>
 
     <script type="text/javascript" src='{% static "js/jukebox/playlist_manager_widgets.js" %}'></script>
     <script type="text/javascript" src='{% static "js/jukebox/playlist_manager.js" %}'></script>
@@ -62,6 +64,14 @@
                 Votre navigateur ne supporte pas lélément <code>audio</code> element.
                 <source src="">
             </audio>
+        </div>
+
+        <div id="artist_artwork_dialog" title="Edit Artist Artwork">
+            <select class="image-picker">
+                <option data-img-src="/media/Artwork/Do_Or_Die.jpg" value="1">  Page 1  </option>
+                <option data-img-src="/media/Artwork/Blackout.jpg" value="2">  Page 2  </option>
+                <option data-img-src="/media/Artwork/The_Very_Best_Of_Bob_Marley__The_Wailers.jpg" value="3">  Page 3  </option>
+            </select>
         </div>
 
 
