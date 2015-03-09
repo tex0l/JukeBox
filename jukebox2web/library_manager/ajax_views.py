@@ -28,12 +28,12 @@ def lib_dict():
                 album_musics.sort(key=lambda m: (m['disc_nb'] if m['disc_nb'] else 0)*1000 +
                                                 (m['number'] if m['number'] else 0))
                 artist_albums.append({"pk": album.pk, "title": album.name, "artist": album.album_artist.name,
-                                      "musics": album_musics, "artwork": album_musics[0]['artwork'],
-                                      "year": album.year})
+                                      "artwork": (album.artwork.url() if album.artwork else 'static/default_artwork.png'),
+                                      "musics": album_musics, "year": album.year})
         if artist_albums:
             artist_albums.sort(key=lambda a: str(a["year"]) + a["title"])
             artists.append({"pk": artist.pk, "name": artist.name, "albums": artist_albums,
-                            "artwork": artist_albums[0]['artwork']})
+                            "artwork": (artist.artwork.url() if artist.artwork else 'static/default_artwork.png')})
 
     artists.sort(key=lambda a: a["name"])
     return {'artists': artists, 'autocomplete_artists': autocomplete_artists,
@@ -86,3 +86,15 @@ class AjaxUpload(View):
 
             return HttpResponse(json.dumps(lib_dict()), content_type='application/json')
 
+
+class Artworks(View):
+
+    @staticmethod
+    def get(request):
+        r = request.GET
+        if r.get('type') == 'artist':
+            a = Artist.objects.get(pk=r.get('pk'))
+            return HttpResponse(json.dumps(a.get_artwork_dict()), content_type='application/json')
+        if r.get('type') == 'album':
+            a = Album.objects.get(pk=r.get('pk'))
+            return HttpResponse(json.dumps(a.get_artwork_dict()), content_type='application/json')
