@@ -100,6 +100,10 @@ class Artworks(View):
             a = Album.objects.get(pk=r.get('pk'))
             return HttpResponse(json.dumps(a.get_artwork_dict()), content_type='application/json')
 
+    @staticmethod
+    def post(self):
+        pass
+
 
 class ArtworkUpload(View):
 

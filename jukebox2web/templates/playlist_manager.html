@@ -129,7 +129,7 @@
 
 </div>
 
-<form action="" id="uploader" enctype="multipart/form-data">
+<form action="" id="uploader" enctype="multipart/form-data" style="visibility: hidden">
     {% csrf_token %}
     <input id="id_file_field" name="file_field" type="file">
     <p><input type="submit" value="Upload" /></p>

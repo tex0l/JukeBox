@@ -775,16 +775,21 @@ $(function() {
 
             s.imagepicker({
                 hide_select : true,
-                show_label  : true
+                show_label  : true,
+                clicked: function(){
+                    if (s.val()=='artist_artwork_add'){
+                        $('#artist_artwork_file_field').click();
+                    }
+                }
             });
 
-            this.element.find('img, .thumbnail').width(200);
+            this.element.find('.thumbnail').height(245).width(200);
+            this.element.find('img').height(200).width(200);
 
             var temp = this;
             this.element.find('#artist_artwork_file_field').fileupload({
                 url: 'ajax/artwork_upload',
                 dropZone: this.element,
-                //data: {'pk': this.options.pk},
                 formData: [{name: 'pk', value: this.options.pk}],
                 dataType: 'json',
                 done: function (e, data) {
