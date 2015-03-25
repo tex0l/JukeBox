@@ -744,13 +744,14 @@ $(function() {
             this.element.find('.artist_artwork_chooser').remove();
 
             var f = $('<form action="" class="artist_artwork_chooser">').appendTo(this.element);
-            var s = $('<select class="image-picker">').appendTo(f);
+            var s = $('<select class="image-picker artwork-select">').appendTo(f);
+            var pk = this.options.pk;
 
             var artist_artworks = $('<optgroup label="Artist Artwork">').appendTo(s);
             for (var i in this.options.artworks){
                 var artwork = this.options.artworks[i];
                 var a = $('<option data-img-src="' + artwork.url +
-                '" value="artist_artwork_' + artwork.pk +
+                '" value="' + artwork.pk +
                 '" data-img-label="' + this.options.name + '">')
                     .appendTo(artist_artworks);
                 if (artwork.selected){
@@ -765,13 +766,33 @@ $(function() {
                 var album = this.options.albums[i];
                 for (var j in album.artworks) {
                     $('<option data-img-src="' + album.artworks[j].url +
-                    '" value="artist_artwork_' + album.artworks[j].pk +
+                    '" value="' + album.artworks[j].pk +
                     '" data-img-label="' + album.title +'">')
                         .appendTo(artist_albums_artwork);
                 }
             }
 
-            $('<input type="submit" value="Save" style="visibility: hidden">').appendTo(f);
+            $('<input class="submit_artist_artwork_btn" type="submit" tabindex="-1" style="position:absolute; top:-1000px">')
+                .click(function () {
+                    var artwork = encodeURIComponent($('.artwork-select').val());
+                    var data = {'type': 'artist', 'pk': pk, 'artwork': artwork};
+                    $.ajax({
+                        type: "POST",
+                        url: "ajax/artwork",
+                        data: data,
+                        dataType: 'json',
+                        success: function(response) {
+                            var lib = $('.library_layout');
+                            var scroll = $('.library_col').scrollTop();
+                            lib.library(response);
+                            $('.library_col').scrollTop( scroll );
+                            $('#artist_artwork_dialog').dialog('close');
+                        }
+                    });
+                    return false;
+                })
+                .appendTo(f);
+
 
             s.imagepicker({
                 hide_select : true,

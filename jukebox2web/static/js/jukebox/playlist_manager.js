@@ -368,6 +368,8 @@ jQuery(function($)
         modal: true,
         buttons: {
             "Save Changes": function() {
+                console.log('Saving chosen artwork');
+                $(this).find('.submit_artist_artwork_btn').click();
             },
             Cancel: function() {
                 $(this).dialog('close');

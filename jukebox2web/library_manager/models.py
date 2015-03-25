@@ -140,7 +140,7 @@ class Music(models.Model):
                 artist.artwork = ArtistArtwork.add_existing_artwork(album.artwork.image, artist)
             artist.save()
 
-        if not album_artist.artwork:
+        if (album_artist.pk != artist.pk) and (not album_artist.artwork):
             if album.artwork:
                 album_artist.artwork = ArtistArtwork.add_existing_artwork(album.artwork.image, artist)
             album_artist.save()

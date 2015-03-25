@@ -101,8 +101,24 @@ class Artworks(View):
             return HttpResponse(json.dumps(a.get_artwork_dict()), content_type='application/json')
 
     @staticmethod
-    def post(self):
-        pass
+    def post(request):
+        print "Updating an artwork"
+        r = request.POST
+        if r.get('type') == 'artist':
+            artist = Artist.objects.get(pk=r.get('pk'))
+            artwork = Artwork.objects.get(pk=r.get('artwork'))
+            print "Updating artwork for " + artist.name
+            if hasattr(artwork, 'artist') and artwork.artist.pk == artist.pk:
+                print "choosing existing artist artwork"
+                artist.artwork = artwork
+            else:
+                new_art = ArtistArtwork.add_existing_artwork(artwork.image, artist)
+                print "creating new artist artwork from existing artwork"
+                artist.artwork = new_art
+            artist.save()
+            return HttpResponse(json.dumps(lib_dict()), content_type='application/json')
+        if r.get('type') == 'album':
+            pass
 
 
 class ArtworkUpload(View):
