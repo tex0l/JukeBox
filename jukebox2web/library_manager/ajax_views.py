@@ -106,12 +106,14 @@ class Artworks(View):
         r = request.POST
         if r.get('type') == 'artist':
             artist = Artist.objects.get(pk=r.get('pk'))
-            artwork = Artwork.objects.get(pk=r.get('artwork'))
+            artwork = ArtistArtwork.objects.filter(artist=artist, pk=r.get('artwork'))
             print "Updating artwork for " + artist.name
-            if hasattr(artwork, 'artist') and artwork.artist.pk == artist.pk:
+
+            if artwork.exists():
                 print "choosing existing artist artwork"
-                artist.artwork = artwork
+                artist.artwork = artwork[0]
             else:
+                artwork = Artwork.objects.get(pk=r.get('artwork'))
                 new_art = ArtistArtwork.add_existing_artwork(artwork.image, artist)
                 print "creating new artist artwork from existing artwork"
                 artist.artwork = new_art
