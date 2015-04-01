@@ -8,6 +8,7 @@ import logging
 from unidecode import unidecode
 import music_player
 
+
 class LockableServer(Server):
     """
     A subclass of lcdproc Server to make it thread-safe
