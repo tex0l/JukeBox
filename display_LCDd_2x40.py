@@ -7,6 +7,8 @@ import time
 import logging
 from unidecode import unidecode
 import music_player
+import traceback
+
 
 class LockableServer(Server):
     """
@@ -48,15 +50,19 @@ class UpdateThread(Thread):
     def run(self):
         logging.debug("Starting updating thread ")
         while self.alive.isSet():
-            time.sleep(0.25)
-            self.display.set_queue(self.player.queue_count())
-            self.display.waiting_entry()
-            if self.player.is_playing():
-                if self.player.index() != self.playing:
-                    self.display.playing_song(self.player.index(), self.player.title(), self.player.artist())
-            else:
-                self.display.waiting()
-                self.playing = ""
+            try:
+                time.sleep(0.25)
+                self.display.set_queue(self.player.queue_count())
+                self.display.waiting_entry()
+                if self.player.is_playing():
+                    if self.player.index() != self.playing:
+                        self.display.playing_song(self.player.index(), self.player.title(), self.player.artist())
+                else:
+                    self.display.waiting()
+                    self.playing = ""
+            except Exception, err:
+                print err
+                print traceback.format_exc()
 
     def join(self, timeout=None):
         self.alive.clear()
