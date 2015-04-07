@@ -843,6 +843,128 @@ $(function() {
         }
     });
 
+    $.widget( "juke.album_artwork_edit", {
+        // default options
+        options: {
+            pk: 0,
+            name: '',
+            artworks: [],
+            albums: [],
+
+            // callbacks
+            change: null,
+            random: null
+        },
+
+        // the constructor
+        _create: function() {
+            this._refresh();
+        },
+
+        // called when created, and later when changing options
+        _refresh: function() {
+            this.element.find('.artist_artwork_chooser').remove();
+
+            var f = $('<form action="" class="artist_artwork_chooser">').appendTo(this.element);
+            var s = $('<select class="image-picker artwork-select">').appendTo(f);
+            var pk = this.options.pk;
+
+            var artist_artworks = $('<optgroup label="Artist Artwork">').appendTo(s);
+            for (var i in this.options.artworks){
+                var artwork = this.options.artworks[i];
+                var a = $('<option data-img-src="' + artwork.url +
+                '" value="' + artwork.pk +
+                '" data-img-label="' + this.options.name + '">')
+                    .appendTo(artist_artworks);
+                if (artwork.selected){
+                    a.attr('selected', 'selected')
+                }
+            }
+            $('<option data-img-src="/static/plus.png" value="artist_artwork_add" data-img-label="Add Artwork">')
+                .appendTo(artist_artworks);
+
+            var artist_albums_artwork = $('<optgroup label="Artist Albums">').appendTo(s);
+            for (var i in this.options.albums){
+                var album = this.options.albums[i];
+                for (var j in album.artworks) {
+                    $('<option data-img-src="' + album.artworks[j].url +
+                    '" value="' + album.artworks[j].pk +
+                    '" data-img-label="' + album.title +'">')
+                        .appendTo(artist_albums_artwork);
+                }
+            }
+
+            $('<input class="submit_artist_artwork_btn" type="submit" tabindex="-1" style="position:absolute; top:-1000px">')
+                .click(function () {
+                    var artwork = encodeURIComponent($('.artwork-select').val());
+                    var data = {'type': 'artist', 'pk': pk, 'artwork': artwork};
+                    $.ajax({
+                        type: "POST",
+                        url: "ajax/artwork",
+                        data: data,
+                        dataType: 'json',
+                        success: function(response) {
+                            var lib = $('.library_layout');
+                            var scroll = $('.library_col').scrollTop();
+                            lib.library(response);
+                            $('.library_col').scrollTop( scroll );
+                            $('#artist_artwork_dialog').dialog('close');
+                        }
+                    });
+                    return false;
+                })
+                .appendTo(f);
+
+
+            s.imagepicker({
+                hide_select : true,
+                show_label  : true,
+                clicked: function(){
+                    if (s.val()=='artist_artwork_add'){
+                        $('#artist_artwork_file_field').click();
+                    }
+                }
+            });
+
+            this.element.find('.thumbnail').height(245).width(200);
+            this.element.find('img').height(200).width(200);
+
+            var temp = this;
+            this.element.find('#artist_artwork_file_field').fileupload({
+                url: 'ajax/artwork_upload',
+                dropZone: this.element,
+                formData: [{name: 'pk', value: this.options.pk}],
+                dataType: 'json',
+                done: function (e, data) {
+                    temp.options.artworks.push(data.result);
+                    temp._refresh();
+                }
+            }).prop('disabled', !$.support.fileInput)
+                .parent().addClass($.support.fileInput ? undefined : 'disabled');
+
+        },
+
+        // events bound via _on are removed automatically
+        // revert other modifications here
+        _destroy: function() {
+            // remove generated elements
+        },
+
+        // _setOptions is called with a hash of all options that are changing
+        // always refresh when changing options
+        _setOptions: function() {
+            // _super and _superApply handle keeping the right this-context
+            this._superApply( arguments );
+            this._refresh();
+        },
+
+        // _setOption is called for each individual option that is changing
+        _setOption: function( key, value ) {
+            // prevent invalid color values
+            this._super( key, value );
+        }
+    });
+
     $.widget( "juke.music_sets_list", {
         // default options
         options: {

@@ -262,11 +262,25 @@ jQuery(function($)
     $.contextMenu({
         selector: '.artist',
         items: {
-            "edit_artwork": {name: "Edit Artwork", icon: "edit", callback: function() {
+            "edit_artwork": {name: "Edit Artist Artwork", icon: "edit", callback: function() {
                 $.getJSON('ajax/artwork', {'type': 'artist', 'pk': $(this).artist('option', 'pk')}, function(data){
                     console.log(data);
                     var d = $('#artist_artwork_dialog');
                     d.artist_artwork_edit(data);
+                    d.dialog('open');
+                });
+            }}
+        }
+    });
+
+    $.contextMenu({
+        selector: '.album_viewer',
+        items: {
+            "edit_artwork": {name: "Edit Album Artwork", icon: "edit", callback: function() {
+                $.getJSON('ajax/artwork', {'type': 'album', 'pk': $(this).album('option', 'pk')}, function(data){
+                    console.log(data);
+                    var d = $('#album_artwork_dialog');
+                    d.album_artwork_edit(data);
                     d.dialog('open');
                 });
             }}
@@ -370,6 +384,30 @@ jQuery(function($)
             "Save Changes": function() {
                 console.log('Saving chosen artwork');
                 $(this).find('.submit_artist_artwork_btn').click();
+            },
+            Cancel: function() {
+                $(this).dialog('close');
+            }
+        },
+        width: '80%',
+        height: 500
+    });
+
+    $('#album_artwork_dialog').dialog({
+        autoOpen: false,
+        show: {
+            effect: "blind",
+            duration: 300
+        },
+        hide: {
+            effect: "blind",
+            duration: 300
+        },
+        modal: true,
+        buttons: {
+            "Save Changes": function() {
+                console.log('Saving chosen artwork');
+                $(this).find('.submit_album_artwork_btn').click();
             },
             Cancel: function() {
                 $(this).dialog('close');
