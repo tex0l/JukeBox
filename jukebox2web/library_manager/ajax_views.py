@@ -120,7 +120,15 @@ class Artworks(View):
             artist.save()
             return HttpResponse(json.dumps(lib_dict()), content_type='application/json')
         if r.get('type') == 'album':
-            pass
+            album = Album.objects.get(pk=r.get('pk'))
+            artwork = AlbumArtwork.objects.filter(album=album, pk=r.get('artwork'))
+            print "Updating artwork for " + album.name
+
+            if artwork.exists():
+                print "choosing existing album artwork"
+                album.artwork = artwork[0]
+                album.save()
+                return HttpResponse(json.dumps(lib_dict()), content_type='application/json')
 
 
 class ArtworkUpload(View):
@@ -128,15 +136,23 @@ class ArtworkUpload(View):
     @staticmethod
     def post(request):
         with lock:
-            form = ArtistArtworkForm(request.POST, request.FILES)
+            form = ArtworkForm(request.POST, request.FILES)
+            t = request.POST.get('type')
             print "Treating uploaded artwork"
-            if form.is_valid():
+            if form.is_valid() and (t == "artist" or t == "album"):
                 print "Form is valid !"
-                artist = Artist.objects.get(pk=int(request.POST.get('pk')))
-                f = request.FILES['artist_artwork_file_field']
-                print f.content_type
-                artwork = ArtistArtwork.add_new_artwork(f.read(), artist)
-                artwork.save()
-                print "Adding new uploaded Artwork to " + artist.name
-                return HttpResponse(json.dumps({'pk': artwork.pk, 'url': artwork.url(), 'selected': True}),
+                f = request.FILES['artwork_file_field']
+                if t == "artist":
+                    artist = Artist.objects.get(pk=int(request.POST.get('pk')))
+                    artwork = ArtistArtwork.add_new_artwork(f.read(), artist)
+                    artwork.save()
+                    print "Adding new uploaded Artwork to " + artist.name
+                    return HttpResponse(json.dumps({'pk': artwork.pk, 'url': artwork.url(), 'selected': True}),
+                                    content_type='application/json')
+                if t == "album":
+                    album = Album.objects.get(pk=int(request.POST.get('pk')))
+                    artwork = AlbumArtwork.add(f.read(), album)
+                    artwork.save()
+                    print "Adding new uploaded Artwork to " + album.name
+                    return HttpResponse(json.dumps({'pk': artwork.pk, 'url': artwork.url(), 'selected': True}),
                                     content_type='application/json')

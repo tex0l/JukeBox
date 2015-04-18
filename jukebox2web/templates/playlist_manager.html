@@ -69,7 +69,7 @@
         <div id="artist_artwork_dialog" title="Edit Artist Artwork">
             <form action="" id="artist_artwork_uploader" enctype="multipart/form-data" style="visibility: hidden">
                 {% csrf_token %}
-                <input id="artist_artwork_file_field" name="artist_artwork_file_field" type="file">
+                <input id="artist_artwork_file_field" name="artwork_file_field" type="file">
                 <input type="submit" value="Upload">
             </form>
         </div>
@@ -77,7 +77,7 @@
         <div id="album_artwork_dialog" title="Edit Album Artwork">
             <form action="" id="album_artwork_uploader" enctype="multipart/form-data" style="visibility: hidden">
                 {% csrf_token %}
-                <input id="album_artwork_file_field" name="album_artwork_file_field" type="file">
+                <input id="album_artwork_file_field" name="artwork_file_field" type="file">
                 <input type="submit" value="Upload">
             </form>
         </div>

@@ -4,6 +4,7 @@ from library_manager.models import *
 
 # Create your models here.
 
+
 class SlotPair(models.Model):
     slot1_nb = models.IntegerField(name='slot1_nb', help_text='is the number of the final index. Ex: id 1 for index A1 ')
     slot2_nb = models.IntegerField(name='slot2_nb', help_text='is the number of the final index. Ex: id 2 for index A2 ')

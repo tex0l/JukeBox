@@ -825,7 +825,7 @@ $(function() {
             this.element.find('#artist_artwork_file_field').fileupload({
                 url: 'ajax/artwork_upload',
                 dropZone: this.element,
-                formData: [{name: 'pk', value: this.options.pk}],
+                formData: [{name: 'pk', value: this.options.pk}, {name: 'type', value: 'artist'}],
                 dataType: 'json',
                 done: function (e, data) {
                     temp.options.artworks.push(data.result);
@@ -877,41 +877,31 @@ $(function() {
 
         // called when created, and later when changing options
         _refresh: function() {
-            this.element.find('.artist_artwork_chooser').remove();
+            this.element.find('.album_artwork_chooser').remove();
 
-            var f = $('<form action="" class="artist_artwork_chooser">').appendTo(this.element);
+            var f = $('<form action="" class="album_artwork_chooser">').appendTo(this.element);
             var s = $('<select class="image-picker artwork-select">').appendTo(f);
             var pk = this.options.pk;
 
-            var artist_artworks = $('<optgroup label="Artist Artwork">').appendTo(s);
+            var album_artworks = $('<optgroup label="Album Artwork">').appendTo(s);
             for (var i in this.options.artworks){
                 var artwork = this.options.artworks[i];
                 var a = $('<option data-img-src="' + artwork.url +
                 '" value="' + artwork.pk +
                 '" data-img-label="' + this.options.name + '">')
-                    .appendTo(artist_artworks);
+                    .appendTo(album_artworks);
                 if (artwork.selected){
                     a.attr('selected', 'selected')
                 }
             }
-            $('<option data-img-src="/static/plus.png" value="artist_artwork_add" data-img-label="Add Artwork">')
-                .appendTo(artist_artworks);
+            $('<option data-img-src="/static/plus.png" value="album_artwork_add" data-img-label="Add Artwork">')
+                .appendTo(album_artworks);
 
-            var artist_albums_artwork = $('<optgroup label="Artist Albums">').appendTo(s);
-            for (var i in this.options.albums){
-                var album = this.options.albums[i];
-                for (var j in album.artworks) {
-                    $('<option data-img-src="' + album.artworks[j].url +
-                    '" value="' + album.artworks[j].pk +
-                    '" data-img-label="' + album.title +'">')
-                        .appendTo(artist_albums_artwork);
-                }
-            }
 
-            $('<input class="submit_artist_artwork_btn" type="submit" tabindex="-1" style="position:absolute; top:-1000px">')
+            $('<input class="submit_album_artwork_btn" type="submit" tabindex="-1" style="position:absolute; top:-1000px">')
                 .click(function () {
                     var artwork = encodeURIComponent($('.artwork-select').val());
-                    var data = {'type': 'artist', 'pk': pk, 'artwork': artwork};
+                    var data = {'type': 'album', 'pk': pk, 'artwork': artwork};
                     $.ajax({
                         type: "POST",
                         url: "ajax/artwork",
@@ -922,7 +912,7 @@ $(function() {
                             var scroll = $('.library_col').scrollTop();
                             lib.library(response);
                             $('.library_col').scrollTop( scroll );
-                            $('#artist_artwork_dialog').dialog('close');
+                            $('#album_artwork_dialog').dialog('close');
                         }
                     });
                     return false;
@@ -934,8 +924,8 @@ $(function() {
                 hide_select : true,
                 show_label  : true,
                 clicked: function(){
-                    if (s.val()=='artist_artwork_add'){
-                        $('#artist_artwork_file_field').click();
+                    if (s.val()=='album_artwork_add'){
+                        $('#album_artwork_file_field').click();
                     }
                 }
             });
@@ -944,10 +934,10 @@ $(function() {
             this.element.find('img').height(200).width(200);
 
             var temp = this;
-            this.element.find('#artist_artwork_file_field').fileupload({
+            this.element.find('#album_artwork_file_field').fileupload({
                 url: 'ajax/artwork_upload',
                 dropZone: this.element,
-                formData: [{name: 'pk', value: this.options.pk}],
+                formData: [{name: 'pk', value: this.options.pk}, {name: 'type', value: 'album'}],
                 dataType: 'json',
                 done: function (e, data) {
                     temp.options.artworks.push(data.result);

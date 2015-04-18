@@ -11,5 +11,5 @@ class MusicForm(forms.Form):
     #     fields = ['file_field']
 
 
-class ArtistArtworkForm(forms.Form):
-    artist_artwork_file_field = forms.fields.ImageField()
+class ArtworkForm(forms.Form):
+    artwork_file_field = forms.fields.ImageField()
