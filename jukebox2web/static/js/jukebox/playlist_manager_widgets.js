@@ -11,8 +11,9 @@ $(function() {
             album_artist: '',
             album: '',
             artwork: 'http://www.vgmpf.com/Wiki/images/3/37/Tetris_-_NES_-_Album_Art.jpg',
+            artwork_pk: 0,
             length: '0:00',
-            slot: 'A00',
+            slot: '00',
             modified: false,
 
             // callbacks
@@ -233,6 +234,7 @@ $(function() {
             music1: {},
             music2: {},
             artwork: 'http://www.vgmpf.com/Wiki/images/3/37/Tetris_-_NES_-_Album_Art.jpg',
+            artwork_pk: 0,
 
             // callbacks
             change: null,
@@ -254,7 +256,12 @@ $(function() {
                     drop: function( event, ui ) {
                         var m = ui.draggable.music('option');
                         m.modified = true;
-                        $(this).parent().music_slot_pair('option', 'music1', m);
+                        var origin = slot_pair.music_slot_pair('option', 'artwork_pk');
+                        if (origin == 0 || origin == slot_pair.music_slot_pair('option', 'music1')['artwork_pk']){
+                            // if there is no current artwork, or it is from the song being replaced
+                            slot_pair.music_slot_pair('option', {"artwork_pk": m['artwork_pk'], 'artwork': m['artwork'] });
+                        }
+                        slot_pair.music_slot_pair('option', 'music1', m);
                     },
                     hoverClass: "music_highlight"
                 });
@@ -274,7 +281,12 @@ $(function() {
                     drop: function( event, ui ) {
                         var m = ui.draggable.music('option');
                         m.modified = true;
-                        $(this).parent().music_slot_pair('option', 'music2', m);
+                        var origin = slot_pair.music_slot_pair('option', 'artwork_pk');
+                        if (origin == 0 || origin == slot_pair.music_slot_pair('option', 'music2')['artwork_pk']){
+                            // if there is no current artwork, or it is from the song being replaced
+                            slot_pair.music_slot_pair('option', {"artwork_pk": m['artwork_pk'], 'artwork': m['artwork'] });
+                        }
+                        slot_pair.music_slot_pair('option', 'music2', m);
                     },
                     hoverClass: "music_highlight"
                 });
@@ -287,6 +299,7 @@ $(function() {
             this.options.music2.slot = this.options.slot2_nb;
             this.music_slot1.music(this.options.music1);
             this.music_slot2.music(this.options.music2);
+            this.slot_artwork.find('img').attr("src", this.options.artwork);
         },
 
         // events bound via _on are removed automatically
@@ -357,8 +370,9 @@ $(function() {
         get_dict: function(){
             var r ={'pk': this.options.pk, 'name': this.options.name};
             this.element.find('.slot_pair').each(function(){
-                r['s'+ $(this).music_slot_pair('option','slot1_nb')] = $(this).music_slot_pair('option','music1').pk;
-                r['s'+ $(this).music_slot_pair('option','slot2_nb')] = $(this).music_slot_pair('option','music2').pk;
+                r['s' + $(this).music_slot_pair('option','slot1_nb')] = $(this).music_slot_pair('option','music1').pk;
+                r['s' + $(this).music_slot_pair('option','slot2_nb')] = $(this).music_slot_pair('option','music2').pk;
+                r['a' + $(this).music_slot_pair('option','slot2_nb')/2] = $(this).music_slot_pair('option', 'artwork_pk');
             });
             console.log(r);
             return r;

@@ -10,6 +10,7 @@ class SlotPair(models.Model):
     music1 = models.ForeignKey('library_manager.Music', null=True, blank=True, related_name='+')
     music2 = models.ForeignKey('library_manager.Music', null=True, blank=True, related_name='+')
     artwork = models.ImageField(upload_to='Artwork')
+    artwork_pk = models.IntegerField(name='artwork_pk', default=0)
 
     def dict(self):
         if self.artwork:

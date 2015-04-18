@@ -156,4 +156,5 @@ class Music(models.Model):
         return {"pk": self.pk, "title": self.title, "artist": self.artist.name, "album": self.album.name,
                 "album_artist": self.album.album_artist.name, "number": self.track_number, "disc_nb": self.disc_number,
                 "artwork": (self.album.artwork.url() if self.album.artwork else 'static/default_artwork.png'),
+                "artwork_pk": (self.album.artwork.pk if self.album.artwork else 0),
                 "url": self.file_field.url}
