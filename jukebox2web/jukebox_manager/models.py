@@ -35,12 +35,13 @@ class SlotPair(models.Model):
                 'title': self.music1.title,
                 'path': self.music1.file_field.path
             },
-            self.slot2_nb:{
+            self.slot2_nb: {
                 'artist': self.music2.artist,
                 'title': self.music2.artist,
                 'path': self.music2.file_field.path
             }
         }
+
 
 class MusicSet(models.Model):
     selection = models.CharField(name='selection', max_length=1, help_text="if not blank, then it's the current musicset for letter id here")

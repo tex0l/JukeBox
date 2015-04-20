@@ -84,7 +84,7 @@ jQuery(function($)
      {slot1_nb: 'A19', slot2_nb: 'A20'}]
      }).appendTo('.slots_list');*/
 
-    $.getJSON('ajax/sets', function(data){
+            $.getJSON('ajax/sets', function(data){
         console.log(data)
         $('.slots_list').music_sets_list(data);
     });
@@ -348,9 +348,50 @@ jQuery(function($)
         },
         modal: true,
         buttons: {
-            "Print Labels": null,
-            "Push to JukeBox": null,
-            "Push to JukeBox & Print Labels": null,
+            "Print Labels": function(){
+
+            },
+            "Push to JukeBox": function(){
+                var t = $(this);
+                var a = t.find("#select_A").val();
+                var b = t.find("#select_B").val();
+                var c = t.find("#select_C").val();
+                var d = t.find("#select_D").val();
+                $.ajax({
+                    type: "POST",
+                    url: "ajax/sets",
+                    data: {'type': 'save', 'sets': JSON.stringify($('.slots_list').music_sets_list('get_list'))},
+                    dataType: 'text',
+                    success: function() {
+                        console.log("Sets saved... Saving selected ones")
+                        $.ajax({
+                            type: "POST",
+                            url: "ajax/sets",
+                            data: {'type': 'select', 'A': a, 'B': b, 'C': c, 'D': d},
+                            dataType: 'json',
+                            success: function() {
+                                t.dialog('close');
+                            }
+                        });
+                    }
+                });
+            },
+            "Push to JukeBox & Print Labels": function(){
+                var t = $(this);
+                var a = t.find("#select_A").val();
+                var b = t.find("#select_B").val();
+                var c = t.find("#select_C").val();
+                var d = t.find("#select_D").val();
+                $.ajax({
+                    type: "POST",
+                    url: "ajax/sets",
+                    data: {'type': 'select', 'A': a, 'B': b, 'C': c, 'D': d},
+                    dataType: 'json',
+                    success: function() {
+                        t.dialog('close');
+                    }
+                });
+            },
             Cancel: function() {
                 $(this).dialog('close');
             }
