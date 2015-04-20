@@ -16,4 +16,5 @@ class Map():
         try:
             return self.map[char]
         except KeyError:
+            logging.debug("Did not find char %s in map" % char)
             return ""

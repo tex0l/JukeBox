@@ -10,6 +10,7 @@ import sys
 
 config = Config()
 # Initializing the logger with the correct settings
+#TODO: reconfigure logger, it's crappy
 logger = Logger(log_format=config.log['format'],
                 path=config.log['path'],
                 level=config.log['level']).root_logger
@@ -19,16 +20,7 @@ def main(loaded_config):
     """
     This method main.main() initializes a jukebox.Jukebox class with loaded_config
     """
-    # You may toggle to True when debugging to avoid restarting loops
-    debug = True
-    try:
-        Jukebox(loaded_config)
-    except Exception as e:
-        logger.critical("Jukebox has crashed with error %s restarting... " % e)
-        if not debug:
-            main(loaded_config)
-        else:
-            raise
+    Jukebox(loaded_config)
 
 
 if __name__ == '__main__':
