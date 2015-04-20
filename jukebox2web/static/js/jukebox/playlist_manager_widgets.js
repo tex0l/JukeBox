@@ -992,8 +992,12 @@ $(function() {
             var first = true;
 
             for (var i in this.options.sets){
+                var name = this.options.sets[i].name;
+                if (this.options.sets[i].selection != '') {
+                    name = name + "        ||       " + this.options.sets[i].selection
+                }
 
-                $('<option value="' + this.options.sets[i].pk + '">').html(this.options.sets[i].name)
+                $('<option value="' + this.options.sets[i].pk + '">').html(name)
                     .appendTo('#set_select');
 
                 if (first){
