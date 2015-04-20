@@ -120,7 +120,6 @@ class DisplayLCDd2x40:
             self.playing_string.set_text(unidecode("Nothing in the playlist. Add a song ?"))
 
     def playing_song(self, index, title, artist):
-        #TODO
         """
         Tell the display which song is playing
         """

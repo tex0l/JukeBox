@@ -27,6 +27,7 @@ class SlotPair(models.Model):
                 'music1': self.music1.dict() if self.music1 else {},
                 'music2': self.music2.dict() if self.music2 else {},
                 'artwork': artwork, 'pk': self.pk}
+
     def dictify(self):
         return {
             self.slot1_nb: {

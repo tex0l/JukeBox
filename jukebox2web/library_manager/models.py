@@ -3,7 +3,6 @@ from django.db import models
 from django.core.files import File
 from tempfile import NamedTemporaryFile
 import mutagenwrapper
-import hashlib
 
 
 class Artwork(models.Model):
