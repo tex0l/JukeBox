@@ -58,6 +58,7 @@ docs/_build/
 
 #General
 Media/*
+Music/*
 *.conf
 *.sh
 .DS_Store

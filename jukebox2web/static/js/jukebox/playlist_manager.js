@@ -222,6 +222,10 @@ jQuery(function($)
         $('#add_music_set_dialog').dialog('open');
     });
 
+    $("#btn_playlist_editor").click(function(){
+        $('#playlist_editor_dialog').dialog('open');
+    });
+
     $("#btn_save").click(function(){
         $.ajax({
             type: "POST",
@@ -320,6 +324,32 @@ jQuery(function($)
         modal: true,
         buttons: {
             "Add Music Set":add_music_set,
+            Cancel: function() {
+                $(this).dialog('close');
+            }
+        },
+        width: 400
+    }).find('input').keyup(function(e){
+        if(e.keyCode == 13) {
+            add_music_set();
+        }
+    });
+
+    $('#playlist_editor_dialog').dialog({
+        autoOpen: false,
+        show: {
+            effect: "blind",
+            duration: 300
+        },
+        hide: {
+            effect: "blind",
+            duration: 300
+        },
+        modal: true,
+        buttons: {
+            "Print Labels": null,
+            "Push to JukeBox": null,
+            "Push to JukeBox & Print Labels": null,
             Cancel: function() {
                 $(this).dialog('close');
             }

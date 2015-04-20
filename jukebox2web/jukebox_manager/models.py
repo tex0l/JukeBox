@@ -72,7 +72,7 @@ class MusicSet(models.Model):
 
     def dict(self):
         return {
-            'pk': self.pk, 'name': self.name,
+            'pk': self.pk, 'name': self.name, 'selection': self.selection,
             'slot_pairs': [self.s0.dict(), self.s1.dict(), self.s2.dict(), self.s3.dict(), self.s4.dict(),
                            self.s5.dict(), self.s6.dict(), self.s7.dict(), self.s8.dict(), self.s9.dict()]
         }
