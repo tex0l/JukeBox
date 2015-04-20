@@ -58,39 +58,16 @@ class MusicSet(models.Model):
 
     @classmethod
     def create(cls, name):
-        s0 = SlotPair(slot1_nb=1, slot2_nb=2)
-        s1 = SlotPair(slot1_nb=3, slot2_nb=4)
-        s2 = SlotPair(slot1_nb=5, slot2_nb=6)
-        s3 = SlotPair(slot1_nb=7, slot2_nb=8)
-        s4 = SlotPair(slot1_nb=9, slot2_nb=10)
-        s5 = SlotPair(slot1_nb=11, slot2_nb=12)
-        s6 = SlotPair(slot1_nb=13, slot2_nb=14)
-        s7 = SlotPair(slot1_nb=15, slot2_nb=16)
-        s8 = SlotPair(slot1_nb=17, slot2_nb=18)
-        s9 = SlotPair(slot1_nb=19, slot2_nb=20)
-        s0.save()
-        s1.save()
-        s2.save()
-        s3.save()
-        s4.save()
-        s5.save()
-        s6.save()
-        s7.save()
-        s8.save()
-        s9.save()
-        return MusicSet(name=name, s0=s0, s1=s1, s2=s2, s3=s3, s4=s4, s5=s5, s6=s6, s7=s7, s8=s8, s9=s9)
+        S = []
+        for i in range(0,10):
+            S.append(SlotPair(slot1_nb=2*i+1, slot2_nb=2*(i+1)))
+            S[i].save()
+        return MusicSet(name=name, s0=S[0], s1=S[1], s2=S[2], s3=S[3], s4=S[4], s5=S[5], s6=S[6], s7=S[7], s8=S[8], s9=S[9])
 
     def save(self, *args, **kwargs):
-        self.s0.save()
-        self.s1.save()
-        self.s2.save()
-        self.s3.save()
-        self.s4.save()
-        self.s5.save()
-        self.s6.save()
-        self.s7.save()
-        self.s8.save()
-        self.s9.save()
+        list = [self.s0, self.s1, self.s2, self.s3, self.s4, self.s5, self.s6, self.s7, self.s8, self.s9]
+        for slot_pair in list:
+            slot_pair.save()
         super(MusicSet, self).save(*args, **kwargs)  # Call the "real" save() method.
 
     def dict(self):
