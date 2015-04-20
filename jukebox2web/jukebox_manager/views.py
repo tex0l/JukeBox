@@ -27,13 +27,10 @@ class MusicSets(View):
     @staticmethod
     def post(request):
         edit = request.POST
-        print edit
         t = edit.get('type')
-        print "type is", t
         if t == 'save':
             sets = json.loads(edit.get('sets'))
             MusicSets.save_sets(sets)
-            print "Sets saved"
             return HttpResponse('OK')
         elif t == 'add':
             m = MusicSet.create(name=edit.get('name'))
@@ -53,7 +50,6 @@ class MusicSets(View):
                 else:
                     m.selection = ''
                 m.save()
-                print m.selection
             #TODO : Actually pushing to the jukebox
             return HttpResponse(json.dumps({'sets': sets_list()}), content_type='application/json')
         raise Exception('Unexpected music set request')
