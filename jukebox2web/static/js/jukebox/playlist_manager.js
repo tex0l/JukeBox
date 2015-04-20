@@ -223,7 +223,8 @@ jQuery(function($)
     });
 
     $("#btn_playlist_editor").click(function(){
-        $('#playlist_editor_dialog').dialog('open');
+        var sets = $('.slots_list').music_sets_list('option', 'sets');
+        $('#playlist_editor_dialog').playlist_editor({'sets': sets}).dialog('open');
     });
 
     $("#btn_save").click(function(){
