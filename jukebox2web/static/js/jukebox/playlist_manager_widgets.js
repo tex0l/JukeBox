@@ -1062,7 +1062,7 @@ $(function() {
                 for (var j in this.options.sets){
                     var temp = $('<option value="' + this.options.sets[j].pk + '">').html(this.options.sets[j].name)
                         .appendTo('#select_'+l[i]);
-                    if (this.options.sets[j].selection == l){
+                    if (this.options.sets[j].selection == l[i]){
                         temp.attr('selected', 'selected');
                     }
                 }
