@@ -1,7 +1,7 @@
 from django.db import models
 from django.conf import settings
 from library_manager.models import *
-
+import logging
 # Create your models here.
 
 
@@ -27,7 +27,19 @@ class SlotPair(models.Model):
                 'music1': self.music1.dict() if self.music1 else {},
                 'music2': self.music2.dict() if self.music2 else {},
                 'artwork': artwork, 'pk': self.pk}
-
+    def dictify(self):
+        return {
+            self.slot1_nb: {
+                'artist': self.music1.artist,
+                'title': self.music1.title,
+                'path': self.music1.file_field.path
+            },
+            self.slot2_nb:{
+                'artist': self.music2.artist,
+                'title': self.music2.artist,
+                'path': self.music2.file_field.path
+            }
+        }
 
 class MusicSet(models.Model):
     selection = models.CharField(name='selection', max_length=1, help_text="if not blank, then it's the current musicset for letter id here")
@@ -86,3 +98,43 @@ class MusicSet(models.Model):
             'slot_pairs': [self.s0.dict(), self.s1.dict(), self.s2.dict(), self.s3.dict(), self.s4.dict(),
                            self.s5.dict(), self.s6.dict(), self.s7.dict(), self.s8.dict(), self.s9.dict()]
         }
+
+    def dictify(self):
+        list = [self.s0, self.s1, self.s2, self.s3, self.s4, self.s5, self.s6, self.s7, self.s8, self.s9]
+        dict = {}
+        for slot_pair in list:
+            dict.update(slot_pair.dictify())
+        return dict
+
+    @staticmethod
+    def get_current_MusicSets():
+        try:
+            a = MusicSet.objects.get(selection='A')
+            a_dict = a.dictify()
+        except:
+            logging.error("No A MusicSet")
+            a_dict = {}
+            pass
+        try:
+            b = MusicSet.objects.get(selection='B')
+            b_dict = b.dictify()
+        except:
+            logging.error("No B MusicSet")
+            b_dict = {}
+            pass
+        try:
+            c = MusicSet.objects.get(selection='C')
+            c_dict = c.dictify()
+        except:
+            logging.error("No C MusicSet")
+            c_dict = {}
+            pass
+        try:
+            d = MusicSet.objects.get(selection='D')
+            d_dict = d.dictify()
+        except:
+            logging.error("No D MusicSet")
+            d_dict = {}
+            pass
+        return {'A': a_dict, 'B': b_dict, 'C': c_dict, 'D': d_dict}
+        

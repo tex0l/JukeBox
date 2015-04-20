@@ -3,14 +3,13 @@ from __future__ import unicode_literals
 # -*- coding: utf-8 -*-
 
 import sys
-from lib import getch
+from core import getch
 import keyboard_map
 import library
-from lib.raw_input_timout import non_blocking_raw_input
 import music_player
 import time
 import logging
-from lib.displays.display import DisplayChooser
+from core.displays.display import DisplayChooser
 from unidecode import unidecode
 
 
@@ -35,27 +34,10 @@ class Jukebox:
         logging.info("Initializing display")
         self.display = DisplayChooser(loaded_config).display
         logging.info("Initializing library")
-        self.music_index = library.Library(loaded_config.paths['music_dir'])
-        if loaded_config.variables['index']:
-            user_input = non_blocking_raw_input(
-                "To update music directory from import directory\nType 'y' or 'yes', %s secs then skipped: " %
-                loaded_config.variables['index_timeout'], timeout=loaded_config.variables['index_timeout'])
-            if user_input == "y" or user_input == "yes":
-                self.generate(loaded_config)
-                self.player.update()
+        self.music_index = library.Library(loaded_config.paths['library_dir'])
         self.print_help()
         self.main(loaded_config)
 
-    def generate(self, loaded_config):
-        """
-        The generate() method first parses the import directory with Player().generate_library() method,
-        Then it updates the library by totally overwriting it with the new one
-        """
-        logging.info("Parsing import directory")
-        self.player.generate_library(loaded_config.paths['index_dir'], loaded_config.paths['music_dir'],
-                                     self.music_index.filled_slots())
-        logging.info("Updating music library")
-        self.music_index = library.Library(loaded_config.paths['music_dir'])
 
     def exit(self):
         logging.debug("Waiting for the end of the display thread update")
@@ -198,7 +180,7 @@ class Jukebox:
         else:
             remaining_time = loaded_config.variables['add_timeout'] - time_elapsed
             logging.info("Waiting for timeout, still %s secs to wait" % remaining_time)
-	    return ''
+        return ''
 
     @staticmethod
     def print_help():

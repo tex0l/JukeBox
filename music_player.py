@@ -5,10 +5,7 @@ from __future__ import unicode_literals
 import os
 import time
 import logging
-from lib.mpdHandler import MPDHandler
-from lib.tags import tag_finder
-# noinspection PyPackageRequirements
-from slugify import slugify
+from core.mpdHandler import MPDHandler
 import subprocess
 
 class Player():

@@ -65,8 +65,7 @@ class Config:
         self.config.set('Network', 'mpd_host', 'localhost')
         self.config.set('Network', 'mpd_port', '6600')
         self.config.add_section('Paths')
-        self.config.set('Paths', 'music_dir', 'Music')
-        self.config.set('Paths', 'index_dir', 'Import')
+        self.config.set('Paths', 'library_dir', 'Media/Library')
         self.config.set('Paths', 'mpd_conf_file', 'mpd.conf')
         self.config.add_section('Variables')
         # index on startup ?

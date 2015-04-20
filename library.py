@@ -1,13 +1,9 @@
 from __future__ import unicode_literals
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
-import glob
 import os
-from lib.tags import tag_finder
 import logging
 import json
-
-from operator import attrgetter
 
 
 def path_leaf(path):
