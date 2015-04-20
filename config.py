@@ -19,15 +19,12 @@ class Config:
         """
         self.config_file = os.path.join(os.path.dirname(__file__), "jukebox.conf")
         self.config = ConfigParser.SafeConfigParser()
-        print "reading config file..."
         self.config.read(self.config_file)
         if not self.config.sections():
-            print "config file is empty"
             self.generate()
         try:
             self.network, self.paths, self.variables, self.lcd, self.log, self.map = self.get_sections()
         except ConfigParser.NoSectionError:
-            print "config file is incomplete, regenerating"
             os.remove(self.config_file)
             self.__init__()
         logging.debug(self.stringify_config())

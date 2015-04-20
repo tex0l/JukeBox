@@ -3,14 +3,14 @@ from __future__ import unicode_literals
 # -*- coding: utf-8 -*-
 
 import sys
-import getch
+from lib import getch
 import keyboard_map
-import parser
-from raw_input_timout import non_blocking_raw_input
+import library
+from lib.raw_input_timout import non_blocking_raw_input
 import music_player
 import time
 import logging
-from display import DisplayChooser
+from lib.displays.display import DisplayChooser
 from unidecode import unidecode
 
 
@@ -35,7 +35,7 @@ class Jukebox:
         logging.info("Initializing display")
         self.display = DisplayChooser(loaded_config).display
         logging.info("Initializing library")
-        self.music_index = parser.MusicDir(loaded_config.paths['music_dir'])
+        self.music_index = library.Library(loaded_config.paths['music_dir'])
         if loaded_config.variables['index']:
             user_input = non_blocking_raw_input(
                 "To update music directory from import directory\nType 'y' or 'yes', %s secs then skipped: " %
@@ -55,13 +55,9 @@ class Jukebox:
         self.player.generate_library(loaded_config.paths['index_dir'], loaded_config.paths['music_dir'],
                                      self.music_index.filled_slots())
         logging.info("Updating music library")
-        self.music_index = parser.MusicDir(loaded_config.paths['music_dir'])
+        self.music_index = library.Library(loaded_config.paths['music_dir'])
 
     def exit(self):
-        # TODO
-        """
-
-        """
         logging.debug("Waiting for the end of the display thread update")
         self.display.UT.join()  # Waits until UpdateThread() thread dies
         logging.debug("Exiting the player")
@@ -72,12 +68,8 @@ class Jukebox:
         exit()
 
     def list(self):
-        # TODO
-        """
-
-        """
         print ("List of songs :")
-        self.music_index.print_music_dir()
+        print self.music_index.__str__()
 
     def main(self, loaded_config):
         """
@@ -157,7 +149,7 @@ class Jukebox:
         old_entry = entry
         if (str(choice)).isdigit():
             entry += choice
-            index = parser.Index(entry[:1], int(entry[1:]))
+            index = library.Index(entry[:1], int(entry[1:]))
             song = self.music_index.find_index(index)
             logging.debug(song)
             if song:
@@ -185,6 +177,7 @@ class Jukebox:
         """
 
         time_elapsed = time.time() - self.player.last_added
+
         if self.player.queue_count() < loaded_config.variables['nb_music'] \
                 or time_elapsed > loaded_config.variables['add_timeout']:
             # If we didn't already choose a letter
