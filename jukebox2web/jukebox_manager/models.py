@@ -35,12 +35,13 @@ class SlotPair(models.Model):
                 'title': self.music1.title,
                 'path': self.music1.file_field.path
             },
-            self.slot2_nb:{
+            self.slot2_nb: {
                 'artist': self.music2.artist,
                 'title': self.music2.artist,
                 'path': self.music2.file_field.path
             }
         }
+
 
 class MusicSet(models.Model):
     selection = models.CharField(name='selection', max_length=1, help_text="if not blank, then it's the current musicset for letter id here")
@@ -72,7 +73,7 @@ class MusicSet(models.Model):
 
     def dict(self):
         return {
-            'pk': self.pk, 'name': self.name,
+            'pk': self.pk, 'name': self.name, 'selection': self.selection,
             'slot_pairs': [self.s0.dict(), self.s1.dict(), self.s2.dict(), self.s3.dict(), self.s4.dict(),
                            self.s5.dict(), self.s6.dict(), self.s7.dict(), self.s8.dict(), self.s9.dict()]
         }

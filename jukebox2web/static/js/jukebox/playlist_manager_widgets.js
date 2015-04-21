@@ -992,8 +992,12 @@ $(function() {
             var first = true;
 
             for (var i in this.options.sets){
+                var name = this.options.sets[i].name;
+                if (this.options.sets[i].selection != '') {
+                    name = name + "        ||       " + this.options.sets[i].selection
+                }
 
-                $('<option value="' + this.options.sets[i].pk + '">').html(this.options.sets[i].name)
+                $('<option value="' + this.options.sets[i].pk + '">').html(name)
                     .appendTo('#set_select');
 
                 if (first){
@@ -1004,6 +1008,67 @@ $(function() {
                 else{
                     $('<div class="music_set_' + this.options.sets[i].pk + '">')
                         .music_set(this.options.sets[i]).appendTo(this.element).hide();
+                }
+            }
+        },
+
+        // events bound via _on are removed automatically
+        // revert other modifications here
+        _destroy: function() {
+            // remove generated elements
+        },
+
+        // _setOptions is called with a hash of all options that are changing
+        // always refresh when changing options
+        _setOptions: function() {
+            // _super and _superApply handle keeping the right this-context
+            this._superApply( arguments );
+            this._refresh();
+        },
+
+        // _setOption is called for each individual option that is changing
+        _setOption: function( key, value ) {
+            this._super( key, value );
+        },
+
+        get_list: function(){
+            var l =[];
+            this.element.find('.music_set').each(function(){
+                l.push($(this).music_set('get_dict'));
+            });
+            console.log(l);
+            return l;
+        }
+    });
+
+    $.widget( "juke.playlist_editor", {
+        // default options
+        options: {
+            sets: [],
+
+            // callbacks
+            change: null,
+            random: null
+        },
+
+        // the constructor
+        _create: function() {
+            this._refresh();
+        },
+
+        // called when created, and later when changing options
+        _refresh: function() {
+            this.element.find('option').remove();
+
+            var l = ['A', 'B', 'C', 'D'];
+
+            for (var i in l){
+                for (var j in this.options.sets){
+                    var temp = $('<option value="' + this.options.sets[j].pk + '">').html(this.options.sets[j].name)
+                        .appendTo('#select_'+l[i]);
+                    if (this.options.sets[j].selection == l[i]){
+                        temp.attr('selected', 'selected');
+                    }
                 }
             }
         },
