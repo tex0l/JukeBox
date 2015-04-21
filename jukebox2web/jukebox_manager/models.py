@@ -84,35 +84,18 @@ class MusicSet(models.Model):
             dict.update(slot_pair.dictify())
         return dict
 
+    def get_selected_dictified_MusicSet(selection):
+        try:
+            return MusicSet.objects.get(selection=selection).dictify()
+        except KeyError:
+            logging.error("MusicSet %s not found, ignored")
+            return {}
+
     @staticmethod
-    def get_current_MusicSets():
-        try:
-            a = MusicSet.objects.get(selection='A')
-            a_dict = a.dictify()
-        except:
-            logging.error("No A MusicSet")
-            a_dict = {}
-            pass
-        try:
-            b = MusicSet.objects.get(selection='B')
-            b_dict = b.dictify()
-        except:
-            logging.error("No B MusicSet")
-            b_dict = {}
-            pass
-        try:
-            c = MusicSet.objects.get(selection='C')
-            c_dict = c.dictify()
-        except:
-            logging.error("No C MusicSet")
-            c_dict = {}
-            pass
-        try:
-            d = MusicSet.objects.get(selection='D')
-            d_dict = d.dictify()
-        except:
-            logging.error("No D MusicSet")
-            d_dict = {}
-            pass
-        return {'A': a_dict, 'B': b_dict, 'C': c_dict, 'D': d_dict}
-        
+    def get_selected_MusicSets():
+        return {
+            'A': MusicSet.get_selected_dictified_MusicSet('A'),
+            'B': MusicSet.get_selected_dictified_MusicSet('B'),
+            'C': MusicSet.get_selected_dictified_MusicSet('C'),
+            'D': MusicSet.get_selected_dictified_MusicSet('D'),
+                }
