@@ -47,7 +47,7 @@ class Library:
 
     def clean(self):
         """
-        clean() method takes the json, parses it and put its elements in suitable objects
+        clean() method takes the json, parses it and puts its elements in suitable objects
         """
         letters = ['A', 'B', 'C', 'D']
         numbers = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11',

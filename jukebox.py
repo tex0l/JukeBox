@@ -34,7 +34,7 @@ class Jukebox:
         logging.info("Initializing display")
         self.display = DisplayChooser(loaded_config).display
         logging.info("Initializing library")
-        self.music_index = library.Library(loaded_config.paths['library_dir'])
+        self.music_index = library.Library(loaded_config.paths["json_conf_file"])
         self.print_help()
         self.main(loaded_config)
 
@@ -73,7 +73,7 @@ class Jukebox:
         Then it will equals this letter concatenated with the current choice when you pick a number
         """
         logging.debug("Entering switch_man()")
-        sys.stdout.write('Enter your choice : ')
+        sys.stdout.write(str("Enter your choice : "))
         sys.stdout.flush()
         choice = getch.getch()
         logging.debug(unidecode("Got choice %s through getch") % choice)
