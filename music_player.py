@@ -263,9 +263,11 @@ class Player():
         return self.mpd_handler.get_queue_count()
 
     def clear(self):
+        logging.info("Clearing playlist")
         self.mpd_handler.clear()
 
     def next(self):
+        logging.info("Playing next music")
         self.mpd_handler.next()
 
     def exit(self):

@@ -98,18 +98,17 @@ class Jukebox:
         Hence, entry equals choice in all cases except when you've picked a letter on the last round,
         Then it will equals this letter concatenated with the current choice when you pick a number
         """
-        logging.debug("Entering switch_man()")
-        sys.stdout.write('Enter your choice : ')
+        logging.debug("Entering switch_man(loaded_config, %s)" % entry)
+        sys.stdout.write(str('Enter your choice : '))
         sys.stdout.flush()
         choice = getch.getch()
-        logging.debug(unidecode("Got choice %s through getch") % choice)
-        logging.debug("Mapping choice throughout the dictionary")
+        logging.debug(str("Got choice %s through getch") % choice)
         choice = self.dictionary.find(choice)
+        logging.debug("Mapped choice throughout the dictionary, got %s" % choice)
         if choice == 'quit':
             self.exit()
         elif choice == 'list':
             self.list()
-            return ''
         elif choice == 'E99':
             self.player.clear()
             return self.music_picker(loaded_config, choice[1:], choice[:1])
@@ -118,9 +117,9 @@ class Jukebox:
         elif choice == '':
             print("Invalid Entry")
             logging.debug("Invalid entry")
-            return ''
         else:
             return self.music_picker(loaded_config, choice, entry)
+        return ''
 
     def is_letter_updater(self, string):
         """
@@ -159,7 +158,6 @@ class Jukebox:
             entry += choice
             index = parser.Index(entry[:1], int(entry[1:]))
             song = self.music_index.find_index(index)
-            logging.debug(song)
             if song:
                 self.add_song(song, entry)
                 logging.debug("is_digit_updater(%s,%s) returns " % (choice, old_entry))
@@ -205,7 +203,7 @@ class Jukebox:
         else:
             remaining_time = loaded_config.variables['add_timeout'] - time_elapsed
             logging.info("Waiting for timeout, still %s secs to wait" % remaining_time)
-	    return ''
+        return ''
 
     @staticmethod
     def print_help():
