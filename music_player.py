@@ -222,7 +222,7 @@ class Player():
         if not Player.thread:
             logging.info("Killing MPD")
             subprocess.call(('killall', 'mpd'), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-            command = ("mpd", unicode(loaded_config.paths['mpd_conf_file']))
+            command = ("mpd", os.path.join(os.path.dirname(__file__), loaded_config.paths['mpd_conf_file']))
             #lancement de mpd
             logging.info("Starting MPD")
             subprocess.call(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
