@@ -4,15 +4,26 @@ from __future__ import unicode_literals
 import logging
 
 
-class Map():
+class Map:
     """
     Get the keyboard mapping from the config file
     """
-    def __init__(self, loaded_config):
-        self.map = loaded_config.map
+    def __init__(self, conf):
+        """
+        :param conf: the configuration given
+        :type conf: config.Config
+        """
+        self.map = conf.map
         logging.debug("Map retrieved : %s" % self.map)
 
     def find(self, char):
+        """
+        :param char: character to map
+        :type char: unicode
+
+        :return: the mapped character if found
+        :rtype: unicode
+        """
         try:
             return self.map[char]
         except KeyError:

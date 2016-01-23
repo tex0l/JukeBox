@@ -8,19 +8,22 @@ from jukebox import Jukebox
 import logging
 import sys
 
+# TODO: import config with class inheritance
 config = Config()
-# Initializing the logger with the correct settings
-#TODO: reconfigure logger, it's crappy
+
+# TODO: reconfigure logger, it's crappy
 logger = Logger(log_format=config.log['format'],
                 path=config.log['path'],
                 level=config.log['level']).root_logger
 
 
-def main(loaded_config):
+def main(conf):
     """
     This method main.main() initializes a jukebox.Jukebox class with loaded_config
+    :param conf: the config object loaded at the beginning of main.py
+    :type conf: Config
     """
-    Jukebox(loaded_config)
+    Jukebox(conf)
 
 
 if __name__ == '__main__':

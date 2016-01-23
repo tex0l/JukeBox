@@ -19,25 +19,25 @@ class Jukebox:
     It links the user interface with the rest of the program
     """
 
-    def __init__(self, loaded_config):
+    def __init__(self, conf):
         """
         Initializes the jukebox:
         First it retrieves the dictionary,
-        Then it initializes the player, the display and the library,
-        And it asks if an import is necessary, and completes the library automatically,
-        Finally it switches into using mode aka the "normal mode"
+        Then it initializes the music_player.Player, the display and the library.Library,
+
+        :param conf: the given config from main
+        :type conf: config.Config
         """
         logging.info("Initializing dictionary")
-        self.dictionary = keyboard_map.Map(loaded_config)
+        self.dictionary = keyboard_map.Map(conf)
         logging.info("Initializing player")
-        self.player = music_player.Player(loaded_config)
+        self.player = music_player.Player(conf)
         logging.info("Initializing display")
-        self.display = DisplayChooser(loaded_config).display
+        self.display = DisplayChooser(conf).display
         logging.info("Initializing library")
-        self.music_index = library.Library(loaded_config.paths["json_conf_file"])
+        self.music_index = library.Library(conf.paths["json_conf_file"])
         self.print_help()
-        self.main(loaded_config)
-
+        self.main(conf)
 
     def exit(self):
         logging.debug("Waiting for the end of the display thread update")
@@ -53,15 +53,18 @@ class Jukebox:
         print ("List of songs :")
         print self.music_index.__str__()
 
-    def main(self, loaded_config):
+    def main(self, conf):
         """
         main method() is the loop of the user interface
+
+        :param conf: the given configuration
+        :type conf: config.Config
         """
         entry = ""
         while 1:
-            entry = self.switch_man(loaded_config, entry)
+            entry = self.switch_man(conf, entry)
 
-    def switch_man(self, loaded_config, entry):
+    def switch_man(self, conf, entry):
         """
         The switch_man() method is the user interface
         It asks the choice then it processes it to the dictionary and the as it follows:
@@ -71,6 +74,14 @@ class Jukebox:
         It is the precedent choice, if you've chosen a letter
         Hence, entry equals choice in all cases except when you've picked a letter on the last round,
         Then it will equals this letter concatenated with the current choice when you pick a number
+
+        :param conf: the configuration given
+        :type conf: config.Config
+
+        :param entry: it's the choice of music, it's either an empty string, a letter or a letter and a number
+        :type entry: unicode
+
+        :rtype: unicode
         """
         logging.debug("Entering switch_man()")
         sys.stdout.write(str("Enter your choice : "))
@@ -86,7 +97,7 @@ class Jukebox:
             return ''
         elif choice == 'E99':
             self.player.clear()
-            return self.music_picker(loaded_config, choice[1:], choice[:1])
+            return self.music_picker(conf, choice[1:], choice[:1])
         elif choice == 'next':
             self.player.next()
         elif choice == '':
@@ -94,12 +105,17 @@ class Jukebox:
             logging.debug("Invalid entry")
             return ''
         else:
-            return self.music_picker(loaded_config, choice, entry)
+            return self.music_picker(conf, choice, entry)
 
     def is_letter_updater(self, string):
         """
         Returns the string if it's a letter, and sends it to the screen
         Else it returns ""
+
+        :param string: the entry to be checked and/or updated
+        :type string: unicode
+
+        :rtype: unicode
         """
         if (str(string)).isalpha():
             entry = string.upper()
@@ -110,9 +126,15 @@ class Jukebox:
     def add_song(self, song, entry):
         """
         Adds a song to the jukebox queue, and displays the corresponding info on the screen
+
+        :param song: the song the add to the queue
+        :type song: library.Music
+
+        :param entry: the entry to be updated on the screen
+        :type entry: unicode
         """
-        print("Song chosen : " + song.artist + "'s " + song.name)
-        logging.debug("Song %s picked from entry %s" % (song.name, entry))
+        print("Song chosen : " + song.artist + "'s " + song.title)
+        logging.debug("Song %s picked from entry %s" % (song.title, entry))
         # ajout a la playlist
         self.player.enqueue(song)
         queue_count = self.player.queue_count()
@@ -126,6 +148,14 @@ class Jukebox:
         Then tries to find the song,
         If found, it plays it, updates the screen
         It returns "" as an entry anyway
+
+        :param choice: the second half of the entry, might be a letter
+        :type choice: int or unicode
+
+        :param entry: the entry to be updated on the screen
+        :type entry: unicode
+
+        :rtype: unicode
         """
 
         old_entry = entry
@@ -146,7 +176,7 @@ class Jukebox:
                                                                                     choice))
         return self.is_letter_updater("" + choice)
 
-    def music_picker(self, loaded_config, choice, entry):
+    def music_picker(self, conf, choice, entry):
         """
         The music_picker() method is the main part to processing the entry the user
         It implements the waiting condition : if the queue length > nb_music and if you added a song
@@ -156,12 +186,21 @@ class Jukebox:
         Then it processes the choice throughout is_letter_updater() method and returns the result,
         If it fails, it raises an "Invalid input" error,
         Else it processes the choice throughout is_digit_updater()  method and returns the result.
+
+        :param conf: the configuration given
+        :type conf: config.Config
+
+        :param choice: the second half of the entry, might be a letter
+        :type choice: int or unicode
+
+        :param entry: the entry to be updated on the screen
+        :type entry: unicode
         """
 
         time_elapsed = time.time() - self.player.last_added
 
-        if self.player.queue_count() < loaded_config.variables['nb_music'] \
-                or time_elapsed > loaded_config.variables['add_timeout']:
+        if self.player.queue_count() < conf.variables['nb_music'] \
+                or time_elapsed > conf.variables['add_timeout']:
             # If we didn't already choose a letter
             if entry == "":
                 result = self.is_letter_updater(choice)
@@ -178,7 +217,7 @@ class Jukebox:
                                                                                 result))
                 return result
         else:
-            remaining_time = loaded_config.variables['add_timeout'] - time_elapsed
+            remaining_time = conf.variables['add_timeout'] - time_elapsed
             logging.info("Waiting for timeout, still %s secs to wait" % remaining_time)
         return ''
 
