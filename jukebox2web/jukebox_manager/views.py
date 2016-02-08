@@ -38,18 +38,28 @@ class MusicSets(View):
             return HttpResponse(json.dumps(m.dict()), content_type='application/json')
         elif t == 'select':
             sets = MusicSet.objects.all()
+            selected = {}
             for m in sets:
                 if m.pk == int(edit.get('A')):
                     m.selection = 'A'
+                    selected['A'] = m
                 elif m.pk == int(edit.get('B')):
                     m.selection = 'B'
+                    selected['B'] = m
                 elif m.pk == int(edit.get('C')):
                     m.selection = 'C'
+                    selected['C'] = m
                 elif m.pk == int(edit.get('D')):
                     m.selection = 'D'
+                    selected['D'] = m
                 else:
                     m.selection = ''
                 m.save()
+            #Create the json file for the jukebox
+            jkPlaylists={}
+            jkPlaylists['A'] = selected['A'].dictify()
+            print(jkPlaylists['A'][1]['artist'])
+            print(json.dumps(jkPlaylists['A']))
             #TODO : Actually pushing to the jukebox
             return HttpResponse(json.dumps({'sets': sets_list()}), content_type='application/json')
         raise Exception('Unexpected music set request')
