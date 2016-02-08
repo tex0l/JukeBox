@@ -31,14 +31,14 @@ class SlotPair(models.Model):
     def dictify(self):
         return {
             self.slot1_nb: {
-                'artist': self.music1.artist.name,
-                'title': self.music1.title,
-                'path': self.music1.file_field.path
+                'artist': Artist.objects.get(pk=Music.objects.get(pk=self.music1_id).artist_id).name,
+                'title': Music.objects.get(pk=self.music1_id).title,
+                'path': Music.objects.get(pk=self.music1_id).file_field.path
             },
             self.slot2_nb: {
-                'artist': self.music2.artist.name,
-                'title': self.music2.artist,
-                'path': self.music2.file_field.path
+                'artist': Artist.objects.get(pk=Music.objects.get(pk=self.music2_id).artist_id).name,
+                'title': Music.objects.get(pk=self.music2_id).title,
+                'path': Music.objects.get(pk=self.music2_id).file_field.path
             }
         }
 
