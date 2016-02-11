@@ -8,8 +8,10 @@ import logging
 from core.mpdHandler import MPDHandler
 import subprocess
 
-class Player():
+
+class Player:
     thread = None
+
     def __init__(self, loaded_config=None):
         if not Player.thread:
             Player.killMPD()
