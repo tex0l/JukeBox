@@ -26,8 +26,8 @@ class Library:
         {'1':
             {
             'title':'title of the A1 song',
-            'artist': 'artiste de la musique A1',
-            'path': 'chemin du fichier correspondant a la musique A1'
+            'artist': 'artist of the A1 song',
+            'path': 'path of the A1 song file'
             },
         '2':
         ...
@@ -85,13 +85,11 @@ class Library:
     def find_index(self, index):
         """
         :param index: the index of the music
-        :type index: unicode
+        :type index: Index
 
         :return: the music corresponding to the index
         :rtype: Music
         """
-
-        # TODO: this must handle an Index object...
         return self.library[index]
 
     def __str__(self):
@@ -119,14 +117,17 @@ class Music:
 
 class Index(object):
     def __init__(self, letter, number):
-        self.letter = letter
-        self.number = number
+        self.letter = unicode(letter)
+        self.number = int(number)
 
     def __str__(self):
-        return self.letter + unicode(self.number)
+        return self.letter + str(self.number)
 
     def __repr__(self):
         return self.__str__()
 
     def __eq__(self, other):
-        return self.letter == other.letter and self.number == other.number
+        return (self.letter, self.number) == (other.letter, other.number)
+
+    def __hash__(self):
+        return hash((self.letter, self.number))
