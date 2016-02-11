@@ -1,0 +1,14 @@
+{
+  "A": {
+    "1": {
+      "title": "title of the A1 song",
+      "artist": "artiste de la musique A1",
+      "path": "1-04_Korobeiniki.m4a"
+    },
+    "2": {
+      "title": "title of the A2 song",
+      "artist": "artiste de la musique A2",
+      "path": "1-06_Hey_Ya.mp3"
+    }
+  }
+}
