@@ -60,6 +60,7 @@ docs/_build/
 Media/*
 Music/*
 *.conf
+*.json
 *.sh
 .DS_Store
 
