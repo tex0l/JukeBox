@@ -108,7 +108,7 @@ class MPDHandler(Thread):
         try:
             with self._client:
                 # noinspection PyUnresolvedReferences
-                self.logger.debug("Adding %s to playlist" % music.name)
+                self.logger.debug("Adding %s to playlist" % music.title)
                 self.logger.info("path : %s" % music.path)
                 self._client.add(music.path)
                 # noinspection PyUnresolvedReferences
@@ -184,7 +184,7 @@ class MPDHandler(Thread):
         self._update_or_not.set()
 
     def enqueue(self, music):
-        self.logger.debug("Adding %s to queue" % music.name)
+        self.logger.debug("Adding %s to queue" % music.title)
         self.queue.append(music)
 
     def get_current_song(self):
