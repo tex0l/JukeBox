@@ -67,7 +67,7 @@ class Config:
         self.config.add_section('Paths')
         self.config.set('Paths', 'library_dir', 'Media/Library')
         self.config.set('Paths', 'mpd_conf_file', 'mpd.conf')
-        self.config.set('Paths', 'json_conf_file', 'json.conf')
+        self.config.set('Paths', 'json_conf_file', 'current_playlist.json')
         self.config.add_section('Variables')
         # index on startup ?
         self.config.set('Variables', 'index', 'True')
