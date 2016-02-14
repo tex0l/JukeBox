@@ -17,6 +17,7 @@ class DisplayChooser():
                 self.display = DisplayLCDd2x40(loaded_config)
                 return
             except:
+                # TODO: the auto switch to dummy display does not work...
                 logging.warning("2x40 display cannot be initialized, switching to dummy")
 
         from core.displays.display_dummy import DisplayDummy

@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 import logging
 import socket
 from threading import Lock, Thread, Event
@@ -10,8 +12,8 @@ class LockableMPDClient(MPDClient):
     A subclass of MPDClient to make it thread-safe
     """
     def __init__(self, use_unicode=False):
-        super(LockableMPDClient, self).__init__()
-        self.use_unicode = use_unicode
+        # TODO: Is the use_unicode kwarg useful ? If yes, explain...
+        super(LockableMPDClient, self).__init__(use_unicode=use_unicode)
         self._lock = Lock()
 
     def acquire(self):
@@ -31,29 +33,54 @@ class MPDHandler(Thread):
     """
     A thread to safely communicate with the mpd client
     """
-    #Private functions that actually communicate with the client
+    # TODO: It'd probably be smart to split this class in two blocks -> a private block, and a public block...
     def __init__(self, loaded_config):
-        Thread.__init__(self,name="MPDHandler")
+        Thread.__init__(self, name="MPDHandler")
 
+        # TODO: Refactor loaded_config into a kwarg, and handle a default value which would work most of the time
         self.loaded_config = loaded_config
+
+        # TODO: Find why the logs and tracebacks of MPDHandler are not always written and when they are why it's messy
         self.logger = logging.getLogger('mpd')
+
         self._client = LockableMPDClient(use_unicode=True)
+
+        # TODO: What are those timeouts ?
         self._client.timeout = None
         self._client.idletimeout = None
 
+        # TODO: Is it necessary to set this flag ??? When is it modified ???
         self.is_idle = False
+
+        # TODO: Is it really an 'unknown' state here, isn't it an 'initialization' state ? :)
         self.status = {'state': 'unknown'}
+
+        # This is the song/music currently being played
         self.current_song = {}
+
+        # This is the current playlist of musics already added to MPD
         self.playlist = []
+
+        # This is the queue of musics waiting to be added to MPD
         self.queue = []
+
+        # TODO: Explain those three events !
         self._update_or_not = Event()
         self._clear_or_not = Event()
         self._next_or_not = Event()
+
+        # TODO: Why define an 'mpd' logger and not use it... ?
         logging.info("Connecting to MPD")
 
+        # TODO: Timestamp of the last addition of a music to the queue/playlist ?
+        # I can't find where it is actually used...
         self.last_added = time.time()
+
+        # Kill flag
         self._stop = Event()
 
+    # TODO: Refactor all those try/except which are quite ugly. Are they useful ? If yes -> use a decorator !!!
+    # TODO: Why are there some functions that contain a return void, and some without a return at all ?
     def _connect(self):
         try:
             with self._client:
@@ -159,6 +186,7 @@ class MPDHandler(Thread):
                 self._clear()
 
             length = len(self.queue)
+            # TODO: Is it possible to add them in the *right order* without defining an iterated variable ?
             for i in range(0, length):
                 self._enqueue(self.queue[0])
                 self.queue.pop(0)

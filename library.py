@@ -5,6 +5,8 @@ import os
 import logging
 import json
 
+# TODO: as its doctsring shows -> useful ?
+
 
 def path_leaf(path):
     """
@@ -50,6 +52,8 @@ class Library:
         with open(self.json_file, 'r') as f:
             return json.load(f)
 
+
+# TODO: this method is never used, wouldn't it be smart to simply remove it ?
     def write(self, conf):
         """
         Writes the config
