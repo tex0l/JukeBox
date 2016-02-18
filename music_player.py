@@ -46,7 +46,8 @@ class Player:
     def enqueue(self, music):
 
         logging.info("Enqueueing %s" % music.index.__str__())
-        self.mpd_handler.enqueue(music)
+        logging.info("%s" % music.path.__str__())
+	self.mpd_handler.enqueue(music)
         self.last_added = time.time()
 
     def is_playing(self):

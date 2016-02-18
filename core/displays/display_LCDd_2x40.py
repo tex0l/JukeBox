@@ -160,7 +160,7 @@ class DisplayLCDd2x40:
         if self.timer is not None:
             self.timer.cancel()
         if song is not None:
-            text += " - %s - %s" % (song.name, song.artist)
+            text += " - %s - %s" % (song.title, song.artist)
             self.lastAdded = time.time()
             self.timer = Timer(5, self.remove_entry)
             self.timer.start()
