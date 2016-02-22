@@ -1,5 +1,9 @@
 from __future__ import unicode_literals
 
+# TODO: Switch to Python 3 ?
+# There is a PIP package with getch which seems to be compatible with Python 3.
+# Since it was the main reason to choose Python 2.7, wouldn't it be smart to switch to Python 3 ?
+
 
 class _Getch:
     """Gets a single character from standard input.  Does not echo to the screen."""

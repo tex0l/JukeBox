@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 import logging
 import os
 
+
 class Logger:
     """
     This class is very simple and is of no use in the rest of the program except in main.py,

@@ -8,8 +8,10 @@ import logging
 from core.mpdHandler import MPDHandler
 import subprocess
 
-class Player():
+
+class Player:
     thread = None
+
     def __init__(self, loaded_config=None):
         if not Player.thread:
             Player.killMPD()
@@ -19,6 +21,7 @@ class Player():
             self.mpd_handler.start()
             Player.thread = self.mpd_handler
         else:
+            # TODO: when the JB crashes at init, it seems to go on an infinite loop because of this condition...
             self.mpd_handler = Player.thread
 
         self.dic = dict([(1, 'A'), (2, 'B'), (3, 'C'), (4, 'D')])
@@ -31,6 +34,7 @@ class Player():
 
     @staticmethod
     def startMPD(loaded_config):
+        # TODO: DO NOT USE AN EXTERNAL MPD.CONF -> write it from jukebox.conf with a sed ?
         command = ("mpd", unicode(loaded_config.paths['mpd_conf_file']))
         logging.info("Starting MPD")
         subprocess.call(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
