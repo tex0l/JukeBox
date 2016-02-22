@@ -33,12 +33,12 @@ class SlotPair(models.Model):
             self.slot1_nb: {
                 'artist': Artist.objects.get(pk=Music.objects.get(pk=self.music1_id).artist_id).name,
                 'title': Music.objects.get(pk=self.music1_id).title,
-                'path': Music.objects.get(pk=self.music1_id).file_field.path
+                'path': Music.objects.get(pk=self.music1_id).file_field.name[8:]
             },
             self.slot2_nb: {
                 'artist': Artist.objects.get(pk=Music.objects.get(pk=self.music2_id).artist_id).name,
                 'title': Music.objects.get(pk=self.music2_id).title,
-                'path': Music.objects.get(pk=self.music2_id).file_field.path
+                'path': Music.objects.get(pk=self.music2_id).file_field.name[8:]
             }
         }
 

@@ -1062,11 +1062,11 @@ $(function() {
 
             var l = ['A', 'B', 'C', 'D'];
 
-            for (var i in l){
-                for (var j in this.options.sets){
+            for (var i in l) {
+                for (var j in this.options.sets) {
                     var temp = $('<option value="' + this.options.sets[j].pk + '">').html(this.options.sets[j].name)
-                        .appendTo('#select_'+l[i]);
-                    if (this.options.sets[j].selection == l[i]){
+                        .appendTo('#select_' + l[i]);
+                    if (this.options.sets[j].selection == l[i]) {
                         temp.attr('selected', 'selected');
                     }
                 }
@@ -1100,7 +1100,10 @@ $(function() {
             console.log(l);
             return l;
         }
+
     });
+
+
 
 
 });

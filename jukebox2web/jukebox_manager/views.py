@@ -4,6 +4,7 @@ import json
 from django.http import HttpResponse
 from urllib import unquote
 
+from jukebox2web.settings import JSON_PATH
 from models import *
 from library_manager.models import *
 import threading
@@ -56,10 +57,14 @@ class MusicSets(View):
                     m.selection = ''
                 m.save()
             #Create the json file for the jukebox
-            jkPlaylists={}
-            jkPlaylists['A'] = selected['A'].dictify()
-            print(jkPlaylists['A'][1]['artist'])
-            print(json.dumps(jkPlaylists['A']))
+            #TODO : check that playlists are full and that all four playlists are different
+            try :
+                f = open('../current_playlist.json', 'w')
+                json.dump({'A' : selected['A'].dictify(), 'B' : selected['B'].dictify(),
+                                  'C' : selected['C'].dictify(), 'D' : selected['D'].dictify()}, f, indent = 4)
+            except (KeyError):
+                print("All playlists must be different and full")
+
             #TODO : Actually pushing to the jukebox
             return HttpResponse(json.dumps({'sets': sets_list()}), content_type='application/json')
         raise Exception('Unexpected music set request')

@@ -349,7 +349,7 @@ jQuery(function($)
         modal: true,
         buttons: {
             "Print Labels": function(){
-
+                //TODO: implement the make labels function
             },
             "Push to JukeBox": function(){
                 var t = $(this);

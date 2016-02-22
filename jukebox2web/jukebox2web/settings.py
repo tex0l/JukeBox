@@ -32,6 +32,7 @@ ALLOWED_HOSTS = []
 LETTER_DICT = ['A', 'B', 'C', 'D']
 NUMBER_DICT = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10',
                '11', '12', '13', '14', '15', '16', '17', '18', '19', '20']
+JSON_PATH = (os.path.join(BASE_DIR, '../json.conf'),)
 
 # Application definition
 
