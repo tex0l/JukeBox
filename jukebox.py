@@ -11,7 +11,7 @@ import time
 import logging
 from core.displays.display import DisplayChooser
 from unidecode import unidecode
-
+import web_to_jukebox
 
 class Jukebox:
     """
@@ -36,6 +36,9 @@ class Jukebox:
         self.display = DisplayChooser(conf).display
         logging.info("Initializing library")
         self.music_index = library.Library(conf.paths["json_conf_file"])
+        logging.info("Initializing pipe with web interface")
+        self.pipe_handler = web_to_jukebox.PipeHandler(conf, self.music_index, self.player)
+        self.pipe_handler.start()
         self.print_help()
         self.main(conf)
 

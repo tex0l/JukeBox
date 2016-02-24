@@ -8,6 +8,7 @@ from jukebox2web.settings import JSON_PATH
 from models import *
 from library_manager.models import *
 import threading
+import os
 
 
 def sets_list():
@@ -65,7 +66,10 @@ class MusicSets(View):
             except (KeyError):
                 print("All playlists must be different and full")
 
-            #TODO : Actually pushing to the jukebox
+            pipeName = '../pipe'
+            pipe = os.open(pipeName, os.O_WRONLY)
+            os.write(pipe, 'reload\n')
+
             return HttpResponse(json.dumps({'sets': sets_list()}), content_type='application/json')
         raise Exception('Unexpected music set request')
 

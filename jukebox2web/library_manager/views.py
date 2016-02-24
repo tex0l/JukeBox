@@ -13,8 +13,8 @@ import logging
 class PlaylistManager(View):
 
     def get(self, request):
-        print "Playlist Manager Chosen"
-        letters = ['A', ]
+        print("Playlist Manager Chosen")
+        letters = ['A', 'B', 'C', 'D']
         numbers = range(1, 21)
         slots = []
         for letter in letters:
