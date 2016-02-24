@@ -8,11 +8,8 @@ from jukebox2web.settings import JSON_PATH
 from models import *
 from library_manager.models import *
 import threading
-<<<<<<< HEAD
 from subprocess import call
-=======
 import os
->>>>>>> prob_zach1
 
 
 def sets_list():
