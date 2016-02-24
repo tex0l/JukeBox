@@ -8,6 +8,7 @@ from jukebox2web.settings import JSON_PATH
 from models import *
 from library_manager.models import *
 import threading
+from subprocess import call
 
 
 def sets_list():
@@ -67,6 +68,51 @@ class MusicSets(View):
 
             #TODO : Actually pushing to the jukebox
             return HttpResponse(json.dumps({'sets': sets_list()}), content_type='application/json')
+        elif t == 'tag':
+            # read json file
+            with open('../current_playlist.json') as data_file:
+                data = json.load(data_file)
+
+            #print(data["A"]["1"]["path"])
+
+            # read tex file
+            f = open("../latex/tag.tex", "r")
+            contents = f.readlines()
+            index = 0
+            for line in contents:
+                index += 1
+                if("\\begin{document}" in line):
+                    break
+            f.close()
+
+            b = True
+            letters = ['A', 'B', 'C', 'D']
+            numbers = ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20']
+
+            for letter in letters:
+                for number in numbers:
+                    # TODO be carefull with other special characters
+                    data[letter][number]["title"] = data[letter][number]["title"].replace("&","\&")
+                    data[letter][number]["artist"] = data[letter][number]["artist"].replace("&","\&")
+                    if(b):
+                        line = "\\boite{\content{%s}{%s}{%s}}" % (letter+number,data[letter][number]["title"],data[letter][number]["artist"])
+                        b = False
+
+                    else:
+                        line += "{\content{%s}{%s}{%s}}\n" % (letter+number,data[letter][number]["title"],data[letter][number]["artist"])
+                        b= True
+                        contents.insert(index, line)
+                        index += 1
+            contents.insert(index, "\end{document}\n")
+            contents = contents[:index+1]
+
+            f = open("../latex/tag.tex", "w")
+            f.writelines(contents)
+            f.close()
+
+            # generate pdf file in latex directory: latex/tag.pdf
+            call(["pdflatex","-output-directory", "../latex/","../latex/tag.tex"])
+            return HttpResponse('OK') # something else?
         raise Exception('Unexpected music set request')
 
     @staticmethod
