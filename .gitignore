@@ -69,5 +69,9 @@ Music/*
 run
 jukebox2web/jukebox_manager/migrations
 jukebox2web/library_manager/migrations
+
 tag.py
+
+
+jukebox2web/.idea/*
 
