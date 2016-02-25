@@ -350,6 +350,30 @@ jQuery(function($)
         buttons: {
             "Print Labels": function(){
                 //TODO: implement the make labels function
+                var t = $(this);
+                var a = t.find("#select_A").val();
+                var b = t.find("#select_B").val();
+                var c = t.find("#select_C").val();
+                var d = t.find("#select_D").val();
+                $.ajax({
+                    type: "POST",
+                    url: "ajax/sets",
+                    data: {'type': 'save', 'sets': JSON.stringify($('.slots_list').music_sets_list('get_list'))},
+                    dataType: 'text',
+                    success: function() {
+                        console.log("Sets saved... Saving selected ones")
+                        $.ajax({
+                            type: "POST",
+                            url: "ajax/sets",
+                            data: {'type': 'tag', 'A': a, 'B': b, 'C': c, 'D': d},
+                            dataType: 'json',
+                            success: function() {
+                                window.location.href = "../latex/tag.pdf";
+                                t.dialog('close');
+                            }
+                        });
+                    }
+                });
             },
             "Push to JukeBox": function(){
                 var t = $(this);
@@ -385,10 +409,27 @@ jQuery(function($)
                 $.ajax({
                     type: "POST",
                     url: "ajax/sets",
-                    data: {'type': 'select', 'A': a, 'B': b, 'C': c, 'D': d},
-                    dataType: 'json',
+                    data: {'type': 'save', 'sets': JSON.stringify($('.slots_list').music_sets_list('get_list'))},
+                    dataType: 'text',
                     success: function() {
-                        t.dialog('close');
+                        console.log("Sets saved... Saving selected ones")
+                        $.ajax({
+                            type: "POST",
+                            url: "ajax/sets",
+                            data: {'type': 'select', 'A': a, 'B': b, 'C': c, 'D': d},
+                            dataType: 'json',
+                            success: function() {
+                                $.ajax({
+                                    type: "POST",
+                                    url: "ajax/sets",
+                                    data: {'type': 'tag', 'A': a, 'B': b, 'C': c, 'D': d},
+                                    dataType: 'json',
+                                    success: function() {
+                                        t.dialog('close');
+                                    }
+                                });
+                            }
+                        });
                     }
                 });
             },

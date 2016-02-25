@@ -95,7 +95,7 @@ class MusicSets(View):
                     data[letter][number]["title"] = data[letter][number]["title"].replace("&","\&")
                     data[letter][number]["artist"] = data[letter][number]["artist"].replace("&","\&")
                     if(b):
-                        line = "\\boite{\content{%s}{%s}{%s}}" % (letter+number,data[letter][number]["title"],data[letter][number]["artist"])
+                        line = "\\boite{\content{%s}{%s}{%s}}{\image{..%s}}" % (letter+number,data[letter][number]["title"],data[letter][number]["artist"],data[letter][number]["artwork"])
                         b = False
 
                     else:
@@ -112,7 +112,8 @@ class MusicSets(View):
 
             # generate pdf file in latex directory: latex/tag.pdf
             call(["pdflatex","-output-directory", "../latex/","../latex/tag.tex"])
-            return HttpResponse('OK') # something else?
+            return HttpResponse(json.dumps({'sets': sets_list()}), content_type='application/json') # something else?
+
         raise Exception('Unexpected music set request')
 
     @staticmethod

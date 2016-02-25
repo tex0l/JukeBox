@@ -1,0 +1,73 @@
+
+\documentclass{article}
+\usepackage{times}
+\usepackage{graphicx}
+
+\setlength\parindent{0pt} % no indent
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\content}[3]{%
+\begin{minipage}[h][2.5cm][c]{2.5cm} % hauteur, largeur
+\begin{center}{
+#1\\
+#2\\
+#3\\
+} 
+\end{center}
+\end{minipage}
+} 
+
+\newcommand{\image}[1]{%
+\begin{minipage}[h][2.5cm][c]{2.4cm}
+\begin{center}
+% input a image
+\includegraphics[width=2.5cm]{#1}  % ../media/Artwork/Africa_Unite_The_Singles_Collection.jpg
+\end{center}
+\end{minipage}
+}
+
+\newcommand{\boite}[3]{
+\framebox[7.5cm][c]{#1#2#3}
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+\boite{\content{A1}{Baby You Can Drive My Car}{The Beatles}}{\image{../media/Artwork/Rubber_Soul.jpg}}{\content{A2}{Troubles}{Alicia Keys}}
+\boite{\content{A3}{A Woman's Worth}{Alicia Keys}}{\image{../media/Artwork/Songs_In_A_Minor.jpg}}{\content{A4}{Sun Is Shinning}{Bob Marley \& The Wailers}}
+\boite{\content{A5}{Sun Is Shinning}{Bob Marley \& The Wailers}}{\image{../media/Artwork/Africa_Unite_The_Singles_Collection.jpg}}{\content{A6}{Lovin U (Bonus Track)}{Alicia Keys}}
+\boite{\content{A7}{Sun Is Shinning}{Bob Marley \& The Wailers}}{\image{../media/Artwork/Africa_Unite_The_Singles_Collection.jpg}}{\content{A8}{Le temps mue}{M}}
+\boite{\content{A9}{Sun Is Shinning}{Bob Marley \& The Wailers}}{\image{../media/Artwork/Africa_Unite_The_Singles_Collection.jpg}}{\content{A10}{Le temps mue}{M}}
+\boite{\content{A11}{Fallin'}{Alicia Keys}}{\image{../media/Artwork/Songs_In_A_Minor.jpg}}{\content{A12}{Le temps mue}{M}}
+\boite{\content{A13}{Fallin'}{Alicia Keys}}{\image{../media/Artwork/Songs_In_A_Minor.jpg}}{\content{A14}{Le temps mue}{M}}
+\boite{\content{A15}{Sun Is Shinning}{Bob Marley \& The Wailers}}{\image{../media/Artwork/Africa_Unite_The_Singles_Collection.jpg}}{\content{A16}{Lovin U (Bonus Track)}{Alicia Keys}}
+\boite{\content{A17}{A Woman's Worth}{Alicia Keys}}{\image{../media/Artwork/Songs_In_A_Minor.jpg}}{\content{A18}{Troubles}{Alicia Keys}}
+\boite{\content{A19}{Fallin'}{Alicia Keys}}{\image{../media/Artwork/Songs_In_A_Minor.jpg}}{\content{A20}{Troubles}{Alicia Keys}}
+\boite{\content{B1}{Lovin U (Bonus Track)}{Alicia Keys}}{\image{../media/Artwork/Songs_In_A_Minor.jpg}}{\content{B2}{Sun Is Shinning}{Bob Marley \& The Wailers}}
+\boite{\content{B3}{Troubles}{Alicia Keys}}{\image{../media/Artwork/Songs_In_A_Minor.jpg}}{\content{B4}{A Woman's Worth}{Alicia Keys}}
+\boite{\content{B5}{Sun Is Shinning}{Bob Marley \& The Wailers}}{\image{../media/Artwork/Africa_Unite_The_Singles_Collection.jpg}}{\content{B6}{Sun Is Shinning}{Bob Marley \& The Wailers}}
+\boite{\content{B7}{Fallin'}{Alicia Keys}}{\image{../media/Artwork/Songs_In_A_Minor.jpg}}{\content{B8}{Troubles}{Alicia Keys}}
+\boite{\content{B9}{Lovin U (Bonus Track)}{Alicia Keys}}{\image{../media/Artwork/Songs_In_A_Minor.jpg}}{\content{B10}{A Woman's Worth}{Alicia Keys}}
+\boite{\content{B11}{Sun Is Shinning}{Bob Marley \& The Wailers}}{\image{../media/Artwork/Africa_Unite_The_Singles_Collection.jpg}}{\content{B12}{Fallin'}{Alicia Keys}}
+\boite{\content{B13}{Lovin U (Bonus Track)}{Alicia Keys}}{\image{../media/Artwork/Songs_In_A_Minor.jpg}}{\content{B14}{Le temps mue}{M}}
+\boite{\content{B15}{Baby You Can Drive My Car}{The Beatles}}{\image{../media/Artwork/Rubber_Soul.jpg}}{\content{B16}{Baby You Can Drive My Car}{The Beatles}}
+\boite{\content{B17}{Baby You Can Drive My Car}{The Beatles}}{\image{../media/Artwork/Rubber_Soul.jpg}}{\content{B18}{Le temps mue}{M}}
+\boite{\content{B19}{Lovin U (Bonus Track)}{Alicia Keys}}{\image{../media/Artwork/Songs_In_A_Minor.jpg}}{\content{B20}{Sun Is Shinning}{Bob Marley \& The Wailers}}
+\boite{\content{C1}{Troubles}{Alicia Keys}}{\image{../media/Artwork/Songs_In_A_Minor.jpg}}{\content{C2}{Fallin'}{Alicia Keys}}
+\boite{\content{C3}{Troubles}{Alicia Keys}}{\image{../media/Artwork/Songs_In_A_Minor.jpg}}{\content{C4}{Troubles}{Alicia Keys}}
+\boite{\content{C5}{A Woman's Worth}{Alicia Keys}}{\image{../media/Artwork/Songs_In_A_Minor.jpg}}{\content{C6}{A Woman's Worth}{Alicia Keys}}
+\boite{\content{C7}{Lovin U (Bonus Track)}{Alicia Keys}}{\image{../media/Artwork/Songs_In_A_Minor.jpg}}{\content{C8}{Lovin U (Bonus Track)}{Alicia Keys}}
+\boite{\content{C9}{Sun Is Shinning}{Bob Marley \& The Wailers}}{\image{../media/Artwork/Africa_Unite_The_Singles_Collection.jpg}}{\content{C10}{Sun Is Shinning}{Bob Marley \& The Wailers}}
+\boite{\content{C11}{A Woman's Worth}{Alicia Keys}}{\image{../media/Artwork/Songs_In_A_Minor.jpg}}{\content{C12}{Le temps mue}{M}}
+\boite{\content{C13}{Sun Is Shinning}{Bob Marley \& The Wailers}}{\image{../media/Artwork/Africa_Unite_The_Singles_Collection.jpg}}{\content{C14}{Le temps mue}{M}}
+\boite{\content{C15}{Sun Is Shinning}{Bob Marley \& The Wailers}}{\image{../media/Artwork/Africa_Unite_The_Singles_Collection.jpg}}{\content{C16}{Le temps mue}{M}}
+\boite{\content{C17}{Sun Is Shinning}{Bob Marley \& The Wailers}}{\image{../media/Artwork/Africa_Unite_The_Singles_Collection.jpg}}{\content{C18}{Sun Is Shinning}{Bob Marley \& The Wailers}}
+\boite{\content{C19}{Sun Is Shinning}{Bob Marley \& The Wailers}}{\image{../media/Artwork/Africa_Unite_The_Singles_Collection.jpg}}{\content{C20}{Le temps mue}{M}}
+\boite{\content{D1}{Fallin'}{Alicia Keys}}{\image{../media/Artwork/Songs_In_A_Minor.jpg}}{\content{D2}{Fallin'}{Alicia Keys}}
+\boite{\content{D3}{Troubles}{Alicia Keys}}{\image{../media/Artwork/Songs_In_A_Minor.jpg}}{\content{D4}{Troubles}{Alicia Keys}}
+\boite{\content{D5}{Lovin U (Bonus Track)}{Alicia Keys}}{\image{../media/Artwork/Songs_In_A_Minor.jpg}}{\content{D6}{A Woman's Worth}{Alicia Keys}}
+\boite{\content{D7}{Sun Is Shinning}{Bob Marley \& The Wailers}}{\image{../media/Artwork/Africa_Unite_The_Singles_Collection.jpg}}{\content{D8}{Sun Is Shinning}{Bob Marley \& The Wailers}}
+\boite{\content{D9}{Sun Is Shinning}{Bob Marley \& The Wailers}}{\image{../media/Artwork/Africa_Unite_The_Singles_Collection.jpg}}{\content{D10}{Fallin'}{Alicia Keys}}
+\boite{\content{D11}{A Woman's Worth}{Alicia Keys}}{\image{../media/Artwork/Songs_In_A_Minor.jpg}}{\content{D12}{Le temps mue}{M}}
+\boite{\content{D13}{Baby You Can Drive My Car}{The Beatles}}{\image{../media/Artwork/Rubber_Soul.jpg}}{\content{D14}{Troubles}{Alicia Keys}}
+\boite{\content{D15}{A Woman's Worth}{Alicia Keys}}{\image{../media/Artwork/Songs_In_A_Minor.jpg}}{\content{D16}{A Woman's Worth}{Alicia Keys}}
+\boite{\content{D17}{Fallin'}{Alicia Keys}}{\image{../media/Artwork/Songs_In_A_Minor.jpg}}{\content{D18}{Lovin U (Bonus Track)}{Alicia Keys}}
+\boite{\content{D19}{Sun Is Shinning}{Bob Marley \& The Wailers}}{\image{../media/Artwork/Africa_Unite_The_Singles_Collection.jpg}}{\content{D20}{Sun Is Shinning}{Bob Marley \& The Wailers}}
+\end{document}
