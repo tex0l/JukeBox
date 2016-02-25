@@ -3,6 +3,7 @@ from django.shortcuts import render_to_response
 from django.views.generic import View
 from django.http import HttpResponseRedirect
 from django.template import RequestContext
+from django.http import HttpResponseRedirect, HttpResponse
 
 from forms import MusicForm
 from models import Music
@@ -28,3 +29,11 @@ class PlaylistManager(View):
              'cols': 2},
             context_instance=RequestContext(request)
         )
+
+
+def pdf_view(request):
+    with open('../latex/tag.pdf', 'r') as pdf:
+        response = HttpResponse(pdf.read(), content_type='application/pdf')
+        response['Content-Disposition'] = 'inline;filename=tag.pdf'
+        return response
+    pdf.closed

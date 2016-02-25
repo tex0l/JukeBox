@@ -348,6 +348,7 @@ jQuery(function($)
         },
         modal: true,
         buttons: {
+
             "Print Labels": function(){
                 //TODO: implement the make labels function
                 var t = $(this);
@@ -368,7 +369,11 @@ jQuery(function($)
                             data: {'type': 'tag', 'A': a, 'B': b, 'C': c, 'D': d},
                             dataType: 'json',
                             success: function() {
-                                window.location.href = "../latex/tag.pdf";
+                                window.open(
+                                      'tag.pdf',
+                                      '_blank' // <- This is what makes it open in a new window.
+                                    );
+                                //$.fileDownload('../latex/tag.pdf').done(function () { alert('File download a success!'); }).fail(function () { alert('File download failed!'); });
                                 t.dialog('close');
                             }
                         });

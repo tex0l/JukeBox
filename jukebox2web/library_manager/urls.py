@@ -3,6 +3,7 @@ from django.conf.urls import patterns, url
 
 from views import *
 from ajax_views import *
+from . import views
 
 
 urlpatterns = patterns('',
@@ -15,4 +16,6 @@ urlpatterns = patterns('',
     url(r'^ajax/upload', AjaxUpload.as_view(), name='library'),
     url(r'^ajax/artwork_upload', ArtworkUpload.as_view(), name='ArtworkUpload'),
     url(r'^ajax/artwork', Artworks.as_view(), name='artwork'),
+    url(r'^tag.pdf', views.pdf_view, name='tag'),
+
 )
