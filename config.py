@@ -68,7 +68,8 @@ class Config:
         self.config.set('Paths', 'library_dir', 'Media/Library')
         self.config.set('Paths', 'mpd_conf_file', 'mpd.conf')
         self.config.set('Paths', 'json_conf_file', 'current_playlist.json')
-        self.config.add_section('Variables')
+        self.config.set('Paths', 'fifo_pipe_file', 'pipe')
+	self.config.add_section('Variables')
         # index on startup ?
         self.config.set('Variables', 'index', 'True')
         self.config.set('Variables', 'index_timeout', '5')
